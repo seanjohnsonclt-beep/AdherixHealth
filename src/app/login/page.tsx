@@ -1,36 +1,38 @@
-import { sendMagicLinkAction } from '@/app/(auth)/actions';
+import { signInWithPasswordAction } from '@/app/(auth)/actions';
 
 export default function LoginPage({
   searchParams,
 }: {
-  searchParams: { sent?: string; error?: string };
+  searchParams: { error?: string };
 }) {
-  const sent = searchParams.sent === '1';
   const error = searchParams.error;
 
   return (
     <div className="shell">
       <div className="login-card">
         <h1>Adherix<sup style={{ fontSize: '13px', color: 'var(--fg-muted)', marginLeft: 4 }}>℞</sup></h1>
-        <p>Sign in with a magic link.</p>
+        <p>Sign in to your account.</p>
 
-        {sent ? (
-          <div style={{ padding: 16, background: 'var(--bg)', border: '1px solid var(--line)', fontSize: 14 }}>
-            Check your email. The link is valid for 1 hour.
+        <form action={signInWithPasswordAction}>
+          <div className="field">
+            <label className="label" htmlFor="email">Work email</label>
+            <input className="input" type="email" name="email" id="email" required autoFocus />
           </div>
-        ) : (
-          <form action={sendMagicLinkAction}>
-            <div className="field">
-              <label className="label" htmlFor="email">Work email</label>
-              <input className="input" type="email" name="email" id="email" required autoFocus />
-            </div>
-            <button className="btn" type="submit">Send link</button>
-          </form>
-        )}
+          <div className="field">
+            <label className="label" htmlFor="password">Password</label>
+            <input className="input" type="password" name="password" id="password" required />
+          </div>
+          <button className="btn" type="submit">Sign in</button>
+        </form>
 
-        {error === 'send_failed' && (
+        {error === 'invalid_credentials' && (
           <p style={{ marginTop: 16, color: 'var(--accent)', fontSize: 13 }}>
-            Something went wrong. Try again.
+            Incorrect email or password. Try again.
+          </p>
+        )}
+        {error === 'missing_fields' && (
+          <p style={{ marginTop: 16, color: 'var(--accent)', fontSize: 13 }}>
+            Please enter your email and password.
           </p>
         )}
         {error === 'no_clinic' && (
