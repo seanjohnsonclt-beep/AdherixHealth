@@ -3,7 +3,7 @@
 //   - a Vercel cron job (production — hits /api/cron/tick)
 //   - manual: `npm run worker:tick`
 
-import 'dotenv/config';
+
 import { evaluateTriggersForAllPatients } from '@/engine/triggers';
 import { sendDueMessages } from '@/engine/sender';
 
