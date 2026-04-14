@@ -3,31 +3,21 @@
 import { redirect } from 'next/navigation';
 import { supabaseServer } from '@/lib/supabase';
 
-export async function sendMagicLinkAction(formData: FormData) {
+export async function signInWithPasswordAction(formData: FormData) {
   const email = String(formData.get('email') || '').trim().toLowerCase();
+  const password = String(formData.get('password') || '');
 
-  if (!email) {
-    redirect('/login?error=missing_email');
-  }
+  if (!email || !password) redirect('/login?error=missing_fields');
 
   const supa = supabaseServer();
+  const { error } = await supa.auth.signInWithPassword({ email, password });
 
-  try {
-    const { error } = await supa.auth.signInWithOtp({
-      email,
-      options: {
-        emailRedirectTo: `${process.env.APP_URL}/auth/callback`,
-      },
-    });
-
-    if (error) {
-      console.error('[auth] magic link warning:', error.message);
-    }
-  } catch (err) {
-    console.error('[auth] magic link exception:', err);
+  if (error) {
+    console.error('[auth] sign in failed:', error.message);
+    redirect('/login?error=invalid_credentials');
   }
 
-  redirect('/login?sent=1');
+  redirect('/');
 }
 
 export async function signOutAction() {
