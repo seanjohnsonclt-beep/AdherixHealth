@@ -23,11 +23,4 @@ export function Topbar({ clinicName, email }: Props) {
         <span>{email}</span>
         <span style={{ margin: '0 12px', color: 'var(--fg-faint)' }}>·</span>
         <form action={signOutAction} style={{ display: 'inline' }}>
-          <button type="submit" style={{ background: 'none', border: 'none', color: 'var(--fg-muted)', cursor: 'pointer', font: 'inherit' }}>
-            Sign out
-          </button>
-        </form>
-      </div>
-    </div>
-  );
-}
+     

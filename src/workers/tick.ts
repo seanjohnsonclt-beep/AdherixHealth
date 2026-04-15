@@ -19,6 +19,6 @@ export async function tick() {
 }
 
 // CLI entry
-if (import.meta.url === `file://${process.argv[1]}`) {
-  tick().then(() => process.exit(0));
+if (require.main === module) {
+  tick().then(() => process.exit(0)).catch(() => process.exit(1));
 }

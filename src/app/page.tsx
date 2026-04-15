@@ -12,18 +12,31 @@ type PatientRow = {
   status: string;
   enrolled_at: Date;
   last_inbound_at: Date | null;
+  days_enrolled: number;
+  engagement_score: number;
 };
 
-function relativeTime(d: Date | null): string {
-  if (!d) return 'never';
-  const ms = Date.now() - new Date(d).getTime();
-  const min = Math.floor(ms / 60000);
-  if (min < 1) return 'just now';
-  if (min < 60) return `${min}m ago`;
-  const hr = Math.floor(min / 60);
-  if (hr < 24) return `${hr}h ago`;
-  const d2 = Math.floor(hr / 24);
-  return `${d2}d ago`;
+type RetentionMetrics = {
+  total: string;
+  retained: string;
+  churned: string;
+  at_risk: string;
+  recovered: string;
+};
+
+function riskLevel(score: number, status: string): 'high' | 'medium' | 'low' {
+  if (status === 'churned') return 'high';
+  if (score >= 70) return 'low';
+  if (score >= 40) return 'medium';
+  return 'high';
+}
+
+function riskLabel(score: number, status: string): string {
+  if (status === 'churned') return 'Churned';
+  const r = riskLevel(score, status);
+  if (r === 'high') return 'High Risk';
+  if (r === 'medium') return 'At Risk';
+  return 'On Track';
 }
 
 function maskPhone(p: string): string {
@@ -31,36 +44,106 @@ function maskPhone(p: string): string {
   return `••• ••• ${p.slice(-4)}`;
 }
 
+// Map phase IDs to clinical stage names
+const CLINICAL_STAGES: Record<number, string> = {
+  0: 'Initiation',
+  1: 'Dose Stabilization',
+  2: 'Adherence Building',
+  3: 'Risk Window',
+  4: 'Taper Management',
+  5: 'Maintenance',
+};
+
 export default async function HomePage() {
   const user = await requireUser();
 
+  // Main patient query with inline engagement scoring
   const patients = await query<PatientRow>(
-    `select id, first_name, phone, current_phase, status, enrolled_at, last_inbound_at
-     from patients
-     where clinic_id = $1
-     order by status = 'flagged' desc, last_inbound_at desc nulls last`,
+    `SELECT
+       p.id, p.first_name, p.phone, p.current_phase, p.status,
+       p.enrolled_at, p.last_inbound_at,
+       ROUND(EXTRACT(EPOCH FROM (NOW() - p.enrolled_at)) / 86400)::int AS days_enrolled,
+       CASE
+         WHEN p.status = 'churned'                                          THEN 0
+         WHEN p.last_inbound_at IS NULL                                     THEN 12
+         WHEN NOW() - p.last_inbound_at < INTERVAL '24 hours'               THEN 95
+         WHEN NOW() - p.last_inbound_at < INTERVAL '2 days'                 THEN 80
+         WHEN NOW() - p.last_inbound_at < INTERVAL '5 days'                 THEN 55
+         WHEN NOW() - p.last_inbound_at < INTERVAL '7 days'                 THEN 30
+         ELSE 10
+       END AS engagement_score
+     FROM patients p
+     WHERE p.clinic_id = $1
+     ORDER BY
+       CASE
+         WHEN p.status = 'churned'                                          THEN 0
+         WHEN p.last_inbound_at IS NULL                                     THEN 12
+         WHEN NOW() - p.last_inbound_at < INTERVAL '24 hours'               THEN 95
+         WHEN NOW() - p.last_inbound_at < INTERVAL '2 days'                 THEN 80
+         WHEN NOW() - p.last_inbound_at < INTERVAL '5 days'                 THEN 55
+         WHEN NOW() - p.last_inbound_at < INTERVAL '7 days'                 THEN 30
+         ELSE 10
+       END ASC,
+       p.last_inbound_at DESC NULLS LAST`,
     [user.clinicId]
   );
 
-  const active = patients.filter((p) => p.status === 'active').length;
-  const flagged = patients.filter((p) => p.status === 'flagged').length;
+  // Retention metrics
+  const [metrics] = await query<RetentionMetrics>(
+    `SELECT
+       COUNT(*)                                                                          AS total,
+       COUNT(*) FILTER (WHERE status IN ('active','flagged'))                           AS retained,
+       COUNT(*) FILTER (WHERE status = 'churned')                                       AS churned,
+       COUNT(*) FILTER (
+         WHERE status != 'churned'
+           AND (last_inbound_at IS NULL OR NOW() - last_inbound_at > INTERVAL '5 days')
+       )                                                                                AS at_risk,
+       COUNT(DISTINCT p2.id) FILTER (WHERE p2.id IS NOT NULL)                          AS recovered
+     FROM patients p
+     LEFT JOIN LATERAL (
+       SELECT p3.id FROM patients p3
+       WHERE p3.id = p.id
+         AND p3.status = 'active'
+         AND p3.last_inbound_at > NOW() - INTERVAL '14 days'
+         AND EXISTS (
+           SELECT 1 FROM trigger_firings tf
+           WHERE tf.patient_id = p3.id
+             AND tf.trigger_key IN ('no_response_48h','no_response_5d')
+             AND tf.fired_at < p3.last_inbound_at
+         )
+       LIMIT 1
+     ) p2 ON TRUE
+     WHERE p.clinic_id = $1`,
+    [user.clinicId]
+  );
+
+  const total = parseInt(metrics?.total ?? '0');
+  const retained = parseInt(metrics?.retained ?? '0');
+  const atRisk = parseInt(metrics?.at_risk ?? '0');
+  const recovered = parseInt(metrics?.recovered ?? '0');
+  const retentionRate = total > 0 ? Math.round((retained / total) * 100) : 0;
 
   return (
     <div className="shell">
       <Topbar clinicName={user.clinicName} email={user.email} />
 
+      {/* Retention KPIs */}
       <div className="stat-row">
         <div className="stat">
-          <div className="num">{patients.length}</div>
-          <div className="lbl">Enrolled</div>
+          <div className="num">{retentionRate}%</div>
+          <div className="lbl">Retention Rate</div>
         </div>
         <div className="stat">
-          <div className="num">{active}</div>
-          <div className="lbl">Active</div>
+          <div className="num">{total}</div>
+          <div className="lbl">Enrolled</div>
         </div>
-        <div className={`stat ${flagged > 0 ? 'flagged' : ''}`}>
-          <div className="num">{flagged}</div>
-          <div className="lbl">Flagged</div>
+        <div className={`stat ${atRisk > 0 ? 'flagged' : ''}`}>
+          <div className="num">{atRisk}</div>
+          <div className="lbl">At-Risk</div>
+        </div>
+        <div className={`stat ${recovered > 0 ? 'recovered' : ''}`}>
+          <div className="num">{recovered}</div>
+          <div className="lbl">Recovered</div>
         </div>
       </div>
 
@@ -81,14 +164,18 @@ export default async function HomePage() {
               <tr>
                 <th>Name</th>
                 <th>Phone</th>
-                <th>Phase</th>
-                <th>Last reply</th>
-                <th>Status</th>
+                <th>Clinical Stage</th>
+                <th>Engagement</th>
+                <th>Risk Level</th>
+                <th>Days Enrolled</th>
               </tr>
             </thead>
             <tbody>
               {patients.map((p) => {
-                const phase = findPhase(p.current_phase);
+                const score = Number(p.engagement_score);
+                const risk = riskLevel(score, p.status);
+                const stageName = CLINICAL_STAGES[p.current_phase] ?? findPhase(p.current_phase)?.name ?? '—';
+
                 return (
                   <tr key={p.id}>
                     <td className="name">
@@ -96,14 +183,28 @@ export default async function HomePage() {
                     </td>
                     <td className="mono">{maskPhone(p.phone)}</td>
                     <td>
-                      <span className="muted small">{p.current_phase}.</span> {phase?.name ?? '—'}
-                    </td>
-                    <td className="mono small muted">{relativeTime(p.last_inbound_at)}</td>
-                    <td>
-                      <span className={`pill ${p.status === 'flagged' ? 'flagged' : 'active'}`}>
-                        {p.status}
+                      <span className="stage-label">
+                        <span className="muted small" style={{ marginRight: 4 }}>Ph {p.current_phase}</span>
+                        {stageName}
                       </span>
                     </td>
+                    <td>
+                      <div className="engagement-cell">
+                        <div className="engagement-bar-wrap">
+                          <div
+                            className={`engagement-bar engagement-bar--${risk}`}
+                            style={{ width: `${score}%` }}
+                          />
+                        </div>
+                        <span className="engagement-score">{score}</span>
+                      </div>
+                    </td>
+                    <td>
+                      <span className={`pill risk-${risk}`}>
+                        {riskLabel(score, p.status)}
+                      </span>
+                    </td>
+                    <td className="mono small muted">{p.days_enrolled}d</td>
                   </tr>
                 );
               })}

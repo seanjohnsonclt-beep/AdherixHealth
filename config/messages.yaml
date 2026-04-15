@@ -12,7 +12,7 @@
 
 templates:
 
-  # ---------- PHASE 0: ONBOARDING ----------
+  # ---------- PHASE 0: INITIATION ----------
   - key: phase0.welcome
     phase: 0
     after: { minutes: 5 }
@@ -32,7 +32,7 @@ templates:
     body: |
       Morning. Did you drink the 16oz of water? Reply Y or N.
 
-  # ---------- PHASE 1: ACTIVATION ----------
+  # ---------- PHASE 1: DOSE STABILIZATION ----------
   - key: phase1.day1.morning
     phase: 1
     after: { hours: 2 }
@@ -61,7 +61,14 @@ templates:
     body: |
       One week in. On a 1-5 scale, how are you feeling? Just reply with a number.
 
-  # ---------- PHASE 2: MOMENTUM ----------
+  - key: phase1.day10.protein_streak
+    phase: 1
+    after: { days: 9 }
+    send_at_local: "09:00"
+    body: |
+      Almost through the first phase. Protein habit still going? Reply Y or N — honest answer only.
+
+  # ---------- PHASE 2: ADHERENCE BUILDING ----------
   - key: phase2.welcome
     phase: 2
     after: { minutes: 5 }
@@ -76,6 +83,156 @@ templates:
     body: |
       Quick one: protein at breakfast yesterday? Y or N.
 
+  - key: phase2.day14.momentum
+    phase: 2
+    after: { days: 14 }
+    send_at_local: "09:30"
+    body: |
+      Two weeks of this. That's real. What's one thing that's gotten easier? Reply with anything.
+
+  - key: phase2.day28.transition_prep
+    phase: 2
+    after: { days: 28 }
+    send_at_local: "10:00"
+    body: |
+      Wrapping up this phase. The habits are yours now — not the program's. Reply READY to keep going.
+
+  # ---------- PHASE 3: RISK WINDOW ----------
+  # This phase requires close behavioral monitoring. Engagement often drops here.
+  # Messages are designed to re-anchor identity and surface stalls before they become drop-off.
+
+  - key: phase3.welcome
+    phase: 3
+    after: { minutes: 5 }
+    body: |
+      You're in a phase where most people slip. We're going to pay closer attention. Still with it? Reply YES.
+
+  - key: phase3.day3.identity
+    phase: 3
+    after: { days: 3 }
+    send_at_local: "09:00"
+    body: |
+      Quick check-in: what's one habit from the last month you're actually keeping? Just name it.
+
+  - key: phase3.day7.engagement_pulse
+    phase: 3
+    after: { days: 7 }
+    send_at_local: "10:00"
+    body: |
+      Midpoint. On a 1-5 scale, how consistent have you been this week? No wrong answer — reply with a number.
+
+  - key: phase3.day10.friction_check
+    phase: 3
+    after: { days: 10 }
+    send_at_local: "18:00"
+    body: |
+      What's getting in the way right now? Reply with one word — or just "nothing" if you're good.
+
+  - key: phase3.day14.reanchor
+    phase: 3
+    after: { days: 14 }
+    send_at_local: "09:00"
+    body: |
+      You've been at this for weeks. What's the one thing you don't want to give up? Reply and I'll remember it.
+
+  - key: phase3.day18.pre_transition
+    phase: 3
+    after: { days: 18 }
+    send_at_local: "10:00"
+    body: |
+      Almost through this phase. The next one is about protecting what you've built. Still in? Reply YES.
+
+  # ---------- PHASE 4: TAPER MANAGEMENT ----------
+  # Medication may be tapering or stopping. Rebound risk is highest here.
+  # Messages are designed to detach progress from the medication and reinforce identity.
+
+  - key: phase4.welcome
+    phase: 4
+    after: { minutes: 5 }
+    body: |
+      This phase is about you, not the medication. The habits you have now are what protects the progress. Reply READY.
+
+  - key: phase4.day3.mindset
+    phase: 4
+    after: { days: 3 }
+    send_at_local: "08:30"
+    body: |
+      Reminder: the results you've gotten came from behavior, not just the prescription. Are you keeping that in mind? Y or N.
+
+  - key: phase4.day7.hunger_check
+    phase: 4
+    after: { days: 7 }
+    send_at_local: "10:00"
+    body: |
+      Check-in: has your appetite felt different this week? Reply MORE, SAME, or LESS.
+
+  - key: phase4.day10.protein_reset
+    phase: 4
+    after: { days: 10 }
+    send_at_local: "09:00"
+    body: |
+      Resetting the one rule: 30g protein at breakfast. This matters most right now. Reply DONE after tomorrow's breakfast.
+
+  - key: phase4.day14.identity_anchor
+    phase: 4
+    after: { days: 14 }
+    send_at_local: "09:30"
+    body: |
+      Halfway through. Name one thing about how you eat now that's different than before. Just one thing.
+
+  - key: phase4.day21.rebound_prevention
+    phase: 4
+    after: { days: 21 }
+    send_at_local: "10:00"
+    body: |
+      Some people feel like they can relax now. The ones who keep going don't wait to slip first. Still going? Reply YES.
+
+  - key: phase4.day28.pre_maintenance
+    phase: 4
+    after: { days: 28 }
+    send_at_local: "09:00"
+    body: |
+      You're almost in maintenance mode. We drop to weekly check-ins. You've earned that. Reply READY.
+
+  # ---------- PHASE 5: MAINTENANCE ----------
+  # Weekly low-touch. Goal: stay present without becoming noise.
+  # Alternate between habit confirmation and identity reinforcement.
+
+  - key: phase5.welcome
+    phase: 5
+    after: { minutes: 5 }
+    body: |
+      Weekly check-ins from here. One text per week, one reply. That's it. Reply OK to confirm.
+
+  - key: phase5.weekly_checkin
+    phase: 5
+    after: { days: 7 }
+    send_at_local: "10:00"
+    repeat_every_days: 7
+    body: |
+      Weekly check: protein still a habit? Reply Y or N.
+
+  - key: phase5.week4.milestone
+    phase: 5
+    after: { days: 28 }
+    send_at_local: "09:30"
+    body: |
+      One month in maintenance. That puts you in the top 20% of programs like this. Keep that standard. Reply OK.
+
+  - key: phase5.week8.identity
+    phase: 5
+    after: { days: 56 }
+    send_at_local: "10:00"
+    body: |
+      Two months. Quick one: what's the one thing you'll never go back on? Reply with it.
+
+  - key: phase5.week12.longevity
+    phase: 5
+    after: { days: 84 }
+    send_at_local: "09:30"
+    body: |
+      Three months of maintenance. Most people don't make it this far. You're not most people. Still going? Reply YES.
+
   # ---------- INTERVENTION MESSAGES (sent by triggers, not schedule) ----------
   - key: trigger.no_response_48h
     body: |
@@ -84,6 +241,10 @@ templates:
   - key: trigger.no_response_5d
     body: |
       It's been 5 days. No pressure, no judgement. Reply BACK when you're ready to pick this up again.
+
+  - key: trigger.engagement_drop
+    body: |
+      Noticed you've gone quiet. No judgement — but I want to make sure you haven't stopped. Reply YES if you're still in.
 
   - key: trigger.flagged_for_clinic
     # Internal — sent to clinic operator, not patient

@@ -55,10 +55,9 @@ export async function sendDueMessages() {
     } catch (err) {
       const errMsg = err instanceof Error ? err.message : String(err);
       console.error(`[sender] failed ${msg.id}:`, errMsg);
-      await query(`update messages set status = 'failed' where id = $1`, [msg.id]);
       await query(
-        `insert into events (patient_id, kind, payload) values ($1, 'send_failed', $2)`,
-        [msg.patient_id, JSON.stringify({ message_id: msg.id, error: errMsg })]
+        `update messages set status = 'failed', error = $1 where id = $2`,
+        [errMsg, msg.id]
       );
     }
   }

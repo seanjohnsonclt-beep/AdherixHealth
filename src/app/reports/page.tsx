@@ -7,11 +7,11 @@ import { FilterBar } from './_components/FilterBar';
 // ─── Phase metadata ────────────────────────────────────────────────────────────
 
 const PHASE_NAMES: Record<number, string> = {
-  0: 'Onboarding',
-  1: 'Activation',
-  2: 'Momentum',
-  3: 'Plateau',
-  4: 'Transition',
+  0: 'Initiation',
+  1: 'Dose Stabilization',
+  2: 'Adherence Building',
+  3: 'Risk Window',
+  4: 'Taper Management',
   5: 'Maintenance',
 };
 
@@ -437,6 +437,49 @@ export default async function ReportsPage({
   const overallReplyRate = totalSent > 0 ? Math.round((totalReceived / totalSent) * 100) : 0;
   const patientReplyRate = total > 0 ? Math.round((everReplied / total) * 100) : 0;
 
+  // Derived outcome metrics
+  const retentionRate = total > 0 ? Math.round(((active + flagged) / total) * 100) : 0;
+
+  // ── 1b. Recovered patients ────────────────────────────────────────────────────
+  const recoveredRow = await queryOne<{ recovered: string }>(
+    `SELECT COUNT(DISTINCT p.id)::text AS recovered
+     FROM patients p
+     WHERE p.clinic_id = $1
+       AND p.status = 'active'
+       AND p.last_inbound_at > NOW() - INTERVAL '14 days'
+       AND EXISTS (
+         SELECT 1 FROM trigger_firings tf
+         WHERE tf.patient_id = p.id
+           AND tf.trigger_key IN ('no_response_48h','no_response_5d')
+           AND tf.fired_at < p.last_inbound_at
+       )`,
+    [user.clinicId]
+  );
+  const recovered = parseInt(recoveredRow?.recovered ?? '0');
+
+  // ── 1c. Risk distribution ─────────────────────────────────────────────────────
+  const riskRow = await queryOne<{ high: string; medium: string; low_ok: string }>(
+    `SELECT
+       COUNT(*) FILTER (WHERE p.status != 'churned' AND (
+         p.last_inbound_at IS NULL OR NOW() - p.last_inbound_at >= INTERVAL '7 days'
+       ))::text AS high,
+       COUNT(*) FILTER (WHERE p.status != 'churned' AND
+         p.last_inbound_at IS NOT NULL AND
+         NOW() - p.last_inbound_at >= INTERVAL '5 days' AND
+         NOW() - p.last_inbound_at < INTERVAL '7 days'
+       )::text AS medium,
+       COUNT(*) FILTER (WHERE p.status != 'churned' AND
+         p.last_inbound_at IS NOT NULL AND
+         NOW() - p.last_inbound_at < INTERVAL '5 days'
+       )::text AS low_ok
+     FROM patients p
+     WHERE p.clinic_id = $1`,
+    [user.clinicId]
+  );
+  const riskHigh = parseInt(riskRow?.high ?? '0');
+  const riskMedium = parseInt(riskRow?.medium ?? '0');
+  const riskLowOk = parseInt(riskRow?.low_ok ?? '0');
+
   // ── 2. Phase distribution ────────────────────────────────────────────────────
   const phaseRows = await query<PhaseRow>(
     `SELECT
@@ -572,6 +615,66 @@ export default async function ReportsPage({
 
       {/* Filter bar */}
       <FilterBar current={filters} />
+
+      {/* ── Outcome metrics (investor / operator view) ── */}
+      <div style={{ background: 'white', border: '1px solid var(--line)', padding: '20px 24px', marginBottom: 24 }}>
+        <div className="label" style={{ marginBottom: 16 }}>Retention Outcomes</div>
+        <div style={{ display: 'flex', gap: 48, flexWrap: 'wrap' }}>
+          <div>
+            <div style={{ fontFamily: 'var(--serif)', fontSize: 44, lineHeight: 1, fontWeight: 500 }}>
+              {retentionRate}%
+            </div>
+            <div className="label" style={{ marginTop: 6 }}>Retention Rate</div>
+          </div>
+          <div>
+            <div style={{ fontFamily: 'var(--serif)', fontSize: 44, lineHeight: 1, fontWeight: 500, color: riskHigh > 0 ? 'var(--accent)' : 'var(--fg)' }}>
+              {riskHigh}
+            </div>
+            <div className="label" style={{ marginTop: 6 }}>High Risk</div>
+          </div>
+          <div>
+            <div style={{ fontFamily: 'var(--serif)', fontSize: 44, lineHeight: 1, fontWeight: 500, color: recovered > 0 ? 'var(--ok)' : 'var(--fg)' }}>
+              {recovered}
+            </div>
+            <div className="label" style={{ marginTop: 6 }}>Recovered</div>
+          </div>
+          <div>
+            <div style={{ fontFamily: 'var(--serif)', fontSize: 44, lineHeight: 1, fontWeight: 500 }}>
+              {avgDays}d
+            </div>
+            <div className="label" style={{ marginTop: 6 }}>Avg Program Duration</div>
+          </div>
+          <div>
+            <div style={{ fontFamily: 'var(--serif)', fontSize: 44, lineHeight: 1, fontWeight: 500 }}>
+              {patientReplyRate}%
+            </div>
+            <div className="label" style={{ marginTop: 6 }}>Reply Rate</div>
+          </div>
+        </div>
+        {/* Risk distribution bar */}
+        {total > 0 && (
+          <div style={{ marginTop: 20 }}>
+            <div className="label" style={{ marginBottom: 8 }}>Risk Distribution</div>
+            <div style={{ display: 'flex', height: 8, borderRadius: 4, overflow: 'hidden', gap: 2 }}>
+              <div style={{ flex: riskLowOk, background: '#22c55e', borderRadius: '4px 0 0 4px' }} title={`On Track: ${riskLowOk}`} />
+              <div style={{ flex: riskMedium, background: '#f59e0b' }} title={`At Risk: ${riskMedium}`} />
+              <div style={{ flex: riskHigh, background: '#ef4444', borderRadius: '0 4px 4px 0' }} title={`High Risk: ${riskHigh}`} />
+            </div>
+            <div style={{ display: 'flex', gap: 20, marginTop: 8 }}>
+              {[
+                { label: `On Track (${riskLowOk})`, color: '#22c55e' },
+                { label: `At Risk (${riskMedium})`, color: '#f59e0b' },
+                { label: `High Risk (${riskHigh})`, color: '#ef4444' },
+              ].map((item) => (
+                <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: 'var(--fg-muted)' }}>
+                  <div style={{ width: 10, height: 10, borderRadius: 2, background: item.color, flexShrink: 0 }} />
+                  {item.label}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
 
       {/* ── Summary cards ── */}
       <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 24 }}>
@@ -770,26 +873,4 @@ export default async function ReportsPage({
                       {fmtDate(p.enrolled_at)}
                     </td>
                     <td style={{ textAlign: 'right', fontFamily: 'var(--mono)', fontSize: 12 }}>
-                      {relTime(p.last_inbound_at)}
-                    </td>
-                    <td style={{ textAlign: 'right', fontFamily: 'var(--mono)' }}>{sent}</td>
-                    <td style={{ textAlign: 'right', fontFamily: 'var(--mono)' }}>{recv}</td>
-                    <td
-                      style={{
-                        textAlign: 'right',
-                        fontFamily: 'var(--mono)',
-                        color: rRate >= 60 ? 'var(--ok)' : rRate < 20 ? 'var(--accent)' : 'var(--fg)',
-                      }}
-                    >
-                      {sent > 0 ? `${rRate}%` : '—'}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        )}
-      </SectionBox>
-    </div>
-  );
-}
+                      {r

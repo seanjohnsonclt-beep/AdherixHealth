@@ -3,34 +3,42 @@
 # after which the engine auto-advances. Triggers can advance early or hold longer.
 #
 # Edit this file to change phase timing. No code change needed.
+#
+# Clinical stage names map to the patient journey as understood by clinicians:
+#   0 Initiation         → First contact, reply-gate, establish relationship
+#   1 Dose Stabilization → Active dose period; daily protein + hydration directives
+#   2 Adherence Building → Habits reinforced; cadence drops to every other day
+#   3 Risk Window        → Stagnation detection; behavioral divergence most likely here
+#   4 Taper Management   → Medication tapering or stopping; highest rebound risk
+#   5 Maintenance        → Indefinite weekly check-ins; prevent long-term drop-off
 
 phases:
   - id: 0
-    name: onboarding
+    name: Initiation
     duration_days: 2
-    description: Remove confusion. First contact within 1 hour of enrollment.
+    description: Remove confusion. First contact within 1 hour of enrollment. Reply-gated.
 
   - id: 1
-    name: activation
+    name: Dose Stabilization
     duration_days: 12
-    description: Establish structure. Daily directive on protein and hydration.
+    description: Establish structure during active dose period. Daily protein and hydration directives.
 
   - id: 2
-    name: momentum
+    name: Adherence Building
     duration_days: 30
-    description: Reinforce habits. Cadence drops to every other day.
+    description: Reinforce habits. Cadence drops to every other day. Behavior becomes automatic.
 
   - id: 3
-    name: plateau
+    name: Risk Window
     duration_days: 21
-    description: Detect stagnation. Triggered by weight or engagement signals, not just time.
+    description: Highest behavioral divergence risk. Triggered by engagement signals, not just time.
 
   - id: 4
-    name: transition
+    name: Taper Management
     duration_days: 30
-    description: Prevent rebound as medication tapers or stops.
+    description: Prevent rebound as medication tapers or stops. Most critical retention phase.
 
   - id: 5
-    name: maintenance
+    name: Maintenance
     duration_days: 9999
-    description: Sustain. Weekly low-touch check-ins indefinitely.
+    description: Sustain long-term. Weekly low-touch check-ins indefinitely.

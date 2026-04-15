@@ -148,6 +148,59 @@ h3 { font-size: 17px; line-height: 1.3; }
 .pill.flagged { color: var(--accent); border-color: var(--accent); background: var(--accent-bg); }
 .pill.active { color: var(--fg-muted); }
 
+/* Risk level badges */
+.pill.risk-high {
+  color: #b91c1c;
+  border-color: #fca5a5;
+  background: #fef2f2;
+  font-weight: 600;
+}
+.pill.risk-medium {
+  color: #92400e;
+  border-color: #fcd34d;
+  background: #fffbeb;
+}
+.pill.risk-low {
+  color: #14532d;
+  border-color: #86efac;
+  background: #f0fdf4;
+}
+
+/* Engagement score bar */
+.engagement-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.engagement-bar-wrap {
+  width: 64px;
+  height: 4px;
+  background: var(--line);
+  border-radius: 2px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.engagement-bar {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+.engagement-bar--low   { background: #22c55e; }
+.engagement-bar--medium { background: #f59e0b; }
+.engagement-bar--high  { background: #ef4444; }
+.engagement-score {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--fg-muted);
+  min-width: 22px;
+}
+
+/* Recovered stat (positive signal) */
+.stat.recovered .num { color: #14532d; }
+
+/* Stage label */
+.stage-label { font-size: 14px; }
+
 .timeline { border-left: 1px solid var(--line-strong); padding-left: 24px; margin-left: 8px; }
 .timeline-item { position: relative; padding-bottom: 24px; }
 .timeline-item::before {
