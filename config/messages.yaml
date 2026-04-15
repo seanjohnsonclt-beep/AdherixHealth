@@ -1,0 +1,92 @@
+# SMS templates. Deidentified per pragmatic HIPAA posture.
+# Rules:
+#   - No diagnosis, no medication name, no dosage
+#   - First name merge allowed via {first_name}
+#   - One action per message
+#   - <= 160 chars where possible (one SMS segment)
+#   - Reply expected: keep the ask binary (Y/N) or single-word
+#
+# Schedule offsets are relative to phase_started_at.
+# 'after' takes any of: minutes, hours, days
+# 'send_at_local' restricts to a time-of-day window (clinic local time).
+
+templates:
+
+  # ---------- PHASE 0: ONBOARDING ----------
+  - key: phase0.welcome
+    phase: 0
+    after: { minutes: 5 }
+    body: |
+      Hi {first_name}, this is your support line. One short text a day, one action at a time. Reply YES to start.
+
+  - key: phase0.confirmed
+    phase: 0
+    requires_reply_to: phase0.welcome
+    body: |
+      Locked in. Your only job tomorrow morning: drink 16oz of water before anything else. I'll text to confirm.
+
+  - key: phase0.day1_check
+    phase: 0
+    after: { days: 1 }
+    send_at_local: "09:00"
+    body: |
+      Morning. Did you drink the 16oz of water? Reply Y or N.
+
+  # ---------- PHASE 1: ACTIVATION ----------
+  - key: phase1.day1.morning
+    phase: 1
+    after: { hours: 2 }
+    send_at_local: "08:30"
+    body: |
+      Today's one thing: 30g of protein at breakfast. Eggs, Greek yogurt, or a shake. Reply DONE when you eat it.
+
+  - key: phase1.day1.evening
+    phase: 1
+    after: { days: 1 }
+    send_at_local: "19:00"
+    body: |
+      Quick check: did you hit 30g protein at breakfast today? Y or N.
+
+  - key: phase1.day3.hydration
+    phase: 1
+    after: { days: 2 }
+    send_at_local: "09:00"
+    body: |
+      New rule starting today: water bottle with you all day. Aim for 64oz. Reply READY.
+
+  - key: phase1.day7.checkin
+    phase: 1
+    after: { days: 6 }
+    send_at_local: "10:00"
+    body: |
+      One week in. On a 1-5 scale, how are you feeling? Just reply with a number.
+
+  # ---------- PHASE 2: MOMENTUM ----------
+  - key: phase2.welcome
+    phase: 2
+    after: { minutes: 5 }
+    body: |
+      You've built the base. Now we drop to every other day. Same rules: protein first, water always.
+
+  - key: phase2.checkin
+    phase: 2
+    after: { days: 2 }
+    send_at_local: "10:00"
+    repeat_every_days: 2
+    body: |
+      Quick one: protein at breakfast yesterday? Y or N.
+
+  # ---------- INTERVENTION MESSAGES (sent by triggers, not schedule) ----------
+  - key: trigger.no_response_48h
+    body: |
+      Haven't heard from you in 2 days. Everything ok? Reply with anything — even one word.
+
+  - key: trigger.no_response_5d
+    body: |
+      It's been 5 days. No pressure, no judgement. Reply BACK when you're ready to pick this up again.
+
+  - key: trigger.flagged_for_clinic
+    # Internal — sent to clinic operator, not patient
+    internal: true
+    body: |
+      Patient flagged: 5+ days no response. Consider direct outreach.

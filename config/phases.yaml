@@ -1,0 +1,36 @@
+# Adherix phase definitions.
+# Patients move through these in order. Each phase has a default duration
+# after which the engine auto-advances. Triggers can advance early or hold longer.
+#
+# Edit this file to change phase timing. No code change needed.
+
+phases:
+  - id: 0
+    name: onboarding
+    duration_days: 2
+    description: Remove confusion. First contact within 1 hour of enrollment.
+
+  - id: 1
+    name: activation
+    duration_days: 12
+    description: Establish structure. Daily directive on protein and hydration.
+
+  - id: 2
+    name: momentum
+    duration_days: 30
+    description: Reinforce habits. Cadence drops to every other day.
+
+  - id: 3
+    name: plateau
+    duration_days: 21
+    description: Detect stagnation. Triggered by weight or engagement signals, not just time.
+
+  - id: 4
+    name: transition
+    duration_days: 30
+    description: Prevent rebound as medication tapers or stops.
+
+  - id: 5
+    name: maintenance
+    duration_days: 9999
+    description: Sustain. Weekly low-touch check-ins indefinitely.
