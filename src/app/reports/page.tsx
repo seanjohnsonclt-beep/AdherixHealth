@@ -873,4 +873,25 @@ export default async function ReportsPage({
                       {fmtDate(p.enrolled_at)}
                     </td>
                     <td style={{ textAlign: 'right', fontFamily: 'var(--mono)', fontSize: 12 }}>
-                      {r
+                      {relTime(p.last_inbound_at)}
+                    </td>
+                    <td style={{ textAlign: 'right', fontFamily: 'var(--mono)', fontSize: 12 }}>
+                      {sent}
+                    </td>
+                    <td style={{ textAlign: 'right', fontFamily: 'var(--mono)', fontSize: 12 }}>
+                      {recv}
+                    </td>
+                    <td style={{ textAlign: 'right', fontFamily: 'var(--mono)', fontSize: 12,
+                      color: rRate >= 60 ? 'var(--ok)' : rRate < 20 ? 'var(--accent)' : 'var(--fg)' }}>
+                      {rRate}%
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        )}
+      </SectionBox>
+    </div>
+  );
+}
