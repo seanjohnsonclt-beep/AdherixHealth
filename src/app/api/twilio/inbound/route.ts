@@ -1,66 +1,85 @@
 // Twilio POSTs here when a patient texts our number.
-// We log the message, update last_inbound_at, and reply with TwiML (empty = no reply).
-//
-// Production: validate the X-Twilio-Signature header. Skipped in MVP — add before pilot.
+// Validates the X-Twilio-Signature header, logs the message,
+// updates last_inbound_at, and returns empty TwiML (engine handles all replies).
 
 import { NextRequest, NextResponse } from 'next/server';
+import twilio from 'twilio';
 import { query, queryOne } from '@/lib/db';
 import { handleReplyGate } from '@/engine/replyGate';
 
+function twiml(body = '') {
+  return new NextResponse(`<Response>${body}</Response>`, {
+    status: 200,
+    headers: { 'Content-Type': 'text/xml' },
+  });
+}
+
 export async function POST(req: NextRequest) {
   const form = await req.formData();
-  const from = String(form.get('From') || '');
-  const body = String(form.get('Body') || '');
-  const sid = String(form.get('MessageSid') || '');
+  const params: Record<string, string> = {};
+  form.forEach((val, key) => { params[key] = String(val); });
 
-  if (!from || !body) {
-    return new NextResponse('<Response/>', {
-      status: 200,
-      headers: { 'Content-Type': 'text/xml' },
-    });
+  const authToken = process.env.TWILIO_AUTH_TOKEN ?? '';
+  if (authToken) {
+    const signature = req.headers.get('x-twilio-signature') ?? '';
+    // Use the public APP_URL so it matches what Twilio signed
+    const url = `${process.env.APP_URL}/api/twilio/inbound`;
+    if (!twilio.validateRequest(authToken, signature, url, params)) {
+      console.warn('[inbound] invalid Twilio signature — rejected');
+      return new NextResponse('Forbidden', { status: 403 });
+    }
   }
 
-  const patient = await queryOne<{ id: string }>(
-    `select id from patients where phone = $1 limit 1`,
+  const from = params['From'] ?? '';
+  const body = params['Body'] ?? '';
+  const sid  = params['MessageSid'] ?? '';
+
+  if (!from || !body) return twiml();
+
+  const patient = await queryOne<{ id: string; status: string }>(
+    `select id, status from patients where phone = $1 limit 1`,
     [from]
   );
 
   if (!patient) {
-    console.warn(`[inbound] unknown sender: ${from.slice(-4)}`);
-    return new NextResponse('<Response/>', {
-      status: 200,
-      headers: { 'Content-Type': 'text/xml' },
-    });
+    console.warn(`[inbound] unknown sender: ...${from.slice(-4)}`);
+    return twiml();
   }
 
+  // Log the inbound message
   await query(
     `insert into messages (patient_id, direction, body, twilio_sid, status)
      values ($1, 'inbound', $2, $3, 'received')`,
     [patient.id, body, sid]
   );
 
+  // Update last seen
   await query(
     `update patients set last_inbound_at = now() where id = $1`,
     [patient.id]
   );
 
+  // Log event for trigger deduplication + analytics
   await query(
     `insert into events (patient_id, kind, payload) values ($1, 'inbound_received', $2)`,
-    [patient.id, JSON.stringify({ length: body.length, first_word: body.trim().split(/\s+/)[0]?.toUpperCase() })]
+    [patient.id, JSON.stringify({
+      length: body.length,
+      first_word: body.trim().split(/\s+/)[0]?.toUpperCase(),
+    })]
   );
 
-  // If patient was flagged for no response, un-flag them on any reply.
-  await query(
-    `update patients set status = 'active' where id = $1 and status = 'flagged'`,
-    [patient.id]
-  );
+  // Auto-unflag: any reply reactivates a flagged patient
+  if (patient.status === 'flagged') {
+    await query(
+      `update patients set status = 'active' where id = $1`,
+      [patient.id]
+    );
+    console.log(`[inbound] patient ${patient.id} unflagged on reply`);
+  }
 
-  // Reply gate: queue any templates waiting on a reply to the last outbound.
+  // Reply gate: queue any templates waiting on this reply
   await handleReplyGate(patient.id, body);
 
-  // Empty TwiML = no auto-reply. Engine handles all responses.
-  return new NextResponse('<Response/>', {
-    status: 200,
-    headers: { 'Content-Type': 'text/xml' },
-  });
+  // Empty TwiML = no auto-reply. Engine handles all outbound messages.
+  return twiml();
 }
