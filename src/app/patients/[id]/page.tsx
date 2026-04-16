@@ -2,7 +2,7 @@ import { requireUser } from '@/lib/auth';
 import { query, queryOne } from '@/lib/db';
 import { findPhase } from '@/lib/config';
 import { Topbar } from '@/app/_components/Topbar';
-import { advancePhaseAction, toggleFlagAction, dischargePatientAction, removePatientAction, updatePatientAction } from '@/app/patients/actions';
+import { PatientActions } from './_components/PatientActions';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 
@@ -86,33 +86,15 @@ export default async function PatientPage({ params }: { params: { id: string } }
           <span className={`pill ${isFlagged ? 'flagged' : patient.status === 'churned' ? 'flagged' : 'active'}`}>
             {patient.status}
           </span>
-          <div style={{ marginTop: 12 }} className="actions">
-            {!isLastPhase && patient.status !== 'churned' && (
-              <form action={advancePhaseAction}>
-                <input type="hidden" name="patient_id" value={patient.id} />
-                <button type="submit" className="btn ghost">Advance phase</button>
-              </form>
-            )}
-            {patient.status !== 'churned' && (
-              <form action={toggleFlagAction}>
-                <input type="hidden" name="patient_id" value={patient.id} />
-                <button type="submit" className={`btn ${isFlagged ? '' : 'danger'}`}>
-                  {isFlagged ? 'Un-flag' : 'Flag'}
-                </button>
-              </form>
-            )}
-            {patient.status !== 'churned' && (
-              <form action={dischargePatientAction}>
-                <input type="hidden" name="patient_id" value={patient.id} />
-                <button type="submit" className="btn ghost">Discharge</button>
-              </form>
-            )}
-            <form action={removePatientAction}>
-              <input type="hidden" name="patient_id" value={patient.id} />
-              <button type="submit" className="btn ghost" style={{ color: 'var(--accent)', borderColor: 'var(--accent)' }}>
-                Remove
-              </button>
-            </form>
+          <div style={{ marginTop: 12 }}>
+            <PatientActions
+              patientId={patient.id}
+              firstName={patient.first_name}
+              phone={patient.phone}
+              status={patient.status}
+              currentPhase={patient.current_phase}
+              isLastPhase={isLastPhase}
+            />
           </div>
         </div>
       </div>
@@ -138,54 +120,6 @@ export default async function PatientPage({ params }: { params: { id: string } }
         </div>
       </div>
 
-      {/* Edit patient details */}
-      <details className="section" style={{ marginBottom: 24 }}>
-        <summary style={{
-          cursor: 'pointer',
-          fontSize: 13,
-          color: 'var(--fg-muted)',
-          listStyle: 'none',
-          display: 'flex',
-          alignItems: 'center',
-          gap: 6,
-          userSelect: 'none',
-        }}>
-          <span style={{ fontSize: 11 }}>▸</span> Edit patient details
-        </summary>
-        <form action={updatePatientAction} style={{
-          marginTop: 16,
-          display: 'flex',
-          gap: 12,
-          alignItems: 'flex-end',
-          flexWrap: 'wrap',
-          padding: '20px',
-          background: 'white',
-          border: '1px solid var(--line)',
-        }}>
-          <input type="hidden" name="patient_id" value={patient.id} />
-          <div style={{ flex: 1, minWidth: 160 }}>
-            <label className="label">First name</label>
-            <input
-              className="input"
-              name="first_name"
-              defaultValue={patient.first_name ?? ''}
-              placeholder="First name"
-              style={{ marginTop: 4 }}
-            />
-          </div>
-          <div style={{ flex: 1, minWidth: 180 }}>
-            <label className="label">Phone (E.164 or 10-digit US)</label>
-            <input
-              className="input"
-              name="phone"
-              defaultValue={patient.phone}
-              placeholder="+15551234567"
-              style={{ marginTop: 4 }}
-            />
-          </div>
-          <button type="submit" className="btn" style={{ flexShrink: 0 }}>Save changes</button>
-        </form>
-      </details>
 
       <div className="section">
         <div className="section-head">

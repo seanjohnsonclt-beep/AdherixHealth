@@ -150,7 +150,7 @@ export default async function HomePage() {
       <div className="section">
         <div className="section-head">
           <h2>Patients</h2>
-          <Link href="/patients/new" className="btn">Enroll patient</Link>
+          <Link href="/patients/new" className="btn" title="Add a new patient and start their behavioral sequence">Enroll patient</Link>
         </div>
 
         {patients.length === 0 ? (

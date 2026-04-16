@@ -13,8 +13,8 @@ export function Topbar({ clinicName, email }: Props) {
           Adherix<sup>℞</sup>
         </a>
         <nav style={{ display: 'flex', gap: 20 }}>
-          <a href="/" style={{ fontSize: 14, color: 'var(--fg-muted)', border: 'none' }}>Patients</a>
-          <a href="/reports" style={{ fontSize: 14, color: 'var(--fg-muted)', border: 'none' }}>Reports</a>
+          <a href="/" style={{ fontSize: 14, color: 'var(--fg-muted)', border: 'none' }} title="View and manage all enrolled patients">Patients</a>
+          <a href="/reports" style={{ fontSize: 14, color: 'var(--fg-muted)', border: 'none' }} title="Retention outcomes, engagement analytics, and message performance">Reports</a>
         </nav>
       </div>
       <div className="meta">
