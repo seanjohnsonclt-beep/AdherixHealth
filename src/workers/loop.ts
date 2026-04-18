@@ -1,7 +1,8 @@
 // Local development cron loop. In production, replace with Vercel Cron
 // hitting an /api/cron/tick route every 1 minute.
 
-import 'dotenv/config';
+import { config } from 'dotenv';
+config({ path: '.env.local' });
 import { tick } from './tick';
 
 const intervalSec = Number(process.env.TICK_INTERVAL_SECONDS || 60);

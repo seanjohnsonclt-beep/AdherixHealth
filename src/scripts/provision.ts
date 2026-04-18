@@ -10,7 +10,8 @@
 //
 // Requires SUPABASE_SERVICE_ROLE_KEY in env.
 
-import 'dotenv/config';
+import { config } from 'dotenv';
+config({ path: '.env.local' });
 import { createClient } from '@supabase/supabase-js';
 import { query, queryOne } from '@/lib/db';
 
