@@ -6,6 +6,10 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  // Ensure YAML config files are bundled with serverless functions
+  outputFileTracingIncludes: {
+    '**': ['./config/**'],
+  },
 };
 
 module.exports = nextConfig;

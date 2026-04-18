@@ -45,6 +45,7 @@ export async function schedulePhaseMessages(patientId: string, phaseId: number) 
   if (!patient) throw new Error(`Patient not found: ${patientId}`);
 
   const tpls = templatesForPhase(phaseId).filter((t) => !t.internal && !t.requires_reply_to);
+  console.log(`[scheduler] phase ${phaseId} → ${tpls.length} templates to schedule for patient ${patientId}`);
   const base = new Date(patient.phase_started_at);
 
   for (const t of tpls) {
@@ -60,6 +61,7 @@ export async function schedulePhaseMessages(patientId: string, phaseId: number) 
     );
   }
 
+  console.log(`[scheduler] scheduled ${tpls.length} messages for patient ${patientId} phase ${phaseId}`);
   await query(
     `insert into events (patient_id, kind, payload) values ($1, 'phase_messages_scheduled', $2)`,
     [patientId, JSON.stringify({ phase: phaseId, count: tpls.length })]
