@@ -14,6 +14,7 @@ type PatientRow = {
   last_inbound_at: Date | null;
   days_enrolled: number;
   engagement_score: number;
+  failed_count: number;
 };
 
 type RetentionMetrics = {
@@ -63,6 +64,7 @@ export default async function HomePage() {
        p.id, p.first_name, p.phone, p.current_phase, p.status,
        p.enrolled_at, p.last_inbound_at,
        ROUND(EXTRACT(EPOCH FROM (NOW() - p.enrolled_at)) / 86400)::int AS days_enrolled,
+       (SELECT COUNT(*) FROM messages m WHERE m.patient_id = p.id AND m.status = 'failed')::int AS failed_count,
        CASE
          WHEN p.status = 'churned'                                          THEN 0
          WHEN p.last_inbound_at IS NULL                                     THEN 12
@@ -180,6 +182,11 @@ export default async function HomePage() {
                   <tr key={p.id}>
                     <td className="name">
                       <Link href={`/patients/${p.id}`}>{p.first_name || '—'}</Link>
+                      {p.failed_count > 0 && (
+                        <span className="fail-badge" title={`${p.failed_count} failed delivery`}>
+                          {p.failed_count} failed
+                        </span>
+                      )}
                     </td>
                     <td className="mono">{maskPhone(p.phone)}</td>
                     <td>

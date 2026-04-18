@@ -25,6 +25,7 @@ type Message = {
   scheduled_for: Date | null;
   sent_at: Date | null;
   status: string;
+  error: string | null;
   created_at: Date;
 };
 
@@ -56,12 +57,14 @@ export default async function PatientPage({ params }: { params: { id: string } }
   if (!patient) redirect('/');
 
   const messages = await query<Message>(
-    `select id, direction, template_key, body, scheduled_for, sent_at, status, created_at
+    `select id, direction, template_key, body, scheduled_for, sent_at, status, error, created_at
      from messages where patient_id = $1
      order by coalesce(sent_at, scheduled_for, created_at) desc
      limit 100`,
     [patient.id]
   );
+
+  const failedCount = messages.filter(m => m.status === 'failed').length;
 
   const phase = findPhase(patient.current_phase);
   const isFlagged = patient.status === 'flagged';
@@ -127,22 +130,38 @@ export default async function PatientPage({ params }: { params: { id: string } }
           <span className="small faint mono">{messages.length} messages</span>
         </div>
 
+        {failedCount > 0 && (
+          <div className="failure-banner">
+            <span className="failure-banner__icon">⚠</span>
+            <span>
+              <strong>{failedCount} message{failedCount > 1 ? 's' : ''} failed to deliver.</strong>
+              {' '}Check the timeline below for details. This patient may not have received scheduled texts.
+            </span>
+          </div>
+        )}
+
         {messages.length === 0 ? (
           <div className="empty"><p>No messages yet.</p></div>
         ) : (
           <div className="timeline">
-            {messages.map((m) => (
-              <div key={m.id} className={`timeline-item ${m.direction}`}>
-                <div className="ts">
-                  {m.direction === 'outbound' ? '→' : '←'}{' '}
-                  {fmtTime(m.sent_at || m.scheduled_for || m.created_at)}
+            {messages.map((m) => {
+              const isFailed = m.status === 'failed';
+              return (
+                <div key={m.id} className={`timeline-item ${m.direction}${isFailed ? ' failed' : ''}`}>
+                  <div className="ts">
+                    {m.direction === 'outbound' ? '→' : '←'}{' '}
+                    {fmtTime(m.sent_at || m.scheduled_for || m.created_at)}
+                  </div>
+                  <div className="body">{m.body}</div>
+                  <div className={`meta${isFailed ? ' meta--error' : ''}`}>
+                    {m.template_key ? `${m.template_key} · ` : ''}{m.status}
+                    {isFailed && m.error && (
+                      <span className="error-detail"> — {m.error}</span>
+                    )}
+                  </div>
                 </div>
-                <div className="body">{m.body}</div>
-                <div className="meta">
-                  {m.template_key ? `${m.template_key} · ` : ''}{m.status}
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>
