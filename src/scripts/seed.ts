@@ -6,7 +6,8 @@
 //
 // Then run `npm run worker:tick` to attempt sending (will hit Twilio if env is set).
 
-import 'dotenv/config';
+import { config } from 'dotenv';
+config({ path: '.env.local' });
 import { query, queryOne } from '@/lib/db';
 import { enrollPatient } from '@/engine/enroll';
 

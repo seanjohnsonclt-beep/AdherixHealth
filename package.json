@@ -13,6 +13,7 @@
     "worker:loop": "tsx src/workers/loop.ts"
   },
   "dependencies": {
+    "dotenv": "^16.4.0",
     "next": "^14.2.0",
     "react": "^18.3.0",
     "react-dom": "^18.3.0",
