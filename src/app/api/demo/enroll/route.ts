@@ -91,6 +91,13 @@ export async function POST(req: NextRequest) {
       firstName: firstName ?? undefined,
     });
 
+    // Fast-forward all pending messages to now so the welcome fires on the very next cron tick
+    await query(
+      `update messages set scheduled_for = now() where patient_id = $1 and status = 'pending'`,
+      [patientId]
+    );
+    console.log(`[demo/enroll] enrolled ${patientId}, messages fast-forwarded to now`);
+
     return NextResponse.json({ success: true, patientId, alreadyEnrolled: false });
   } catch (err) {
     const msg = err instanceof Error ? err.message : 'Server error';
