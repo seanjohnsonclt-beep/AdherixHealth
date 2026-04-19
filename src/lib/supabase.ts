@@ -12,9 +12,14 @@ export function supabaseServer() {
         getAll: () => cookieStore.getAll(),
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         setAll: (toSet: { name: string; value: string; options?: any }[]) => {
-          toSet.forEach(({ name, value, options }) => {
-            cookieStore.set(name, value, options);
-          });
+          try {
+            toSet.forEach(({ name, value, options }) => {
+              cookieStore.set(name, value, options);
+            });
+          } catch {
+            // Called from a Server Component. Safe to ignore when
+            // session refresh happens in middleware or Route Handlers.
+          }
         },
       },
     }
