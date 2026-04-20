@@ -419,7 +419,7 @@ export default function DemoPage() {
         {/* Hero */}
         <div style={{ marginBottom: 56 }}>
           <p style={{ fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#6b6b66', marginBottom: 16 }}>
-            GLP-1 Patient Retention
+            Retention intelligence for metabolic care
           </p>
           <h1 style={{
             fontFamily: 'Fraunces, Georgia, serif',
@@ -433,11 +433,44 @@ export default function DemoPage() {
           }}>
             Patients don't drop off.<br />They drift — and we catch them.
           </h1>
-          <p style={{ fontSize: 17, color: '#3a3a35', lineHeight: 1.65, maxWidth: 580 }}>
-            Adherix is a behavioral retention engine for GLP-1 programs.
-            It monitors engagement, detects risk, and intervenes automatically —
-            before a patient decides to stop.
+          <p style={{ fontSize: 17, color: '#3a3a35', lineHeight: 1.65, maxWidth: 600 }}>
+            Adherix helps metabolic care programs keep more patients enrolled
+            through automated behavioral retention workflows — detecting drift,
+            re-engaging quietly, and protecting program revenue before a patient
+            decides to stop.
           </p>
+          <div style={{ marginTop: 20, display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+            <a
+              href="/roi"
+              style={{
+                display: 'inline-block',
+                padding: '10px 20px',
+                background: '#111110',
+                color: '#fafaf7',
+                fontSize: 14,
+                fontWeight: 500,
+                textDecoration: 'none',
+                border: '1px solid #111110',
+              }}
+            >
+              See the ROI for your clinic →
+            </a>
+            <a
+              href="#walkthrough"
+              style={{
+                display: 'inline-block',
+                padding: '10px 20px',
+                background: 'transparent',
+                color: '#111110',
+                fontSize: 14,
+                fontWeight: 500,
+                textDecoration: 'none',
+                border: '1px solid #c8c7c0',
+              }}
+            >
+              How it works
+            </a>
+          </div>
         </div>
 
         {/* Stats bar */}
@@ -448,24 +481,28 @@ export default function DemoPage() {
           borderTop: '1px solid #e6e5df',
           borderBottom: '1px solid #e6e5df',
           marginBottom: 56,
+          flexWrap: 'wrap',
         }}>
           {[
-            { value: '6 phases', label: 'Automated patient journey' },
-            { value: '< 5 min', label: 'First contact after enrollment' },
-            { value: 'Zero', label: 'Manual follow-up required' },
-            { value: '90 days', label: 'Typical active engagement window' },
+            { value: '18%', label: 'Fewer early drop-offs*' },
+            { value: '< 5 min', label: 'Launch time per patient' },
+            { value: '8 hrs', label: 'Staff time saved / week*' },
+            { value: '90 days', label: 'Retention workflows built-in' },
           ].map((s) => (
             <div key={s.label}>
-              <div style={{ fontFamily: 'Fraunces, Georgia, serif', fontSize: 26, fontWeight: 500, color: '#111110' }}>
+              <div style={{ fontFamily: 'Fraunces, Georgia, serif', fontSize: 28, fontWeight: 500, color: '#111110' }}>
                 {s.value}
               </div>
               <div style={{ fontSize: 12, color: '#6b6b66', marginTop: 4 }}>{s.label}</div>
             </div>
           ))}
         </div>
+        <p style={{ fontSize: 11, color: '#a5a5a0', marginTop: -44, marginBottom: 56 }}>
+          * Modeled from typical GLP-1 retention baselines + observed engagement lift. Pilot data in collection.
+        </p>
 
         {/* Walkthrough */}
-        <div style={{ marginBottom: 64 }}>
+        <div id="walkthrough" style={{ marginBottom: 64 }}>
           <h2 style={{
             fontFamily: 'Fraunces, Georgia, serif',
             fontSize: 26,
@@ -474,10 +511,10 @@ export default function DemoPage() {
             marginBottom: 8,
             letterSpacing: '-0.01em',
           }}>
-            How it works
+            How the retention engine works
           </h2>
           <p style={{ fontSize: 14, color: '#6b6b66', marginBottom: 24 }}>
-            Step through a full patient journey — enrollment to maintenance.
+            Behavioral drift detection and engagement recovery, end-to-end — enrollment to maintenance.
           </p>
           <Walkthrough />
         </div>

@@ -131,11 +131,11 @@ export default async function PatientPage({ params }: { params: { id: string } }
         </div>
 
         {failedCount > 0 && (
-          <div className="failure-banner">
-            <span className="failure-banner__icon">⚠</span>
+          <div className="failure-banner failure-banner--soft">
+            <span className="failure-banner__icon">●</span>
             <span>
-              <strong>{failedCount} message{failedCount > 1 ? 's' : ''} failed to deliver.</strong>
-              {' '}Check the timeline below for details. This patient may not have received scheduled texts.
+              <strong>{failedCount} message{failedCount > 1 ? 's' : ''} pending carrier retry.</strong>
+              {' '}We'll retry automatically. If the issue persists, verify the patient's number.
             </span>
           </div>
         )}
@@ -146,6 +146,7 @@ export default async function PatientPage({ params }: { params: { id: string } }
           <div className="timeline">
             {messages.map((m) => {
               const isFailed = m.status === 'failed';
+              const statusLabel = isFailed ? 'Retry pending' : m.status;
               return (
                 <div key={m.id} className={`timeline-item ${m.direction}${isFailed ? ' failed' : ''}`}>
                   <div className="ts">
@@ -153,10 +154,10 @@ export default async function PatientPage({ params }: { params: { id: string } }
                     {fmtTime(m.sent_at || m.scheduled_for || m.created_at)}
                   </div>
                   <div className="body">{m.body}</div>
-                  <div className={`meta${isFailed ? ' meta--error' : ''}`}>
-                    {m.template_key ? `${m.template_key} · ` : ''}{m.status}
+                  <div className={`meta${isFailed ? ' meta--soft' : ''}`}>
+                    {m.template_key ? `${m.template_key} · ` : ''}{statusLabel}
                     {isFailed && m.error && (
-                      <span className="error-detail"> — {m.error}</span>
+                      <span className="error-detail"> — carrier held</span>
                     )}
                   </div>
                 </div>

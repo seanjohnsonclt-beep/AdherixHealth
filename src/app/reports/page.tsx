@@ -3,6 +3,7 @@ import { requireUser } from '@/lib/auth';
 import { query, queryOne } from '@/lib/db';
 import { Topbar } from '@/app/_components/Topbar';
 import { FilterBar } from './_components/FilterBar';
+import { getClinicMetrics, fmtMoney } from '@/lib/metrics';
 
 // ─── Phase metadata ────────────────────────────────────────────────────────────
 
@@ -248,6 +249,32 @@ function ChartLegend({ items }: { items: { label: string; color: string }[] }) {
   );
 }
 
+function BoardMetric({
+  label,
+  value,
+  sub,
+  tone,
+}: {
+  label: string;
+  value: string | number;
+  sub?: string;
+  tone?: 'good' | 'warn' | 'accent';
+}) {
+  const color =
+    tone === 'good'   ? '#14532d' :
+    tone === 'warn'   ? '#b45309' :
+    tone === 'accent' ? '#111110' : 'var(--fg)';
+  return (
+    <div>
+      <div style={{ fontFamily: 'var(--serif)', fontSize: 36, lineHeight: 1, fontWeight: 500, color, letterSpacing: '-0.01em' }}>
+        {value}
+      </div>
+      <div className="label" style={{ marginTop: 8 }}>{label}</div>
+      {sub && <div style={{ fontSize: 11, color: 'var(--fg-faint)', marginTop: 4 }}>{sub}</div>}
+    </div>
+  );
+}
+
 function StatCard({
   label,
   value,
@@ -388,6 +415,7 @@ export default async function ReportsPage({
   searchParams: Record<string, string>;
 }) {
   const user = await requireUser();
+  const metrics = await getClinicMetrics(user.clinicId);
 
   const filters: Filters = {
     phase: searchParams.phase ?? '',
@@ -560,6 +588,77 @@ export default async function ReportsPage({
     [user.clinicId]
   );
 
+  // ── 5b. Churn risk by phase ──────────────────────────────────────────────────
+  const churnByPhase = await query<{ current_phase: number; at_risk: string; total: string }>(
+    `select
+       p.current_phase,
+       count(*) filter (
+         where p.status != 'churned'
+           and (p.last_inbound_at is null or now() - p.last_inbound_at >= interval '5 days')
+       )::text as at_risk,
+       count(*)::text as total
+     from patients p
+     where p.clinic_id = $1
+     group by p.current_phase
+     order by p.current_phase`,
+    [user.clinicId]
+  );
+
+  // ── 5c. Retention trend (last 12 weeks) ──────────────────────────────────────
+  const retentionTrend = await query<{ week: string; enrolled: string; retained: string }>(
+    `with weeks as (
+       select generate_series(
+         date_trunc('week', now() - interval '11 weeks'),
+         date_trunc('week', now()),
+         interval '1 week'
+       )::date as wk
+     )
+     select
+       to_char(weeks.wk, 'MM/DD') as week,
+       count(p.id) filter (where p.enrolled_at <= weeks.wk + interval '1 week')::text as enrolled,
+       count(p.id) filter (
+         where p.enrolled_at <= weeks.wk + interval '1 week'
+           and (p.status != 'churned' or (p.status = 'churned' and p.enrolled_at > weeks.wk))
+       )::text as retained
+     from weeks
+     left join patients p on p.clinic_id = $1
+     group by weeks.wk
+     order by weeks.wk`,
+    [user.clinicId]
+  );
+
+  // ── 5d. Recovery success rate over time ──────────────────────────────────────
+  const recoverySuccess = await query<{ week: string; fired: string; recovered: string }>(
+    `with weeks as (
+       select generate_series(
+         date_trunc('week', now() - interval '11 weeks'),
+         date_trunc('week', now()),
+         interval '1 week'
+       )::date as wk
+     )
+     select
+       to_char(weeks.wk, 'MM/DD') as week,
+       count(tf.id)::text as fired,
+       count(tf.id) filter (
+         where exists (
+           select 1 from messages m
+           where m.patient_id = tf.patient_id
+             and m.direction = 'inbound'
+             and m.created_at > tf.fired_at
+             and m.created_at < tf.fired_at + interval '7 days'
+         )
+       )::text as recovered
+     from weeks
+     left join trigger_firings tf
+       on date_trunc('week', tf.fired_at) = weeks.wk
+       and tf.trigger_key in ('no_response_48h','no_response_5d')
+     left join patients p on p.id = tf.patient_id and p.clinic_id = $1
+     where tf.id is null or p.clinic_id = $1
+     group by weeks.wk
+     order by weeks.wk`,
+    [user.clinicId]
+  );
+
   // ── 6. Filtered patient list ─────────────────────────────────────────────────
   const patients = await query<PatientRow>(
     `SELECT
@@ -590,6 +689,25 @@ export default async function ReportsPage({
   const outboundValues = msgRows.map((r) => parseInt(r.outbound));
   const inboundValues = msgRows.map((r) => parseInt(r.inbound));
 
+  const trendLabels = retentionTrend.map((r) => r.week);
+  const retentionPctValues = retentionTrend.map((r) => {
+    const e = parseInt(r.enrolled);
+    const rr = parseInt(r.retained);
+    return e > 0 ? Math.round((rr / e) * 100) : 100;
+  });
+
+  const recoveryLabels = recoverySuccess.map((r) => r.week);
+  const recoveryRateValues = recoverySuccess.map((r) => {
+    const fired = parseInt(r.fired);
+    const rec = parseInt(r.recovered);
+    return fired > 0 ? Math.round((rec / fired) * 100) : 0;
+  });
+
+  const maxChurn = Math.max(
+    ...churnByPhase.map((r) => parseInt(r.total) || 0),
+    1,
+  );
+
   const activeFilters =
     filters.phase !== '' ||
     filters.status !== '' ||
@@ -616,55 +734,32 @@ export default async function ReportsPage({
       {/* Filter bar */}
       <FilterBar current={filters} />
 
-      {/* ── Outcome metrics (investor / operator view) ── */}
-      <div style={{ background: 'white', border: '1px solid var(--line)', padding: '20px 24px', marginBottom: 24 }}>
-        <div className="label" style={{ marginBottom: 16 }}>Retention Outcomes</div>
-        <div style={{ display: 'flex', gap: 48, flexWrap: 'wrap' }}>
-          <div>
-            <div style={{ fontFamily: 'var(--serif)', fontSize: 44, lineHeight: 1, fontWeight: 500 }}>
-              {retentionRate}%
-            </div>
-            <div className="label" style={{ marginTop: 6 }}>Retention Rate</div>
-          </div>
-          <div>
-            <div style={{ fontFamily: 'var(--serif)', fontSize: 44, lineHeight: 1, fontWeight: 500, color: riskHigh > 0 ? 'var(--accent)' : 'var(--fg)' }}>
-              {riskHigh}
-            </div>
-            <div className="label" style={{ marginTop: 6 }}>High Risk</div>
-          </div>
-          <div>
-            <div style={{ fontFamily: 'var(--serif)', fontSize: 44, lineHeight: 1, fontWeight: 500, color: recovered > 0 ? 'var(--ok)' : 'var(--fg)' }}>
-              {recovered}
-            </div>
-            <div className="label" style={{ marginTop: 6 }}>Recovered</div>
-          </div>
-          <div>
-            <div style={{ fontFamily: 'var(--serif)', fontSize: 44, lineHeight: 1, fontWeight: 500 }}>
-              {avgDays}d
-            </div>
-            <div className="label" style={{ marginTop: 6 }}>Avg Program Duration</div>
-          </div>
-          <div>
-            <div style={{ fontFamily: 'var(--serif)', fontSize: 44, lineHeight: 1, fontWeight: 500 }}>
-              {patientReplyRate}%
-            </div>
-            <div className="label" style={{ marginTop: 6 }}>Reply Rate</div>
-          </div>
+      {/* ── Boardroom top row ── */}
+      <div style={{ background: 'white', border: '1px solid var(--line)', padding: '28px 32px', marginBottom: 24 }}>
+        <div className="label" style={{ marginBottom: 20 }}>Retention intelligence · last 30 days</div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: 28 }}>
+          <BoardMetric label="Retention rate"    value={`${metrics.retentionRate}%`} />
+          <BoardMetric label="Revenue protected" value={fmtMoney(metrics.revenueProtected30d)} tone="accent" sub="modeled" />
+          <BoardMetric label="Patients recovered" value={metrics.recoveredThisMonth} tone={metrics.recoveredThisMonth > 0 ? 'good' : undefined} />
+          <BoardMetric label="Avg program duration" value={`${metrics.avgMonthsOnProgram}mo`} sub={`${metrics.avgDaysOnProgram}d avg`} />
+          <BoardMetric label="Response rate"      value={`${metrics.responseRatePct}%`} sub={`${metrics.inboundReceived30d} of ${metrics.outboundSent30d}`} />
+          <BoardMetric label="Staff time saved"   value={`${metrics.staffHoursSaved30d}h`} sub="auto-outreach" />
         </div>
+
         {/* Risk distribution bar */}
-        {total > 0 && (
-          <div style={{ marginTop: 20 }}>
-            <div className="label" style={{ marginBottom: 8 }}>Risk Distribution</div>
+        {metrics.total > 0 && (
+          <div style={{ marginTop: 28 }}>
+            <div className="label" style={{ marginBottom: 8 }}>Patient risk distribution</div>
             <div style={{ display: 'flex', height: 8, borderRadius: 4, overflow: 'hidden', gap: 2 }}>
-              <div style={{ flex: riskLowOk, background: '#22c55e', borderRadius: '4px 0 0 4px' }} title={`On Track: ${riskLowOk}`} />
-              <div style={{ flex: riskMedium, background: '#f59e0b' }} title={`At Risk: ${riskMedium}`} />
-              <div style={{ flex: riskHigh, background: '#ef4444', borderRadius: '0 4px 4px 0' }} title={`High Risk: ${riskHigh}`} />
+              <div style={{ flex: metrics.healthy || 1, background: '#22c55e', borderRadius: '4px 0 0 4px' }} title={`Healthy: ${metrics.healthy}`} />
+              <div style={{ flex: metrics.monitor || 0.001, background: '#f59e0b' }} title={`Monitor: ${metrics.monitor}`} />
+              <div style={{ flex: metrics.urgent || 0.001, background: '#ef4444', borderRadius: '0 4px 4px 0' }} title={`Urgent: ${metrics.urgent}`} />
             </div>
             <div style={{ display: 'flex', gap: 20, marginTop: 8 }}>
               {[
-                { label: `On Track (${riskLowOk})`, color: '#22c55e' },
-                { label: `At Risk (${riskMedium})`, color: '#f59e0b' },
-                { label: `High Risk (${riskHigh})`, color: '#ef4444' },
+                { label: `Healthy (${metrics.healthy})`, color: '#22c55e' },
+                { label: `Monitor (${metrics.monitor})`, color: '#f59e0b' },
+                { label: `Urgent (${metrics.urgent})`, color: '#ef4444' },
               ].map((item) => (
                 <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: 'var(--fg-muted)' }}>
                   <div style={{ width: 10, height: 10, borderRadius: 2, background: item.color, flexShrink: 0 }} />
@@ -674,6 +769,48 @@ export default async function ReportsPage({
             </div>
           </div>
         )}
+      </div>
+
+      {/* ── Retention Trend ── */}
+      <SectionBox title="Retention trend" sub="last 12 weeks · % of enrolled still active">
+        <LineChart
+          series={[{ label: 'Retention %', values: retentionPctValues, color: '#14532d' }]}
+          labels={trendLabels}
+        />
+        <ChartLegend items={[{ label: 'Retention rate', color: '#14532d' }]} />
+      </SectionBox>
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 24 }}>
+        {/* ── Recovery success ── */}
+        <SectionBox title="Recovery success rate" sub="% drifting patients re-engaged within 7d">
+          <LineChart
+            series={[{ label: 'Recovery %', values: recoveryRateValues, color: 'var(--fg)' }]}
+            labels={recoveryLabels}
+            height={120}
+          />
+        </SectionBox>
+
+        {/* ── Churn risk by phase ── */}
+        <SectionBox title="Churn risk by program phase" sub="at-risk ÷ total, by phase">
+          {churnByPhase.length === 0 ? (
+            <p className="small muted">No patients yet.</p>
+          ) : (
+            churnByPhase.map((r) => {
+              const total = parseInt(r.total);
+              const atRisk = parseInt(r.at_risk);
+              return (
+                <HBar
+                  key={r.current_phase}
+                  label={`${r.current_phase}. ${PHASE_NAMES[r.current_phase] ?? '—'}`}
+                  value={atRisk}
+                  max={maxChurn}
+                  subLabel={total > 0 ? `/ ${total}` : ''}
+                  color={atRisk > 0 ? '#f59e0b' : '#22c55e'}
+                />
+              );
+            })
+          )}
+        </SectionBox>
       </div>
 
       {/* ── Summary cards ── */}
