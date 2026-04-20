@@ -131,3 +131,85 @@ export async function sendDeliveryFailureAlert({
 
   await sendEmail({ to, subject, html });
 }
+
+// ─── Weekly clinic digest ────────────────────────────────────────────────────
+
+export type WeeklyDigestData = {
+  clinicName: string;
+  weekStart: string;       // e.g. "April 13"
+  weekEnd: string;         // e.g. "April 19"
+  recoveredThisWeek: number;
+  driftingNow: number;
+  needStaffOutreach: number;
+  revenueProtected30d: number;
+  revenueProtectedIsModeled: boolean;
+  outboundSent: number;
+  inboundReceived: number;
+};
+
+export async function sendWeeklyDigest({
+  to,
+  data,
+}: {
+  to: string;
+  data: WeeklyDigestData;
+}): Promise<void> {
+  const subject = `${data.clinicName} · Weekly retention summary — ${data.weekStart}–${data.weekEnd}`;
+
+  const revenueSub = data.revenueProtectedIsModeled ? 'projected · last 30 days' : 'modeled · last 30 days';
+  const outreachLine =
+    data.needStaffOutreach > 0
+      ? `<strong style="color:#c2953a;">${data.needStaffOutreach} patient${data.needStaffOutreach === 1 ? '' : 's'}</strong> need${data.needStaffOutreach === 1 ? 's' : ''} staff outreach today.`
+      : `<span style="color:#4a7c5c;">No patients require staff outreach today.</span>`;
+
+  const html = `
+    <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,sans-serif;max-width:620px;margin:0 auto;padding:32px 24px;background:#fafaf7;color:#0f172a;">
+      <div style="font-family:Georgia,serif;font-size:22px;font-weight:500;margin-bottom:8px;color:#1e3a5f;">
+        Adherix<sup style="font-size:11px;color:#6b6b66;">℞</sup> · Weekly summary
+      </div>
+      <div style="font-size:13px;color:#6b6b66;margin-bottom:28px;">
+        ${data.clinicName} · ${data.weekStart}–${data.weekEnd}
+      </div>
+
+      <table style="width:100%;border-collapse:collapse;margin-bottom:24px;">
+        <tr>
+          <td style="padding:16px 18px;background:#1e3a5f;color:white;width:50%;vertical-align:top;">
+            <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.1em;opacity:0.8;margin-bottom:6px;">Revenue protected</div>
+            <div style="font-family:Georgia,serif;font-size:28px;line-height:1;">$${data.revenueProtected30d.toLocaleString()}</div>
+            <div style="font-size:11px;opacity:0.8;margin-top:6px;">${revenueSub}</div>
+          </td>
+          <td style="padding:16px 18px;background:white;border:1px solid #e6e5df;width:50%;vertical-align:top;">
+            <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:#6b6b66;margin-bottom:6px;">Patients recovered</div>
+            <div style="font-family:Georgia,serif;font-size:28px;line-height:1;color:#1e3a5f;">${data.recoveredThisWeek}</div>
+            <div style="font-size:11px;color:#6b6b66;margin-top:6px;">this week</div>
+          </td>
+        </tr>
+      </table>
+
+      <p style="font-size:15px;line-height:1.6;margin:0 0 14px;">
+        ${outreachLine}
+      </p>
+      <p style="font-size:14px;line-height:1.6;color:#475569;margin:0 0 22px;">
+        ${data.driftingNow} patient${data.driftingNow === 1 ? '' : 's'} currently drifting · ${data.outboundSent} outbound, ${data.inboundReceived} inbound messages this week.
+      </p>
+
+      <div style="margin-top:8px;">
+        <a href="${APP_URL}"
+           style="display:inline-block;padding:11px 22px;background:#1e3a5f;color:white;font-size:13px;font-weight:500;text-decoration:none;margin-right:8px;">
+          Open dashboard →
+        </a>
+        <a href="${APP_URL}/reports"
+           style="display:inline-block;padding:11px 22px;background:white;color:#1e3a5f;border:1px solid #1e3a5f;font-size:13px;font-weight:500;text-decoration:none;">
+          View reports
+        </a>
+      </div>
+
+      <p style="margin-top:36px;font-size:11px;color:#a5a5a0;border-top:1px solid #e6e5df;padding-top:14px;line-height:1.5;">
+        You are receiving this because you are the admin for ${data.clinicName}.
+        Revenue figures are modeled based on $600/mo program value × 35% churn-without-intervention × 3.4 months protected tenure per recovery.
+      </p>
+    </div>
+  `;
+
+  await sendEmail({ to, subject, html });
+}

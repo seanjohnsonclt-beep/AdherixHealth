@@ -7,6 +7,9 @@ import {
   dischargePatientAction,
   removePatientAction,
   updatePatientAction,
+  pausePatientAction,
+  resumePatientAction,
+  reactivatePatientAction,
 } from '@/app/patients/actions';
 
 type Props = {
@@ -23,6 +26,7 @@ export function PatientActions({ patientId, firstName, phone, status, currentPha
   const [showConfirm, setShowConfirm] = useState(false);
   const isFlagged = status === 'flagged';
   const isChurned = status === 'churned';
+  const isPaused = status === 'paused';
 
   return (
     <div>
@@ -54,6 +58,36 @@ export function PatientActions({ patientId, firstName, phone, status, currentPha
                 ? 'Remove the flag and return this patient to active status'
                 : 'Flag for manual clinic follow-up — pauses automated messages'}>
               {isFlagged ? 'Un-flag' : 'Flag'}
+            </button>
+          </form>
+        )}
+
+        {!isChurned && !isPaused && (
+          <form action={pausePatientAction}>
+            <input type="hidden" name="patient_id" value={patientId} />
+            <button type="submit" className="btn ghost"
+              title="Temporarily stop outbound messages — scheduled messages wait until you resume. Use for vacation or mid-care gaps.">
+              Pause
+            </button>
+          </form>
+        )}
+
+        {isPaused && (
+          <form action={resumePatientAction}>
+            <input type="hidden" name="patient_id" value={patientId} />
+            <button type="submit" className="btn"
+              title="Resume sending — scheduled messages will begin firing again on the next engine tick.">
+              Resume
+            </button>
+          </form>
+        )}
+
+        {isChurned && (
+          <form action={reactivatePatientAction}>
+            <input type="hidden" name="patient_id" value={patientId} />
+            <button type="submit" className="btn"
+              title="Move this discharged patient back to active. Phase plan stays where it was; advance manually if needed.">
+              Reactivate
             </button>
           </form>
         )}

@@ -102,6 +102,57 @@ export async function updatePatientAction(formData: FormData) {
   redirect(`/patients/${id}`);
 }
 
+// Pause: temporary stop — scheduled messages wait, triggers don't evaluate,
+// but nothing is deleted. Use for patients on vacation or mid-gap in care.
+export async function pausePatientAction(formData: FormData) {
+  const user = await requireUser();
+  const id = String(formData.get('patient_id') || '');
+  await assertPatientInClinic(id, user.clinicId);
+
+  await query(`update patients set status = 'paused' where id = $1`, [id]);
+  await query(
+    `insert into events (patient_id, kind, payload) values ($1, 'paused', $2)`,
+    [id, JSON.stringify({ by: 'clinic_admin' })]
+  );
+
+  revalidatePath(`/patients/${id}`);
+  revalidatePath('/');
+}
+
+// Resume: paused → active. Any pending messages whose scheduled_for is in the
+// past will fire on the next tick (intentional — we kept them warm on purpose).
+export async function resumePatientAction(formData: FormData) {
+  const user = await requireUser();
+  const id = String(formData.get('patient_id') || '');
+  await assertPatientInClinic(id, user.clinicId);
+
+  await query(`update patients set status = 'active' where id = $1`, [id]);
+  await query(
+    `insert into events (patient_id, kind, payload) values ($1, 'resumed', $2)`,
+    [id, JSON.stringify({ by: 'clinic_admin' })]
+  );
+
+  revalidatePath(`/patients/${id}`);
+  revalidatePath('/');
+}
+
+// Reactivate: churned → active. Doesn't re-queue the phase plan (those were
+// cancelled on discharge). Clinic can manually advance or re-enroll if needed.
+export async function reactivatePatientAction(formData: FormData) {
+  const user = await requireUser();
+  const id = String(formData.get('patient_id') || '');
+  await assertPatientInClinic(id, user.clinicId);
+
+  await query(`update patients set status = 'active' where id = $1`, [id]);
+  await query(
+    `insert into events (patient_id, kind, payload) values ($1, 'reactivated', $2)`,
+    [id, JSON.stringify({ by: 'clinic_admin' })]
+  );
+
+  revalidatePath(`/patients/${id}`);
+  revalidatePath('/');
+}
+
 // Discharge: marks churned + cancels pending messages. Keeps record for reporting.
 export async function dischargePatientAction(formData: FormData) {
   const user = await requireUser();

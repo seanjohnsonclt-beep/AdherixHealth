@@ -728,23 +728,47 @@ export default async function ReportsPage({
             </p>
           )}
         </div>
-        <div style={{ display: 'flex', alignItems: 'baseline', gap: 14 }}>
-          <a
-            href="/api/export/exec-summary"
-            className="btn ghost"
-            style={{ fontSize: 13, padding: '6px 12px' }}
-            title="One-file CSV of top-line metrics + 12-week retention + recovery trends"
-          >
-            Export exec summary
-          </a>
-          <a
-            href="/api/export/recovery-ledger"
-            className="btn ghost"
-            style={{ fontSize: 13, padding: '6px 12px' }}
-            title="Itemized list of recovered patients with modeled revenue protected per recovery"
-          >
-            Export recovery ledger
-          </a>
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: 14, flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+          <div style={{ display: 'flex', gap: 6 }}>
+            <a
+              href="/api/export/exec-summary"
+              className="btn ghost"
+              style={{ fontSize: 13, padding: '6px 12px' }}
+              title="One-file CSV of top-line metrics + 12-week retention + recovery trends"
+            >
+              Exec summary · CSV
+            </a>
+            <a
+              href="/reports/print/exec-summary"
+              target="_blank"
+              rel="noopener"
+              className="btn ghost"
+              style={{ fontSize: 13, padding: '6px 12px' }}
+              title="Print-ready board deck PDF — opens in a new tab, auto-triggers print dialog"
+            >
+              PDF
+            </a>
+          </div>
+          <div style={{ display: 'flex', gap: 6 }}>
+            <a
+              href="/api/export/recovery-ledger"
+              className="btn ghost"
+              style={{ fontSize: 13, padding: '6px 12px' }}
+              title="Itemized list of recovered patients with modeled revenue protected per recovery"
+            >
+              Recovery ledger · CSV
+            </a>
+            <a
+              href="/reports/print/recovery-ledger"
+              target="_blank"
+              rel="noopener"
+              className="btn ghost"
+              style={{ fontSize: 13, padding: '6px 12px' }}
+              title="Print-ready recovery ledger PDF — the renewal-justification artifact"
+            >
+              PDF
+            </a>
+          </div>
           <span className="small faint mono">{user.clinicName}</span>
         </div>
       </div>
