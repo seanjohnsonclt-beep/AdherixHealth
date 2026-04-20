@@ -173,7 +173,12 @@ export default async function HomePage() {
             <div className="hero-stat__lbl">Recovered this week</div>
           </div>
           <div className="hero-stat">
-            <div className="hero-stat__num">{fmtMoney(metrics.revenueProtected30d)}</div>
+            <div className="hero-stat__num" style={{ color: 'var(--navy)' }}>
+              {fmtMoney(metrics.revenueProtected30d)}
+              {metrics.revenueProtectedIsModeled && (
+                <span className="modeled-badge" style={{ marginLeft: 6 }}>Projected</span>
+              )}
+            </div>
             <div className="hero-stat__lbl">Protected revenue (30d)</div>
           </div>
           <div className="hero-stat">
@@ -208,7 +213,7 @@ export default async function HomePage() {
         <KpiCard
           label="Revenue protected"
           value={fmtMoney(metrics.revenueProtected30d)}
-          sub="modeled, last 30d"
+          sub={metrics.revenueProtectedIsModeled ? 'projected · last 30d' : 'modeled · last 30d'}
           tone="accent"
         />
         <KpiCard

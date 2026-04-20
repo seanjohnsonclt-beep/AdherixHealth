@@ -1,15 +1,41 @@
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500&display=swap');
 
 :root {
-  --bg: #fafaf7;
-  --fg: #111110;
-  --fg-muted: #6b6b66;
-  --fg-faint: #a5a5a0;
-  --line: #e6e5df;
-  --line-strong: #c8c7c0;
-  --accent: #c8341c;
-  --accent-bg: #fbecea;
-  --ok: #1f6b3a;
+  /* Warm, layered off-whites — easier on the eye, more premium than pure white */
+  --bg: #f7f5ef;
+  --bg-card: #ffffff;
+  --bg-card-soft: #fafaf5;
+  --bg-section: #f1eee4;
+
+  /* Navy-tinted text for a trust feel (vs true black) */
+  --fg: #0f172a;
+  --fg-muted: #5a6478;
+  --fg-faint: #9ca3af;
+  --line: #e6e3d8;
+  --line-strong: #c8c4b6;
+
+  /* Navy is the trust accent — used for primary numbers and key actions */
+  --navy: #1e3a5f;
+  --navy-soft: #2d4a73;
+  --navy-tint: #eef2f8;
+
+  /* Status hierarchy */
+  --good: #15803d;
+  --good-soft: #f0fdf4;
+  --good-border: #86efac;
+
+  --warn: #b45309;
+  --warn-soft: #fffbeb;
+  --warn-border: #fcd34d;
+
+  --urgent: #b91c1c;
+  --urgent-soft: #fef2f2;
+  --urgent-border: #fca5a5;
+
+  /* Legacy aliases (kept so existing classes don't break) */
+  --accent: #b45309;
+  --accent-bg: #fffbeb;
+  --ok: var(--good);
 
   --serif: 'Fraunces', Georgia, serif;
   --sans: 'Inter', system-ui, sans-serif;
@@ -375,6 +401,126 @@ h3 { font-size: 17px; line-height: 1.3; }
 .empty .num { font-family: var(--serif); font-size: 28px; }
 
 .actions { display: flex; gap: 8px; }
+
+/* ── Premium / layered treatments ──────────────────────────────────────────── */
+
+/* Hero card gets a subtle navy accent bar on the left for trust */
+.hero-card {
+  position: relative;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.02);
+}
+.hero-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 100%;
+  background: var(--navy);
+}
+
+/* KPI cards — subtly warmer + navy numbers for primary tones */
+.kpi-card {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  transition: border-color 120ms ease;
+}
+.kpi-card:hover { border-color: var(--line-strong); }
+.kpi-card--accent .kpi-card__num { color: var(--navy); }
+.kpi-card--good   .kpi-card__num { color: var(--good); }
+.kpi-card--warn   .kpi-card__num { color: var(--warn); }
+
+/* Executive metric — used on the reports top strip */
+.exec-metric {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  padding: 22px 24px;
+  position: relative;
+}
+.exec-metric--primary {
+  background: linear-gradient(180deg, var(--navy-tint) 0%, var(--bg-card) 70%);
+  border-color: var(--navy-tint);
+}
+.exec-metric__label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--fg-muted);
+  margin-bottom: 10px;
+}
+.exec-metric__num {
+  font-family: var(--serif);
+  font-size: 42px;
+  line-height: 1;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--fg);
+}
+.exec-metric__num--navy  { color: var(--navy); }
+.exec-metric__num--good  { color: var(--good); }
+.exec-metric__sub {
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--fg-muted);
+}
+.exec-metric__trend {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  margin-left: 8px;
+  font-size: 13px;
+  font-family: var(--sans);
+  font-weight: 500;
+}
+.exec-metric__trend--up   { color: var(--good); }
+.exec-metric__trend--down { color: var(--urgent); }
+.exec-metric__trend--flat { color: var(--fg-faint); }
+
+/* Exec strip sparkline container */
+.exec-metric__spark {
+  margin-top: 14px;
+  height: 38px;
+  width: 100%;
+}
+
+/* Layered analytics section — slightly deeper bg to separate from exec strip */
+.analytics-section {
+  background: var(--bg-section);
+  padding: 32px;
+  margin: 32px -32px 32px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.analytics-section__title {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  margin-bottom: 4px;
+}
+.analytics-section__sub {
+  font-size: 13px;
+  color: var(--fg-muted);
+  margin-bottom: 24px;
+}
+
+/* Modeled badge — used next to $0-safety projections */
+.modeled-badge {
+  display: inline-block;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  background: var(--navy-tint);
+  color: var(--navy-soft);
+  border: 1px solid var(--navy-tint);
+  border-radius: 3px;
+  margin-left: 8px;
+  vertical-align: middle;
+  font-weight: 500;
+}
 
 .login-card {
   max-width: 360px;

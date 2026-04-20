@@ -734,41 +734,130 @@ export default async function ReportsPage({
       {/* Filter bar */}
       <FilterBar current={filters} />
 
-      {/* ── Boardroom top row ── */}
-      <div style={{ background: 'white', border: '1px solid var(--line)', padding: '28px 32px', marginBottom: 24 }}>
-        <div className="label" style={{ marginBottom: 20 }}>Retention intelligence · last 30 days</div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: 28 }}>
-          <BoardMetric label="Retention rate"    value={`${metrics.retentionRate}%`} />
-          <BoardMetric label="Revenue protected" value={fmtMoney(metrics.revenueProtected30d)} tone="accent" sub="modeled" />
-          <BoardMetric label="Patients recovered" value={metrics.recoveredThisMonth} tone={metrics.recoveredThisMonth > 0 ? 'good' : undefined} />
-          <BoardMetric label="Avg program duration" value={`${metrics.avgMonthsOnProgram}mo`} sub={`${metrics.avgDaysOnProgram}d avg`} />
-          <BoardMetric label="Response rate"      value={`${metrics.responseRatePct}%`} sub={`${metrics.inboundReceived30d} of ${metrics.outboundSent30d}`} />
-          <BoardMetric label="Staff time saved"   value={`${metrics.staffHoursSaved30d}h`} sub="auto-outreach" />
+      {/* ── Executive strip (4 primary boardroom metrics) ── */}
+      <div className="label" style={{ marginBottom: 12 }}>Executive summary · last 30 days</div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 16 }}>
+        {/* Revenue Protected — primary/navy emphasis */}
+        <div className="exec-metric exec-metric--primary">
+          <div className="exec-metric__label">Revenue protected</div>
+          <div className="exec-metric__num exec-metric__num--navy">
+            {fmtMoney(metrics.revenueProtected30d)}
+            {metrics.revenueProtectedIsModeled && (
+              <span className="modeled-badge">Projected</span>
+            )}
+          </div>
+          <div className="exec-metric__sub">
+            from {metrics.recoveredThisMonth} recovered patient{metrics.recoveredThisMonth === 1 ? '' : 's'}
+          </div>
         </div>
 
-        {/* Risk distribution bar */}
-        {metrics.total > 0 && (
-          <div style={{ marginTop: 28 }}>
-            <div className="label" style={{ marginBottom: 8 }}>Patient risk distribution</div>
-            <div style={{ display: 'flex', height: 8, borderRadius: 4, overflow: 'hidden', gap: 2 }}>
-              <div style={{ flex: metrics.healthy || 1, background: '#22c55e', borderRadius: '4px 0 0 4px' }} title={`Healthy: ${metrics.healthy}`} />
-              <div style={{ flex: metrics.monitor || 0.001, background: '#f59e0b' }} title={`Monitor: ${metrics.monitor}`} />
-              <div style={{ flex: metrics.urgent || 0.001, background: '#ef4444', borderRadius: '0 4px 4px 0' }} title={`Urgent: ${metrics.urgent}`} />
-            </div>
-            <div style={{ display: 'flex', gap: 20, marginTop: 8 }}>
-              {[
-                { label: `Healthy (${metrics.healthy})`, color: '#22c55e' },
-                { label: `Monitor (${metrics.monitor})`, color: '#f59e0b' },
-                { label: `Urgent (${metrics.urgent})`, color: '#ef4444' },
-              ].map((item) => (
-                <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: 'var(--fg-muted)' }}>
-                  <div style={{ width: 10, height: 10, borderRadius: 2, background: item.color, flexShrink: 0 }} />
-                  {item.label}
-                </div>
-              ))}
-            </div>
+        {/* Retention trend */}
+        <div className="exec-metric">
+          <div className="exec-metric__label">Retention rate</div>
+          <div className="exec-metric__num">
+            {metrics.retentionRate}%
+            <span
+              className={`exec-metric__trend ${
+                metrics.retentionDeltaPct > 0
+                  ? 'exec-metric__trend--up'
+                  : metrics.retentionDeltaPct < 0
+                  ? 'exec-metric__trend--down'
+                  : 'exec-metric__trend--flat'
+              }`}
+            >
+              {metrics.retentionDeltaPct > 0 ? '↗' : metrics.retentionDeltaPct < 0 ? '↘' : '→'}{' '}
+              {metrics.retentionDeltaPct > 0 ? '+' : ''}
+              {metrics.retentionDeltaPct}%
+            </span>
           </div>
-        )}
+          <div className="exec-metric__sub">vs 30 days ago</div>
+          {/* mini sparkline */}
+          <div className="exec-metric__spark">
+            <LineChart
+              series={[{ label: 'Retention', values: retentionPctValues, color: 'var(--navy)' }]}
+              labels={trendLabels.map(() => '')}
+              height={38}
+            />
+          </div>
+        </div>
+
+        {/* Patients Recovered */}
+        <div className="exec-metric">
+          <div className="exec-metric__label">Patients recovered</div>
+          <div className="exec-metric__num exec-metric__num--good">
+            {metrics.recoveredThisMonth}
+          </div>
+          <div className="exec-metric__sub">
+            {metrics.recoveredThisWeek} this week · {metrics.recoveredThisMonth} this month
+          </div>
+        </div>
+
+        {/* Avg Program Duration */}
+        <div className="exec-metric">
+          <div className="exec-metric__label">Avg program duration</div>
+          <div className="exec-metric__num">
+            {metrics.avgMonthsOnProgram}
+            <span style={{ fontSize: 20, color: 'var(--fg-muted)', marginLeft: 4 }}>mo</span>
+          </div>
+          <div className="exec-metric__sub">
+            {metrics.avgDaysOnProgram} days avg · roster of {metrics.total}
+          </div>
+        </div>
+      </div>
+
+      {/* Secondary strip — engagement & staff efficiency */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 32 }}>
+        <div className="exec-metric">
+          <div className="exec-metric__label">Response rate</div>
+          <div className="exec-metric__num" style={{ fontSize: 28 }}>
+            {metrics.responseRatePct}%
+          </div>
+          <div className="exec-metric__sub">
+            {metrics.inboundReceived30d} replies · {metrics.outboundSent30d} sent
+          </div>
+        </div>
+        <div className="exec-metric">
+          <div className="exec-metric__label">Staff time saved</div>
+          <div className="exec-metric__num" style={{ fontSize: 28 }}>
+            {metrics.staffHoursSaved30d}
+            <span style={{ fontSize: 16, color: 'var(--fg-muted)', marginLeft: 4 }}>hrs</span>
+          </div>
+          <div className="exec-metric__sub">auto-outreach vs manual touchpoints</div>
+        </div>
+        <div className="exec-metric">
+          <div className="exec-metric__label">Patient risk distribution</div>
+          {metrics.total > 0 ? (
+            <>
+              <div style={{ display: 'flex', height: 10, borderRadius: 4, overflow: 'hidden', gap: 2, marginTop: 8, marginBottom: 10 }}>
+                <div style={{ flex: metrics.healthy || 1, background: 'var(--good)', borderRadius: '4px 0 0 4px' }} title={`Healthy: ${metrics.healthy}`} />
+                <div style={{ flex: metrics.monitor || 0.001, background: 'var(--warn)' }} title={`Monitor: ${metrics.monitor}`} />
+                <div style={{ flex: metrics.urgent || 0.001, background: 'var(--urgent)', borderRadius: '0 4px 4px 0' }} title={`Urgent: ${metrics.urgent}`} />
+              </div>
+              <div style={{ display: 'flex', gap: 14, fontSize: 11, color: 'var(--fg-muted)' }}>
+                <span>
+                  <span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: 2, background: 'var(--good)', marginRight: 4, verticalAlign: 'middle' }} />
+                  Healthy {metrics.healthy}
+                </span>
+                <span>
+                  <span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: 2, background: 'var(--warn)', marginRight: 4, verticalAlign: 'middle' }} />
+                  Monitor {metrics.monitor}
+                </span>
+                <span>
+                  <span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: 2, background: 'var(--urgent)', marginRight: 4, verticalAlign: 'middle' }} />
+                  Urgent {metrics.urgent}
+                </span>
+              </div>
+            </>
+          ) : (
+            <div className="exec-metric__sub">No patients yet.</div>
+          )}
+        </div>
+      </div>
+
+      {/* ── Layered analytics section ── */}
+      <div style={{ marginTop: 24 }}>
+        <div className="analytics-section__title">Analytics</div>
+        <div className="analytics-section__sub">Deeper engagement, recovery and program detail</div>
       </div>
 
       {/* ── Retention Trend ── */}

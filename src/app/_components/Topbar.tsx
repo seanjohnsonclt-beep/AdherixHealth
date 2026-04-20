@@ -15,6 +15,7 @@ export function Topbar({ clinicName, email }: Props) {
         <nav style={{ display: 'flex', gap: 20 }}>
           <a href="/" style={{ fontSize: 14, color: 'var(--fg-muted)', border: 'none' }} title="View and manage all enrolled patients">Patients</a>
           <a href="/reports" style={{ fontSize: 14, color: 'var(--fg-muted)', border: 'none' }} title="Retention outcomes, engagement analytics, and message performance">Reports</a>
+          <a href="/roi" style={{ fontSize: 14, color: 'var(--fg-muted)', border: 'none' }} title="Estimate revenue protected by retention automation">ROI</a>
         </nav>
       </div>
       <div className="meta">

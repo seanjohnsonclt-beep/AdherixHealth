@@ -1,18 +1,24 @@
 // Builds a realistic, believable demo dataset for a clinic.
-// Wipes existing patients in that clinic, then inserts ~100 patients with:
-//   - mixed phases (0..5) weighted toward steady-state 2-4
-//   - mixed statuses (active / flagged / paused / churned / recovered)
-//   - realistic enrollment spread over the last ~8 months
-//   - outbound + inbound messages with realistic response rates
-//   - trigger_firings rows so "recovered" counts correctly
-//   - events rows so the behavioral log looks lived-in
+// Wipes existing patients in that clinic, then inserts 87 patients tuned to
+// hit the executive-demo targets the clinic owner sees on the homepage:
 //
-// All messages are inserted with status='sent' (or 'failed' in < 2% of cases)
-// — no Twilio calls are made. Scheduled-for is always in the past.
+//   - 87 patients total
+//   - 12 drifting (active, last reply 3–5 days ago)
+//   - 7 recovered THIS WEEK (trigger fired, then inbound within 7d)
+//   - 20 recovered THIS MONTH (trigger fired, then inbound within 30d)
+//   - ~$14,250 revenue protected (computed downstream from the 20 recoveries)
+//
+// Numbers are intentionally deterministic enough that the dashboard never
+// looks empty or uncertain in demos, while the behaviour of each seeded
+// patient remains believable (real message cadence, realistic reply rates,
+// trigger firings before recovery replies, phase advancement events).
+//
+// All messages are inserted with status='sent' (or 'failed' in ~1.5% of
+// cases) — no Twilio calls are made. scheduled_for is always in the past.
 
 import { query, queryOne } from '@/lib/db';
 
-// ─── Names (diverse, non-PII obviously — all synthetic) ────────────────────────
+// ─── Names (synthetic, diverse) ────────────────────────────────────────────────
 const FIRST_NAMES = [
   'Alex','Jordan','Taylor','Morgan','Casey','Riley','Avery','Quinn','Parker','Rowan',
   'Emma','Olivia','Ava','Isabella','Sophia','Mia','Amelia','Harper','Evelyn','Abigail',
@@ -28,37 +34,42 @@ const FIRST_NAMES = [
   'Hana','Minji','Seojun','Jiwon','Doyun','Hyejin','Yuna','Taeyang','Somin','Chanwoo',
 ];
 
-// ─── Distribution knobs ────────────────────────────────────────────────────────
-// Weights sum to any positive number; pickWeighted normalizes.
-const PHASE_WEIGHTS: Array<[number, number]> = [
-  [0, 6],   // Initiation (just enrolled)
-  [1, 16],  // Dose Stabilization
-  [2, 24],  // Adherence Building
-  [3, 28],  // Risk Window / Momentum (biggest cohort)
-  [4, 16],  // Taper Management
-  [5, 10],  // Maintenance
-];
-
-// Status buckets AFTER phase is decided. Drives how we render last_inbound_at,
-// message history, and trigger_firings.
+// ─── Bucket plan ───────────────────────────────────────────────────────────────
 type Bucket =
-  | 'healthy'      // active, replies frequently, never flagged
-  | 'light'        // active, sporadic replies, never flagged
-  | 'recovered'    // active now, but was flagged earlier → we insert a trigger_firing before last reply
-  | 'drifting'     // active, no reply 3-5 days, starting to slip
-  | 'flagged'      // flagged status, no reply 5-9 days
-  | 'paused'       // patient-initiated pause
-  | 'churned';     // churned, haven't heard from them in 14+ days
+  | 'healthy'           // active, replied <2d ago, no trigger history
+  | 'light'             // active, replied 2-4d ago, no trigger history
+  | 'recovered_fresh'   // active, trigger fired then reply in last 7d
+  | 'recovered_older'   // active, trigger fired then reply 8-30d ago
+  | 'drifting'          // active, replied 3-5d ago, no trigger yet
+  | 'flagged'           // status=flagged, reply 5-9d ago
+  | 'paused'            // status=paused
+  | 'churned';          // status=churned
 
-const BUCKET_WEIGHTS: Array<[Bucket, number]> = [
-  ['healthy',   52],
-  ['light',     12],
-  ['recovered',  9],
-  ['drifting',   8],
-  ['flagged',    8],
-  ['paused',     4],
-  ['churned',    7],
-];
+// Target for an 87-patient demo clinic. Each entry = bucket → exact count.
+// Sum = 87. If caller requests a different target, counts scale proportionally
+// (rounded) and the 'healthy' bucket absorbs the remainder.
+const DEMO_TARGETS_87: Record<Bucket, number> = {
+  recovered_fresh: 7,
+  recovered_older: 13,
+  drifting:        12,
+  flagged:          8,
+  paused:           4,
+  churned:          6,
+  healthy:         30,
+  light:            7,
+};
+
+// Phase weight per bucket (so recovered patients cluster mid-program, etc.)
+const PHASE_WEIGHTS_BY_BUCKET: Record<Bucket, Array<[number, number]>> = {
+  healthy:         [[0,4],[1,12],[2,22],[3,28],[4,20],[5,14]],
+  light:           [[0,2],[1,10],[2,22],[3,30],[4,22],[5,14]],
+  recovered_fresh: [[1,8],[2,26],[3,36],[4,22],[5,8]],
+  recovered_older: [[1,6],[2,24],[3,38],[4,22],[5,10]],
+  drifting:        [[1,10],[2,26],[3,32],[4,22],[5,10]],
+  flagged:         [[1,14],[2,28],[3,32],[4,18],[5,8]],
+  paused:          [[2,24],[3,36],[4,28],[5,12]],
+  churned:         [[1,30],[2,34],[3,24],[4,10],[5,2]],
+};
 
 // ─── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -80,15 +91,54 @@ function pick<T>(arr: T[]): T {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-// Fake phone in E.164, last 4 randomized, area code 555 (non-routable).
+function shuffle<T>(arr: T[]): T[] {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// Fake phone in E.164, area code 555 (non-routable).
 function fakePhone(i: number): string {
   const last4 = String(1000 + i).padStart(4, '0');
   const mid = String(100 + (i % 900)).padStart(3, '0');
   return `+1555${mid}${last4}`;
 }
 
-// ─── Outbound template bodies (phase-keyed, de-identified) ─────────────────────
-// Kept short & directive to match Adherix voice.
+// Build the exact bucket-per-patient list for a given target count.
+// For target = 87 we use DEMO_TARGETS_87 literally. For other counts we
+// scale by ratio, then absorb any rounding remainder into 'healthy'.
+function buildBucketPlan(target: number): Bucket[] {
+  let counts: Record<Bucket, number>;
+
+  if (target === 87) {
+    counts = { ...DEMO_TARGETS_87 };
+  } else {
+    const ratio = target / 87;
+    counts = {
+      recovered_fresh: Math.round(DEMO_TARGETS_87.recovered_fresh * ratio),
+      recovered_older: Math.round(DEMO_TARGETS_87.recovered_older * ratio),
+      drifting:        Math.round(DEMO_TARGETS_87.drifting * ratio),
+      flagged:         Math.round(DEMO_TARGETS_87.flagged * ratio),
+      paused:          Math.round(DEMO_TARGETS_87.paused * ratio),
+      churned:         Math.round(DEMO_TARGETS_87.churned * ratio),
+      light:           Math.round(DEMO_TARGETS_87.light * ratio),
+      healthy: 0, // absorbs the remainder below
+    };
+    const assigned = Object.values(counts).reduce((s, v) => s + v, 0);
+    counts.healthy = Math.max(0, target - assigned);
+  }
+
+  const plan: Bucket[] = [];
+  (Object.keys(counts) as Bucket[]).forEach((b) => {
+    for (let i = 0; i < counts[b]; i++) plan.push(b);
+  });
+  return shuffle(plan);
+}
+
+// ─── Template catalog (phase-keyed, short & directive) ─────────────────────────
 const OUTBOUND: Record<string, string[]> = {
   'phase0.welcome':       ['Hi {name}, welcome to your program. One short text a day. Reply YES to start.'],
   'phase0.confirmed':     ['Locked in. First goal tomorrow morning: 16oz of water before anything else.'],
@@ -141,25 +191,25 @@ export type ReseedResult = {
 
 export async function reseedDemo(opts: ReseedOptions): Promise<ReseedResult> {
   const { clinicId } = opts;
-  const target = opts.targetCount ?? randInt(96, 128);
+  const target = opts.targetCount ?? 87;
 
   // Wipe existing patients (cascades to messages / events / trigger_firings)
   await query(`delete from patients where clinic_id = $1`, [clinicId]);
 
+  const plan = buildBucketPlan(target);
   const bucketCounts: Record<string, number> = {};
   let totalMessages = 0;
   const now = Date.now();
 
-  for (let i = 0; i < target; i++) {
-    const phase = pickWeighted(PHASE_WEIGHTS);
-    const bucket = pickWeighted(BUCKET_WEIGHTS);
+  for (let i = 0; i < plan.length; i++) {
+    const bucket = plan[i];
     bucketCounts[bucket] = (bucketCounts[bucket] ?? 0) + 1;
 
+    const phase = pickWeighted(PHASE_WEIGHTS_BY_BUCKET[bucket]);
     const firstName = pick(FIRST_NAMES);
     const phone = fakePhone(i);
 
-    // Enrolled somewhere between 2 and 240 days ago, weighted toward older
-    // for later phases so "days on program" feels right.
+    // Enrolled: biased toward older for later phases.
     const minDaysAgo =
       phase === 0 ? 0 :
       phase === 1 ? 3 :
@@ -177,7 +227,6 @@ export async function reseedDemo(opts: ReseedOptions): Promise<ReseedResult> {
     const enrolledDaysAgo = randInt(minDaysAgo, maxDaysAgo);
     const enrolledAt = new Date(now - enrolledDaysAgo * 86400 * 1000);
 
-    // Phase started: recent for late phases, near enrollment for early phases.
     const phaseStartedDaysAgo = Math.min(
       enrolledDaysAgo,
       phase === 0 ? randInt(0, 1) :
@@ -189,26 +238,33 @@ export async function reseedDemo(opts: ReseedOptions): Promise<ReseedResult> {
     );
     const phaseStartedAt = new Date(now - phaseStartedDaysAgo * 86400 * 1000);
 
-    // Status + last_inbound by bucket
+    // Status + last_inbound — tuned per bucket to hit exact metric targets.
     let status: 'active' | 'flagged' | 'paused' | 'churned' = 'active';
     let lastInboundDaysAgo: number | null;
 
     switch (bucket) {
       case 'healthy':
         status = 'active';
-        lastInboundDaysAgo = randInt(0, 2);
+        lastInboundDaysAgo = randInt(0, 1);
         break;
       case 'light':
         status = 'active';
         lastInboundDaysAgo = randInt(2, 4);
         break;
-      case 'recovered':
+      case 'recovered_fresh':
+        // Replied within last 7d (counts as recoveredThisWeek)
         status = 'active';
-        lastInboundDaysAgo = randInt(0, 3);  // recently replied
+        lastInboundDaysAgo = randInt(0, 6);
+        break;
+      case 'recovered_older':
+        // Replied 8-30d ago (counts as recoveredThisMonth only)
+        status = 'active';
+        lastInboundDaysAgo = randInt(8, 28);
         break;
       case 'drifting':
+        // Critical for the "12 drifting" homepage number — keep 3-5d window
         status = 'active';
-        lastInboundDaysAgo = randInt(3, 5);
+        lastInboundDaysAgo = randInt(3, 4);
         break;
       case 'flagged':
         status = 'flagged';
@@ -223,9 +279,6 @@ export async function reseedDemo(opts: ReseedOptions): Promise<ReseedResult> {
         lastInboundDaysAgo = randInt(14, Math.max(14, enrolledDaysAgo));
         break;
     }
-
-    // Never-responders (5% of light + a sliver of churned) have null inbound
-    if (bucket === 'light' && Math.random() < 0.08) lastInboundDaysAgo = null;
 
     const lastInboundAt =
       lastInboundDaysAgo === null ? null : new Date(now - lastInboundDaysAgo * 86400 * 1000);
@@ -242,32 +295,30 @@ export async function reseedDemo(opts: ReseedOptions): Promise<ReseedResult> {
     if (!patientRow) continue;
     const patientId = patientRow.id;
 
-    // Insert enrollment event
+    // Enrollment event
     await query(
       `insert into events (patient_id, kind, payload, created_at)
        values ($1, 'enrolled', $2, $3)`,
       [patientId, JSON.stringify({ phone_last4: phone.slice(-4) }), enrolledAt]
     );
 
-    // Generate message history. Roughly 1 outbound every 2-3 days since enroll.
+    // Outbound message history — roughly one every 2-3 days since enrollment.
     const totalOutbound = Math.max(
       1,
       Math.min(60, Math.floor(enrolledDaysAgo / randInt(2, 3)) + randInt(0, 2))
     );
 
-    // How responsive is this patient? Used to decide per-message reply probability.
     const replyProbability =
-      bucket === 'healthy'   ? 0.75 :
-      bucket === 'light'     ? 0.35 :
-      bucket === 'recovered' ? 0.55 :
-      bucket === 'drifting'  ? 0.40 :
-      bucket === 'flagged'   ? 0.20 :
-      bucket === 'paused'    ? 0.30 :
-                              0.15;
+      bucket === 'healthy'         ? 0.75 :
+      bucket === 'light'           ? 0.35 :
+      bucket === 'recovered_fresh' ? 0.55 :
+      bucket === 'recovered_older' ? 0.55 :
+      bucket === 'drifting'        ? 0.40 :
+      bucket === 'flagged'         ? 0.20 :
+      bucket === 'paused'          ? 0.30 :
+                                     0.15;
 
-    // Walk forward from enrollment, spacing messages ~2-3 days apart.
     let cursorDaysAgo = enrolledDaysAgo;
-    let lastOutboundTime: Date | null = null;
     let messagesInserted = 0;
 
     for (let m = 0; m < totalOutbound && cursorDaysAgo > 0; m++) {
@@ -275,12 +326,11 @@ export async function reseedDemo(opts: ReseedOptions): Promise<ReseedResult> {
       cursorDaysAgo = Math.max(0, cursorDaysAgo - step);
       const sentAt = new Date(now - cursorDaysAgo * 86400 * 1000 + randInt(0, 8) * 3600 * 1000);
 
-      // Decide template: bias toward current phase for most, earlier phases for early ones
       const templatePhase = Math.min(phase, Math.floor((m / totalOutbound) * (phase + 1)));
       const key = pickOutboundKey(templatePhase);
       const body = OUTBOUND[key][0].replace('{name}', firstName);
 
-      // 1.5% failed to make deliverability look honest-but-not-alarmist
+      // ~1.5% failed to keep deliverability honest-but-not-alarmist
       const failed = Math.random() < 0.015;
 
       await query(
@@ -300,14 +350,10 @@ export async function reseedDemo(opts: ReseedOptions): Promise<ReseedResult> {
         ]
       );
       messagesInserted++;
-      lastOutboundTime = sentAt;
 
-      // Maybe patient replies
       if (!failed && Math.random() < replyProbability) {
-        // Reply arrives 20 minutes to 18 hours later
         const replyDelayMin = randInt(20, 18 * 60);
         const replyAt = new Date(sentAt.getTime() + replyDelayMin * 60 * 1000);
-        // Don't schedule replies in the future
         if (replyAt.getTime() <= now) {
           await query(
             `insert into messages
@@ -320,34 +366,35 @@ export async function reseedDemo(opts: ReseedOptions): Promise<ReseedResult> {
       }
     }
 
-    // Trigger firings & events for buckets that need them
-    if (bucket === 'recovered' && lastInboundAt) {
-      // Fire a no_response_48h trigger 1-2 days BEFORE the recent reply
+    // ── Trigger firings + events per bucket ──────────────────────────────────
+    if ((bucket === 'recovered_fresh' || bucket === 'recovered_older') && lastInboundAt) {
+      // Trigger fired 1-3 days BEFORE the recent reply → counts as a recovery.
       const firedAt = new Date(lastInboundAt.getTime() - randInt(1, 3) * 86400 * 1000);
+      const triggerKey = Math.random() < 0.6 ? 'no_response_48h' : 'no_response_5d';
       await query(
         `insert into trigger_firings (patient_id, trigger_key, dedupe_key, fired_at)
-         values ($1, 'no_response_48h', $2, $3)
+         values ($1, $2, $3, $4)
          on conflict do nothing`,
         [
           patientId,
-          `no_response_48h:${firedAt.toISOString().slice(0, 10)}`,
+          triggerKey,
+          `${triggerKey}:${firedAt.toISOString().slice(0, 10)}`,
           firedAt,
         ]
       );
-      // Also insert the trigger outbound message
       await query(
         `insert into messages
            (patient_id, direction, template_key, body, sent_at, twilio_sid, status, created_at)
-         values ($1, 'outbound', 'trigger.no_response_48h', $2, $3, $4, 'sent', $5)`,
+         values ($1, 'outbound', $2, $3, $4, $5, 'sent', $6)`,
         [
           patientId,
-          OUTBOUND['trigger.no_response_48h'][0],
+          `trigger.${triggerKey}`,
+          OUTBOUND[`trigger.${triggerKey}`][0],
           firedAt,
           `DEMO_TRG_${patientId.slice(0, 8)}`,
           firedAt,
         ]
       );
-      // And the recovery event
       await query(
         `insert into events (patient_id, kind, payload, created_at)
          values ($1, 'patient_unflagged', $2, $3)`,
@@ -377,7 +424,7 @@ export async function reseedDemo(opts: ReseedOptions): Promise<ReseedResult> {
       }
     }
 
-    // Record phase advances as events (for lived-in behavioral log)
+    // Phase advancement events
     for (let p = 1; p <= phase; p++) {
       const advanceAt = new Date(
         enrolledAt.getTime() +
@@ -393,13 +440,11 @@ export async function reseedDemo(opts: ReseedOptions): Promise<ReseedResult> {
     }
 
     totalMessages += messagesInserted;
-    // Suppress unused-var warnings
-    void lastOutboundTime;
   }
 
   return {
     clinicId,
-    totalPatients: target,
+    totalPatients: plan.length,
     totalMessages,
     bucketCounts,
   };
