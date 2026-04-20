@@ -241,6 +241,22 @@ export default async function HomePage() {
                 {metrics.urgent} urgent
               </span>
             </span>
+            <a
+              href="/api/export/action-list"
+              className="btn ghost"
+              style={{ fontSize: 13, padding: '6px 12px', borderBottom: '1px solid var(--fg)' }}
+              title="Download CSV of patients needing action today"
+            >
+              Export action list
+            </a>
+            <a
+              href="/api/export/roster"
+              className="btn ghost"
+              style={{ fontSize: 13, padding: '6px 12px', borderBottom: '1px solid var(--fg)' }}
+              title="Download full patient roster as CSV"
+            >
+              Export roster
+            </a>
           </div>
         </div>
 

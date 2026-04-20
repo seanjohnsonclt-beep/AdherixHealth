@@ -728,7 +728,25 @@ export default async function ReportsPage({
             </p>
           )}
         </div>
-        <span className="small faint mono">{user.clinicName}</span>
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: 14 }}>
+          <a
+            href="/api/export/exec-summary"
+            className="btn ghost"
+            style={{ fontSize: 13, padding: '6px 12px' }}
+            title="One-file CSV of top-line metrics + 12-week retention + recovery trends"
+          >
+            Export exec summary
+          </a>
+          <a
+            href="/api/export/recovery-ledger"
+            className="btn ghost"
+            style={{ fontSize: 13, padding: '6px 12px' }}
+            title="Itemized list of recovered patients with modeled revenue protected per recovery"
+          >
+            Export recovery ledger
+          </a>
+          <span className="small faint mono">{user.clinicName}</span>
+        </div>
       </div>
 
       {/* Filter bar */}
