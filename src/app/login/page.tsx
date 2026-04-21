@@ -10,7 +10,7 @@ export default function LoginPage({
   return (
     <div className="shell">
       <div className="login-card">
-        <h1>Adherix<sup style={{ fontSize: '13px', color: 'var(--fg-muted)', marginLeft: 4 }}>℞</sup></h1>
+        <h1>MyAdherix</h1>
         <p>Sign in to your account.</p>
 
         <form action={signInWithPasswordAction}>

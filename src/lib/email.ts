@@ -90,9 +90,9 @@ export async function sendDeliveryFailureAlert({
     .join('');
 
   const html = `
-    <div style="font-family:Inter,system-ui,sans-serif;max-width:640px;margin:0 auto;padding:32px 24px;background:#fafaf7;">
-      <div style="font-family:Georgia,serif;font-size:22px;font-weight:500;margin-bottom:24px;">
-        Adherix<sup style="font-size:11px;color:#6b6b66;">℞</sup>
+    <div style="font-family:Geist,system-ui,sans-serif;max-width:640px;margin:0 auto;padding:32px 24px;background:#F4EFE6;">
+      <div style="font-family:Fraunces,Georgia,serif;font-size:24px;font-weight:400;margin-bottom:24px;color:#1F2A2A;letter-spacing:-0.02em;">
+        MyAdherix
       </div>
 
       <p style="font-size:15px;color:#111110;margin-bottom:8px;">
@@ -117,8 +117,8 @@ export async function sendDeliveryFailureAlert({
 
       <div style="margin-top:24px;">
         <a href="${APP_URL}"
-           style="display:inline-block;padding:10px 20px;background:#111110;color:#fafaf7;font-size:14px;font-weight:500;text-decoration:none;">
-          Open Adherix →
+           style="display:inline-block;padding:10px 20px;background:#3D7670;color:#F4EFE6;font-size:14px;font-weight:500;text-decoration:none;border-radius:6px;">
+          Open MyAdherix →
         </a>
       </div>
 
@@ -163,11 +163,11 @@ export async function sendWeeklyDigest({
       : `<span style="color:#4a7c5c;">No patients require staff outreach today.</span>`;
 
   const html = `
-    <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,sans-serif;max-width:620px;margin:0 auto;padding:32px 24px;background:#fafaf7;color:#0f172a;">
-      <div style="font-family:Georgia,serif;font-size:22px;font-weight:500;margin-bottom:8px;color:#1e3a5f;">
-        Adherix<sup style="font-size:11px;color:#6b6b66;">℞</sup> · Weekly summary
+    <div style="font-family:Geist,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;max-width:620px;margin:0 auto;padding:32px 24px;background:#F4EFE6;color:#1F2A2A;">
+      <div style="font-family:Fraunces,Georgia,serif;font-size:24px;font-weight:400;margin-bottom:8px;color:#1F2A2A;letter-spacing:-0.02em;">
+        MyAdherix · Weekly summary
       </div>
-      <div style="font-size:13px;color:#6b6b66;margin-bottom:28px;">
+      <div style="font-size:13px;color:#6B7878;margin-bottom:28px;">
         ${data.clinicName} · ${data.weekStart}–${data.weekEnd}
       </div>
 

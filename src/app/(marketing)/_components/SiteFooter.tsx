@@ -23,15 +23,15 @@ export function SiteFooter() {
             <Link href="/#trust">Compliance</Link>
           </div>
           <div className="mkt-footer__col">
-            <h4>Get Started</h4>
-            <Link href="/pilot">Request a pilot</Link>
+            <h4>Get started</h4>
+            <Link href="/pilot">Request a demo</Link>
             <Link href="/demo">See the platform</Link>
             <Link href="/login">Sign in</Link>
           </div>
           <div className="mkt-footer__col">
             <h4>Contact</h4>
             <a href="mailto:hello@adherix.health">hello@adherix.health</a>
-            <a href="mailto:pilots@adherix.health">pilots@adherix.health</a>
+            <a href="mailto:demos@adherix.health">demos@adherix.health</a>
           </div>
         </div>
         <div className="mkt-footer__bottom">

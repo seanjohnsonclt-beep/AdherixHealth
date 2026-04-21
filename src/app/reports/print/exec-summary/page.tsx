@@ -105,7 +105,7 @@ export default async function ExecSummaryPrint() {
       <div className="print-hint">Ctrl/⌘+P to save as PDF</div>
       <div className="page">
         <header className="brand">
-          <h1>Adherix<sup>℞</sup> · Executive Summary</h1>
+          <h1>MyAdherix · Executive Summary</h1>
           <div className="meta">
             <div className="clinic">{user.clinicName}</div>
             <div>Period: last 30 days · Generated {today}</div>

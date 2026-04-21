@@ -10,7 +10,7 @@ export function Topbar({ clinicName, email }: Props) {
     <div className="topbar">
       <div style={{ display: 'flex', alignItems: 'baseline', gap: 28 }}>
         <a href="/dashboard" className="brand" style={{ border: 'none' }}>
-          Adherix<sup>℞</sup>
+          MyAdherix
         </a>
         <nav style={{ display: 'flex', gap: 20 }}>
           <a href="/dashboard" style={{ fontSize: 14, color: 'var(--fg-muted)', border: 'none' }} title="View and manage all enrolled patients">Patients</a>

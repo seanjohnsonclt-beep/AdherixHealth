@@ -54,7 +54,7 @@ export default function MarketingHome() {
                 </p>
                 <div className="mkt-hero__cta">
                   <Link href="/pilot" className="mkt-btn mkt-btn--primary mkt-btn--lg">
-                    Request a pilot
+                    Request a demo
                   </Link>
                   <Link href="#platform" className="mkt-btn mkt-btn--ghost mkt-btn--lg">
                     See the platform
@@ -298,7 +298,7 @@ export default function MarketingHome() {
               </p>
               <div className="mkt-final-cta__row">
                 <Link href="/pilot" className="mkt-btn mkt-btn--primary mkt-btn--lg">
-                  Request a pilot
+                  Request a demo
                 </Link>
                 <Link href="#platform" className="mkt-btn mkt-btn--outline-dark mkt-btn--lg">
                   See the platform

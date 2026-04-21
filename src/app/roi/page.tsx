@@ -154,7 +154,7 @@ export default function RoiPage() {
             letterSpacing: '-0.01em',
           }}
         >
-          Adherix<sup style={{ fontSize: 11, color: '#6b6b66' }}>℞</sup>
+          MyAdherix
         </a>
         <a
           href="/demo"
@@ -373,7 +373,7 @@ export default function RoiPage() {
             </div>
 
             <a
-              href="mailto:seanjohnsonclt@gmail.com?subject=Adherix%20Pilot%20Inquiry"
+              href="mailto:seanjohnsonclt@gmail.com?subject=Adherix%20Demo%20Inquiry"
               style={{
                 display: 'block',
                 marginTop: 28,
@@ -386,7 +386,7 @@ export default function RoiPage() {
                 textDecoration: 'none',
               }}
             >
-              Request a pilot for your clinic →
+              Request a demo for your clinic →
             </a>
           </div>
         </div>

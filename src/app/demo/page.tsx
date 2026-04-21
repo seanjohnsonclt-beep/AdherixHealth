@@ -407,7 +407,7 @@ export default function DemoPage() {
           textDecoration: 'none',
           letterSpacing: '-0.01em',
         }}>
-          Adherix<sup style={{ fontSize: 11, color: '#6b6b66' }}>℞</sup>
+          Adherix
         </a>
         <a href="/login" style={{ fontSize: 13, color: '#6b6b66', textDecoration: 'none', borderBottom: '1px solid #c8c7c0' }}>
           Clinic login →
@@ -570,11 +570,11 @@ export default function DemoPage() {
               Ready to run this for your clinic?
             </div>
             <div style={{ fontSize: 14, color: '#a5a5a0', lineHeight: 1.5 }}>
-              Pilot programs launch in under 48 hours. No long-term commitment.
+              Demo walk-throughs take 30 minutes. Pilot setup in under 48 hours.
             </div>
           </div>
           <a
-            href="mailto:seanjohnsonclt@gmail.com?subject=Adherix Pilot Inquiry"
+            href="mailto:seanjohnsonclt@gmail.com?subject=Adherix Demo Inquiry"
             style={{
               display: 'inline-block',
               padding: '12px 28px',
@@ -586,7 +586,7 @@ export default function DemoPage() {
               whiteSpace: 'nowrap',
             }}
           >
-            Request a pilot →
+            Request a demo →
           </a>
         </div>
       </div>

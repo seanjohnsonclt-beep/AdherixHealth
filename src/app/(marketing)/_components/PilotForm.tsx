@@ -3,7 +3,7 @@
 import { useState } from 'react';
 
 /**
- * Request a Pilot form.
+ * Request a Demo form.
  * Posts to /api/pilot, which emails the Adherix team via Resend.
  *
  * Designed to be low-friction: 6 fields, clear labels, forgiving UX.
@@ -68,7 +68,7 @@ export function PilotForm() {
       <div className="mkt-form__success">
         <strong>Thanks — your request is in.</strong>
         <div style={{ marginTop: 6, fontSize: 14 }}>
-          Someone from the Adherix team will be in touch within one business day to scope a pilot.
+          Someone from the Adherix team will be in touch within one business day to schedule a demo.
         </div>
       </div>
     );
@@ -169,7 +169,7 @@ export function PilotForm() {
           className="mkt-btn mkt-btn--primary"
           disabled={status === 'submitting'}
         >
-          {status === 'submitting' ? 'Sending\u2026' : 'Request a pilot'}
+          {status === 'submitting' ? 'Sending\u2026' : 'Request a demo'}
         </button>
         <span style={{ fontSize: 13, color: 'var(--mkt-muted)' }}>
           No spam, no sales auto-drip. A real person replies.

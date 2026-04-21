@@ -98,32 +98,32 @@ export async function POST(req: Request) {
   const notesHtml = notes
     ? `
       <div style="margin-top:18px;">
-        <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.08em;color:#6b6b66;margin-bottom:6px;">
+        <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.08em;color:#6B7878;margin-bottom:6px;">
           What they want to prove
         </div>
-        <div style="background:#fff;border:1px solid #e6e5df;border-radius:6px;padding:14px 16px;font-size:14.5px;line-height:1.6;white-space:pre-wrap;color:#0b2540;">
+        <div style="background:#fff;border:1px solid #E0D9CA;border-radius:6px;padding:14px 16px;font-size:14.5px;line-height:1.6;white-space:pre-wrap;color:#1F2A2A;">
           ${escapeHtml(notes)}
         </div>
       </div>`
     : '';
 
-  const subject = `Adherix — Pilot request from ${fullName} (${clinicName})`;
+  const subject = `Adherix — Demo request from ${fullName} (${clinicName})`;
   const html = `
-    <div style="font-family:Inter,system-ui,sans-serif;max-width:640px;margin:0 auto;padding:28px 24px;background:#fafaf7;">
-      <div style="font-family:Georgia,serif;font-size:22px;font-weight:500;margin-bottom:18px;color:#0b2540;">
-        Adherix<sup style="font-size:11px;color:#6b6b66;">℞</sup>
+    <div style="font-family:Geist,system-ui,sans-serif;max-width:640px;margin:0 auto;padding:28px 24px;background:#F4EFE6;">
+      <div style="font-family:Fraunces,Georgia,serif;font-size:24px;font-weight:400;margin-bottom:18px;color:#1F2A2A;letter-spacing:-0.02em;">
+        Adherix
       </div>
-      <p style="font-size:15px;color:#0b2540;margin:0 0 18px;">
-        New pilot request from <strong>${escapeHtml(fullName)}</strong> at <strong>${escapeHtml(clinicName)}</strong>.
+      <p style="font-size:15px;color:#1F2A2A;margin:0 0 18px;">
+        New demo request from <strong>${escapeHtml(fullName)}</strong> at <strong>${escapeHtml(clinicName)}</strong>.
       </p>
 
-      <table style="width:100%;border-collapse:collapse;background:white;border:1px solid #e6e5df;border-radius:6px;overflow:hidden;">
+      <table style="width:100%;border-collapse:collapse;background:white;border:1px solid #E0D9CA;border-radius:6px;overflow:hidden;">
         <tbody>${rowsHtml}</tbody>
       </table>
 
       ${notesHtml}
 
-      <p style="margin-top:28px;font-size:12px;color:#a5a5a0;border-top:1px solid #e6e5df;padding-top:14px;">
+      <p style="margin-top:28px;font-size:12px;color:#6B7878;border-top:1px solid #E0D9CA;padding-top:14px;">
         Submitted from the Adherix Health marketing site (/pilot).
       </p>
     </div>
