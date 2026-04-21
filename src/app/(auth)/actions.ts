@@ -17,11 +17,11 @@ export async function signInWithPasswordAction(formData: FormData) {
     redirect('/login?error=invalid_credentials');
   }
 
-  redirect('/');
+  redirect('/dashboard');
 }
 
 export async function signOutAction() {
   const supa = supabaseServer();
   await supa.auth.signOut();
-  redirect('/login');
+  redirect('/');
 }

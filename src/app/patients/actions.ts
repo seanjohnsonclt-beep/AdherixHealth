@@ -38,7 +38,7 @@ async function assertPatientInClinic(patientId: string, clinicId: string) {
     `select 1 from patients where id = $1 and clinic_id = $2`,
     [patientId, clinicId]
   );
-  if (!row) redirect('/');
+  if (!row) redirect('/dashboard');
 }
 
 export async function advancePhaseAction(formData: FormData) {
@@ -170,7 +170,7 @@ export async function dischargePatientAction(formData: FormData) {
   );
 
   revalidatePath('/');
-  redirect('/');
+  redirect('/dashboard');
 }
 
 // Remove: hard deletes the patient and all associated data. Use for test patients.
@@ -183,5 +183,5 @@ export async function removePatientAction(formData: FormData) {
   await query(`delete from patients where id = $1 and clinic_id = $2`, [id, user.clinicId]);
 
   revalidatePath('/');
-  redirect('/');
+  redirect('/dashboard');
 }

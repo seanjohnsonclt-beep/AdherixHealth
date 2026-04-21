@@ -15,7 +15,7 @@ export default async function NewPatientPage({
       <Topbar clinicName={user.clinicName} email={user.email} />
 
       <div style={{ maxWidth: 440 }}>
-        <Link href="/" className="small muted" style={{ border: 'none' }}>← All patients</Link>
+        <Link href="/dashboard" className="small muted" style={{ border: 'none' }}>← All patients</Link>
         <h1 style={{ marginTop: 12, marginBottom: 8 }}>Enroll patient</h1>
         <p className="muted small" style={{ marginBottom: 24 }}>
           The first message goes out within 5 minutes of enrollment.
@@ -42,7 +42,7 @@ export default async function NewPatientPage({
 
           <div className="actions">
             <button className="btn" type="submit">Enroll &amp; start</button>
-            <Link href="/" className="btn ghost">Cancel</Link>
+            <Link href="/dashboard" className="btn ghost">Cancel</Link>
           </div>
         </form>
       </div>

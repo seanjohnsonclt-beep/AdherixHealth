@@ -9,11 +9,11 @@ export function Topbar({ clinicName, email }: Props) {
   return (
     <div className="topbar">
       <div style={{ display: 'flex', alignItems: 'baseline', gap: 28 }}>
-        <a href="/" className="brand" style={{ border: 'none' }}>
+        <a href="/dashboard" className="brand" style={{ border: 'none' }}>
           Adherix<sup>℞</sup>
         </a>
         <nav style={{ display: 'flex', gap: 20 }}>
-          <a href="/" style={{ fontSize: 14, color: 'var(--fg-muted)', border: 'none' }} title="View and manage all enrolled patients">Patients</a>
+          <a href="/dashboard" style={{ fontSize: 14, color: 'var(--fg-muted)', border: 'none' }} title="View and manage all enrolled patients">Patients</a>
           <a href="/reports" style={{ fontSize: 14, color: 'var(--fg-muted)', border: 'none' }} title="Retention outcomes, engagement analytics, and message performance">Reports</a>
           <a href="/roi" style={{ fontSize: 14, color: 'var(--fg-muted)', border: 'none' }} title="Estimate revenue protected by retention automation">ROI</a>
         </nav>

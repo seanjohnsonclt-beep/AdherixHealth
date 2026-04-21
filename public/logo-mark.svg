@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Adherix">
+  <!-- Cohort A mark — Sage on transparent, per Brand Kit -->
+  <polygon points="54,14 60,14 26,110 16,110" fill="#5B9B94"/>
+  <polygon points="54,14 60,14 84,110 74,110" fill="#5B9B94"/>
+  <rect x="30" y="84" width="40" height="6" rx="1.5" fill="#3D7670" opacity="0.6"/>
+  <rect x="34" y="68" width="32" height="6" rx="1.5" fill="#3D7670" opacity="0.8"/>
+  <rect x="38" y="52" width="24" height="6" rx="1.5" fill="#3D7670"/>
+  <circle cx="100" cy="86" r="6" fill="#3D7670"/>
+</svg>

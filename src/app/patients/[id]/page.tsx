@@ -54,7 +54,7 @@ export default async function PatientPage({ params }: { params: { id: string } }
     [params.id, user.clinicId]
   );
 
-  if (!patient) redirect('/');
+  if (!patient) redirect('/dashboard');
 
   const messages = await query<Message>(
     `select id, direction, template_key, body, scheduled_for, sent_at, status, error, created_at
@@ -74,7 +74,7 @@ export default async function PatientPage({ params }: { params: { id: string } }
     <div className="shell">
       <Topbar clinicName={user.clinicName} email={user.email} />
 
-      <Link href="/" className="small muted" style={{ border: 'none' }}>← All patients</Link>
+      <Link href="/dashboard" className="small muted" style={{ border: 'none' }}>← All patients</Link>
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginTop: 12, marginBottom: 32 }}>
         <div>
