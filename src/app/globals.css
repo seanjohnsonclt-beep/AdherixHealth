@@ -1501,3 +1501,646 @@ h3 { font-size: 17px; line-height: 1.3; }
 /* ─── Misc helpers ───────────────────────────────────────────────────────── */
 .mkt-muted-text { color: var(--mkt-muted); }
 .mkt-divider { height: 1px; background: var(--mkt-line); border: none; margin: 32px 0; }
+
+/* =========================================================================
+   Redesign 2026-04 — additive marketing surfaces (.mkt-r-*)
+
+   Self-contained namespace for the homepage redesign. Reuses the existing
+   --mkt-* tokens; does not modify any class above. Safe to remove as a
+   block if the redesign is ever rolled back.
+   ========================================================================= */
+
+/* ── Section scaffolding ────────────────────────────────────────────────── */
+.mkt-r-section {
+  position: relative;
+  padding: 96px 0;
+  background: var(--mkt-paper);
+  isolation: isolate;
+}
+.mkt-r-section--alt { background: var(--mkt-paper-soft); }
+.mkt-r-section--paper-soft { background: var(--mkt-paper-soft); }
+.mkt-r-section--ink {
+  background: var(--mkt-ink);
+  color: var(--mkt-paper);
+}
+.mkt-r-section--ink .mkt-h2,
+.mkt-r-section--ink .mkt-h3 {
+  color: var(--mkt-paper);
+}
+.mkt-r-section--ink .mkt-eyebrow {
+  color: var(--mkt-sage-soft);
+}
+.mkt-r-section--ink .mkt-subhead {
+  color: rgba(244, 239, 230, 0.78);
+}
+
+.mkt-r-section__head {
+  max-width: 760px;
+  margin: 0 auto 56px;
+  text-align: center;
+}
+.mkt-r-section__head .mkt-subhead {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (max-width: 768px) {
+  .mkt-r-section { padding: 64px 0; }
+  .mkt-r-section__head { margin-bottom: 40px; }
+}
+
+/* ── Section 1 — Hero ───────────────────────────────────────────────────── */
+.mkt-r-hero {
+  position: relative;
+  padding: 120px 0 96px;
+  overflow: hidden;
+  background: var(--mkt-paper);
+}
+.mkt-r-hero__inner {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+}
+.mkt-r-hero__eyebrow { margin-bottom: 18px; }
+.mkt-r-hero__title {
+  max-width: 880px;
+  margin: 0 auto 22px;
+  font-size: 64px;
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+  font-weight: 400;
+}
+.mkt-r-hero__sub {
+  max-width: 620px;
+  margin: 0 auto 36px;
+  font-size: 19px;
+  color: var(--mkt-ink-2);
+}
+.mkt-r-hero__cta {
+  display: inline-flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 56px;
+}
+.mkt-r-hero__stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 32px;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 28px 32px;
+  border: 1px solid var(--mkt-line);
+  border-radius: var(--mkt-radius-lg);
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(2px);
+}
+.mkt-r-hero__stat { text-align: center; }
+.mkt-r-hero__stat-big {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 36px;
+  font-weight: 500;
+  color: var(--mkt-sage-deep);
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+.mkt-r-hero__stat-unit {
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--mkt-sage-deep);
+  margin-left: 2px;
+}
+.mkt-r-hero__stat-label {
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 13px;
+  color: var(--mkt-muted);
+  margin-top: 8px;
+  letter-spacing: -0.005em;
+}
+.mkt-r-hero__disclaimer {
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 12px;
+  color: var(--mkt-faint);
+  text-align: center;
+  margin: 18px 0 0;
+}
+.mkt-r-hero__wash {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 60% 40% at 30% 25%, rgba(91, 155, 148, 0.12), transparent 70%),
+    radial-gradient(ellipse 50% 35% at 75% 75%, rgba(217, 152, 119, 0.08), transparent 70%);
+}
+@media (max-width: 768px) {
+  .mkt-r-hero { padding: 80px 0 64px; }
+  .mkt-r-hero__title { font-size: 40px; }
+  .mkt-r-hero__sub { font-size: 17px; }
+  .mkt-r-hero__stats { grid-template-columns: 1fr; gap: 22px; padding: 22px; }
+  .mkt-r-hero__stat-big { font-size: 30px; }
+}
+
+/* ── Section 2 — Drift ──────────────────────────────────────────────────── */
+.mkt-r-drift__chart-wrap {
+  max-width: 880px;
+  margin: 0 auto 32px;
+  padding: 32px;
+  background: var(--mkt-card);
+  border: 1px solid var(--mkt-line);
+  border-radius: var(--mkt-radius-lg);
+  box-shadow: var(--mkt-shadow-md);
+}
+.mkt-r-drift__chart {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.mkt-r-drift__caption {
+  max-width: 640px;
+  margin: 0 auto 56px;
+  text-align: center;
+  font-family: 'Geist', system-ui, sans-serif;
+  color: var(--mkt-ink-2);
+  font-size: 16px;
+  line-height: 1.6;
+}
+.mkt-r-drift__pull {
+  max-width: 640px;
+  margin: 0 auto;
+  text-align: center;
+  padding: 36px 32px;
+  border: 1px solid var(--mkt-line);
+  border-radius: var(--mkt-radius-lg);
+  background: var(--mkt-card);
+}
+.mkt-r-drift__pull-num {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 56px;
+  font-weight: 500;
+  color: var(--mkt-clay-deep);
+  letter-spacing: -0.025em;
+  line-height: 1;
+  margin-bottom: 12px;
+}
+.mkt-r-drift__pull-text {
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 16px;
+  color: var(--mkt-ink-2);
+  line-height: 1.55;
+  margin-bottom: 12px;
+}
+.mkt-r-drift__pull-foot {
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 12px;
+  color: var(--mkt-faint);
+}
+@media (max-width: 768px) {
+  .mkt-r-drift__chart-wrap { padding: 18px; }
+  .mkt-r-drift__pull-num { font-size: 44px; }
+}
+
+/* ── Section 3 — SMS alone ──────────────────────────────────────────────── */
+.mkt-r-sms__split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  max-width: 1040px;
+  margin: 0 auto;
+}
+.mkt-r-sms__col {
+  padding: 32px;
+  border: 1px solid var(--mkt-line);
+  border-radius: var(--mkt-radius-lg);
+  background: var(--mkt-card);
+}
+.mkt-r-sms__col--dumb {
+  background: var(--mkt-paper-soft);
+}
+.mkt-r-sms__col--smart {
+  border-color: var(--mkt-sage-soft);
+  box-shadow: var(--mkt-shadow-md);
+}
+.mkt-r-sms__col-head { margin-bottom: 20px; }
+.mkt-r-sms__col-head .mkt-h3 { margin-bottom: 0; }
+.mkt-r-sms__tag {
+  display: inline-block;
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 999px;
+  margin-bottom: 12px;
+}
+.mkt-r-sms__tag--dumb {
+  background: var(--mkt-line);
+  color: var(--mkt-ink-2);
+}
+.mkt-r-sms__tag--smart {
+  background: var(--mkt-sage-mist);
+  color: var(--mkt-sage-deep);
+}
+.mkt-r-sms__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.mkt-r-sms__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--mkt-ink-2);
+  padding: 10px 0;
+  border-top: 1px solid var(--mkt-line);
+}
+.mkt-r-sms__item:first-child { border-top: none; }
+.mkt-r-sms__dash {
+  color: var(--mkt-muted);
+  flex: 0 0 auto;
+  margin-top: 5px;
+}
+.mkt-r-sms__check {
+  color: var(--mkt-sage-deep);
+  flex: 0 0 auto;
+  margin-top: 3px;
+}
+.mkt-r-sms__foot {
+  text-align: center;
+  margin-top: 36px;
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 14px;
+  color: var(--mkt-muted);
+  letter-spacing: -0.005em;
+}
+.mkt-r-sms__foot p { margin: 0; }
+@media (max-width: 768px) {
+  .mkt-r-sms__split { grid-template-columns: 1fr; }
+  .mkt-r-sms__col { padding: 22px; }
+}
+
+/* ── Section 4 — Engine ─────────────────────────────────────────────────── */
+.mkt-r-engine__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+  max-width: 1100px;
+  margin: 0 auto 64px;
+}
+.mkt-r-engine__card {
+  padding: 28px;
+  background: var(--mkt-card);
+  border: 1px solid var(--mkt-line);
+  border-radius: var(--mkt-radius-lg);
+  transition: border-color 200ms ease, box-shadow 200ms ease, transform 200ms ease;
+}
+.mkt-r-engine__card:hover {
+  border-color: var(--mkt-sage-soft);
+  box-shadow: var(--mkt-shadow-md);
+  transform: translateY(-2px);
+}
+.mkt-r-engine__card .mkt-h3 {
+  margin-bottom: 10px;
+}
+.mkt-r-engine__card p {
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--mkt-ink-2);
+  margin: 0;
+}
+.mkt-r-engine__timeline-wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px;
+  background: var(--mkt-card);
+  border: 1px solid var(--mkt-line);
+  border-radius: var(--mkt-radius-lg);
+}
+.mkt-r-engine__timeline-head {
+  margin-bottom: 24px;
+  text-align: center;
+}
+.mkt-r-engine__timeline-head .mkt-eyebrow { margin-bottom: 8px; }
+.mkt-r-engine__timeline-head p {
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--mkt-muted);
+  max-width: 580px;
+  margin: 0 auto;
+}
+.mkt-r-engine__timeline {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+.mkt-r-engine__phase {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.mkt-r-engine__phase-bar-track {
+  height: 10px;
+  background: var(--mkt-paper-soft);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+.mkt-r-engine__phase-bar {
+  height: 100%;
+  border-radius: 999px;
+}
+.mkt-r-engine__phase-bar--0 { background: var(--mkt-sage-soft); }
+.mkt-r-engine__phase-bar--1 { background: #8FBDB5; }
+.mkt-r-engine__phase-bar--2 { background: var(--mkt-sage); }
+.mkt-r-engine__phase-bar--3 { background: var(--mkt-sage-deep); }
+.mkt-r-engine__phase-bar--4 { background: #2F5A55; }
+.mkt-r-engine__phase-bar--5 {
+  background: linear-gradient(to right, #234442, rgba(35, 68, 66, 0.25));
+}
+.mkt-r-engine__phase-meta { padding: 0 4px; }
+.mkt-r-engine__phase-label {
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--mkt-ink);
+  letter-spacing: -0.005em;
+}
+.mkt-r-engine__phase-sub {
+  font-family: 'Geist Mono', ui-monospace, monospace;
+  font-size: 11px;
+  color: var(--mkt-muted);
+  margin-top: 2px;
+}
+@media (max-width: 900px) {
+  .mkt-r-engine__grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 768px) {
+  .mkt-r-engine__timeline { flex-direction: column; gap: 14px; }
+  .mkt-r-engine__phase { width: 100%; flex-basis: auto !important; }
+}
+
+/* ── Section 5 — ROI tiles ──────────────────────────────────────────────── */
+.mkt-r-roi__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+  max-width: 1100px;
+  margin: 0 auto 40px;
+}
+.mkt-r-roi__tile {
+  padding: 36px 28px;
+  background: var(--mkt-card);
+  border: 1px solid var(--mkt-line);
+  border-radius: var(--mkt-radius-lg);
+  text-align: left;
+  transition: border-color 200ms ease, box-shadow 200ms ease;
+}
+.mkt-r-roi__tile:hover {
+  border-color: var(--mkt-sage-soft);
+  box-shadow: var(--mkt-shadow-md);
+}
+.mkt-r-roi__big {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 56px;
+  font-weight: 500;
+  color: var(--mkt-sage-deep);
+  letter-spacing: -0.025em;
+  line-height: 1;
+  margin-bottom: 14px;
+}
+.mkt-r-roi__unit {
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 22px;
+  font-weight: 500;
+  margin-left: 2px;
+}
+.mkt-r-roi__label {
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--mkt-ink);
+  margin-bottom: 6px;
+  letter-spacing: -0.005em;
+}
+.mkt-r-roi__sub {
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 13px;
+  color: var(--mkt-muted);
+  line-height: 1.5;
+}
+.mkt-r-roi__cta {
+  max-width: 720px;
+  margin: 0 auto;
+  text-align: center;
+}
+.mkt-r-roi__formula {
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 15px;
+  color: var(--mkt-ink-2);
+  line-height: 1.55;
+  margin: 0 0 18px;
+}
+.mkt-r-roi__disclaimer {
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 12px;
+  color: var(--mkt-faint);
+  text-align: center;
+  margin: 24px 0 0;
+}
+@media (max-width: 900px) {
+  .mkt-r-roi__grid { grid-template-columns: 1fr; }
+  .mkt-r-roi__big { font-size: 44px; }
+}
+
+/* ── Section 6 — Dashboard preview ──────────────────────────────────────── */
+.mkt-r-dash__frame {
+  max-width: 1080px;
+  margin: 0 auto;
+  background: var(--mkt-card);
+  border: 1px solid var(--mkt-line);
+  border-radius: var(--mkt-radius-lg);
+  box-shadow: var(--mkt-shadow-lg);
+  overflow: hidden;
+}
+.mkt-r-dash__chrome {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--mkt-paper-soft);
+  border-bottom: 1px solid var(--mkt-line);
+}
+.mkt-r-dash__dots {
+  display: flex;
+  gap: 6px;
+}
+.mkt-r-dash__dots span {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--mkt-line-strong);
+  display: block;
+}
+.mkt-r-dash__url {
+  flex: 1;
+  text-align: center;
+  font-family: 'Geist Mono', ui-monospace, monospace;
+  font-size: 12px;
+  color: var(--mkt-muted);
+}
+.mkt-r-dash__body { padding: 28px; }
+.mkt-r-dash__kpis {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+.mkt-r-dash__kpi {
+  padding: 18px;
+  background: var(--mkt-paper-soft);
+  border: 1px solid var(--mkt-line);
+  border-radius: var(--mkt-radius);
+}
+.mkt-r-dash__kpi-value {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 28px;
+  font-weight: 500;
+  color: var(--mkt-ink);
+  letter-spacing: -0.02em;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.mkt-r-dash__kpi-label {
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 12px;
+  color: var(--mkt-muted);
+  letter-spacing: -0.005em;
+}
+.mkt-r-dash__table {
+  border: 1px solid var(--mkt-line);
+  border-radius: var(--mkt-radius);
+  overflow: hidden;
+}
+.mkt-r-dash__row {
+  display: grid;
+  grid-template-columns: 1.4fr 1.2fr 0.9fr 1fr 0.9fr;
+  gap: 16px;
+  padding: 14px 18px;
+  border-top: 1px solid var(--mkt-line);
+  align-items: center;
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 14px;
+  color: var(--mkt-ink-2);
+}
+.mkt-r-dash__row:first-child { border-top: none; }
+.mkt-r-dash__row--head {
+  background: var(--mkt-paper-soft);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--mkt-muted);
+}
+.mkt-r-dash__chip {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+.mkt-r-dash__chip--on-track {
+  background: var(--mkt-sage-mist);
+  color: var(--mkt-sage-deep);
+}
+.mkt-r-dash__chip--watch {
+  background: #F4E9C9;
+  color: #8A6B1F;
+}
+.mkt-r-dash__chip--flagged {
+  background: var(--mkt-warn-soft);
+  color: var(--mkt-warn);
+}
+.mkt-r-dash__spark { display: block; }
+.mkt-r-dash__spark--up { color: var(--mkt-sage-deep); }
+.mkt-r-dash__spark--flat { color: var(--mkt-muted); }
+.mkt-r-dash__spark--down { color: var(--mkt-clay-deep); }
+@media (max-width: 900px) {
+  .mkt-r-dash__kpis { grid-template-columns: repeat(2, 1fr); }
+  .mkt-r-dash__row { grid-template-columns: 1.2fr 1fr 0.8fr; }
+  .mkt-r-dash__row > *:nth-child(4),
+  .mkt-r-dash__row > *:nth-child(5) { display: none; }
+}
+
+/* ── Section 7 — Pilot band ─────────────────────────────────────────────── */
+.mkt-r-pilot {
+  text-align: center;
+  max-width: 760px;
+  margin: 0 auto;
+}
+.mkt-r-pilot__eyebrow { margin-bottom: 14px; }
+.mkt-r-pilot__title {
+  color: var(--mkt-paper);
+  margin-bottom: 18px;
+}
+.mkt-r-pilot__sub {
+  margin: 0 auto 32px;
+  color: rgba(244, 239, 230, 0.78);
+}
+.mkt-r-pilot__cta {
+  display: inline-flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 32px;
+}
+.mkt-btn--ghost-on-dark {
+  border-color: rgba(244, 239, 230, 0.32);
+  color: var(--mkt-paper);
+}
+.mkt-btn--ghost-on-dark:hover {
+  border-color: var(--mkt-paper);
+  background: rgba(244, 239, 230, 0.06);
+}
+.mkt-r-pilot__strip {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  justify-content: center;
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 13px;
+  color: rgba(244, 239, 230, 0.6);
+  letter-spacing: -0.005em;
+}
+
+/* ── Section 8 — Founder note ───────────────────────────────────────────── */
+.mkt-r-founder {
+  max-width: 820px;
+  margin: 0 auto;
+  text-align: center;
+}
+.mkt-r-founder__row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  margin-top: 24px;
+}
+.mkt-r-founder__avatar {
+  flex: 0 0 auto;
+}
+.mkt-r-founder__silhouette { display: block; }
+.mkt-r-founder__body {
+  text-align: left;
+  max-width: 620px;
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--mkt-ink-2);
+}
+.mkt-r-founder__body p { margin: 0 0 16px
