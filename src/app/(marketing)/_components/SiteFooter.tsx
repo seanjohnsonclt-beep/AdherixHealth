@@ -16,27 +16,27 @@ export function SiteFooter() {
             </p>
           </div>
           <div className="mkt-footer__col">
-            <h4>Platform</h4>
-            <Link href="/#platform">Overview</Link>
-            <Link href="/#how">How it works</Link>
-            <Link href="/#roi">ROI</Link>
-            <Link href="/#trust">Compliance</Link>
+            <h4>Product</h4>
+            <Link href="/">Overview</Link>
+            <Link href="/platform">Platform</Link>
+            <Link href="/roi">ROI calculator</Link>
+            <Link href="/pilot">Book a demo</Link>
           </div>
           <div className="mkt-footer__col">
-            <h4>Get started</h4>
-            <Link href="/pilot">Request a demo</Link>
-            <Link href="/demo">See the platform</Link>
+            <h4>Account</h4>
             <Link href="/login">Sign in</Link>
+            <a href="mailto:hello@adherix.health">Contact us</a>
           </div>
           <div className="mkt-footer__col">
-            <h4>Contact</h4>
-            <a href="mailto:hello@adherix.health">hello@adherix.health</a>
-            <a href="mailto:demos@adherix.health">demos@adherix.health</a>
+            <h4>Legal &amp; security</h4>
+            <Link href="/privacy">Privacy policy</Link>
+            <Link href="/terms">Terms of service</Link>
+            <Link href="/security">Security</Link>
           </div>
         </div>
         <div className="mkt-footer__bottom">
           <span>© {year} Adherix Health. All rights reserved.</span>
-          <span>Behavioral retention infrastructure for metabolic care programs.</span>
+          <span>HIPAA-aware infrastructure for GLP-1 retention programs.</span>
         </div>
       </div>
     </footer>
