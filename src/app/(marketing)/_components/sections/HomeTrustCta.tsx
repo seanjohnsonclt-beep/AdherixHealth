@@ -68,7 +68,7 @@ export function HomeTrustCta() {
           <span aria-hidden="true">·</span>
           <span>HIPAA-aware architecture</span>
           <span aria-hidden="true">·</span>
-          <span>Currently in clinic validation</span>
+          <span>Accepting early clinic partnerships</span>
         </FadeRise>
       </div>
     </section>

@@ -1,14 +1,12 @@
 import Link from 'next/link';
 import { AdherixLogo } from './AdherixLogo';
+import { MobileNav } from './MobileNav';
 
 /**
  * Sticky public site header.
  *
- * Nav links now point to real pages, not in-page anchors.
- *   Platform      → /platform
- *   ROI calculator → /roi
- *   Sign in       → /login (low emphasis)
- *   CTA           → /pilot (Book a demo)
+ * Desktop nav: Platform | ROI calculator | Sign in | Book a demo
+ * Mobile: logo + hamburger via MobileNav (client component)
  */
 export function SiteHeader() {
   return (
@@ -23,7 +21,8 @@ export function SiteHeader() {
             </span>
           </Link>
 
-          <nav className="mkt-nav" aria-label="Primary">
+          {/* Desktop nav — hidden on mobile via CSS */}
+          <nav className="mkt-nav mkt-nav--desktop" aria-label="Primary">
             <Link href="/platform">Platform</Link>
             <Link href="/roi">ROI calculator</Link>
             <Link href="/login">Sign in</Link>
@@ -31,6 +30,9 @@ export function SiteHeader() {
               Book a demo
             </Link>
           </nav>
+
+          {/* Mobile nav — hamburger + slide-down, hidden on desktop via CSS */}
+          <MobileNav />
         </div>
       </div>
     </header>

@@ -3124,3 +3124,302 @@ h3 { font-size: 17px; line-height: 1.3; }
   .mkt-v2-hero__title { font-size: 34px; }
   .mkt-v2-pillar { padding: 26px 22px; }
 }
+
+/* =========================================================================
+   Mobile nav + Mini ROI calculator — 2026-04
+   ========================================================================= */
+
+/* ---- Mobile nav toggle (hidden on desktop) ---- */
+.mkt-mobile-toggle {
+  display: none;
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  color: var(--mkt-ink);
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Three-bar hamburger icon built from box-shadow */
+.mkt-mobile-toggle__bar {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--mkt-ink);
+  border-radius: 2px;
+  position: relative;
+  transition: background 0.2s ease;
+}
+.mkt-mobile-toggle__bar::before,
+.mkt-mobile-toggle__bar::after {
+  content: '';
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--mkt-ink);
+  border-radius: 2px;
+  position: absolute;
+  left: 0;
+  transition: transform 0.22s ease, top 0.22s ease, opacity 0.15s ease;
+}
+.mkt-mobile-toggle__bar::before { top: -7px; }
+.mkt-mobile-toggle__bar::after  { top:  7px; }
+
+/* X state */
+.mkt-mobile-toggle__bar.is-open { background: transparent; }
+.mkt-mobile-toggle__bar.is-open::before {
+  top: 0;
+  transform: rotate(45deg);
+}
+.mkt-mobile-toggle__bar.is-open::after {
+  top: 0;
+  transform: rotate(-45deg);
+}
+
+/* ---- Mobile menu overlay ---- */
+.mkt-mobile-menu {
+  position: fixed;
+  top: 61px; /* header height */
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--mkt-paper);
+  border-top: 1px solid var(--mkt-line);
+  z-index: 999;
+  overflow-y: auto;
+  animation: mkt-menu-in 0.2s ease;
+}
+@keyframes mkt-menu-in {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.mkt-mobile-menu__inner {
+  display: flex;
+  flex-direction: column;
+  padding: 24px 20px 40px;
+  gap: 4px;
+}
+.mkt-mobile-menu__link {
+  display: block;
+  padding: 14px 4px;
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--mkt-ink);
+  border-bottom: 1px solid var(--mkt-line);
+  text-decoration: none;
+}
+.mkt-mobile-menu__link:hover { color: var(--mkt-sage-deep); }
+.mkt-mobile-menu__link--muted { color: var(--mkt-graphite); font-weight: 400; }
+.mkt-mobile-menu__cta {
+  margin-top: 20px;
+  width: 100%;
+  justify-content: center;
+  text-align: center;
+}
+
+/* Hide desktop nav on mobile, hide mobile toggle on desktop */
+@media (max-width: 679px) {
+  .mkt-nav--desktop { display: none \!important; }
+  .mkt-mobile-toggle { display: flex; }
+}
+@media (min-width: 680px) {
+  .mkt-mobile-toggle { display: none \!important; }
+  .mkt-mobile-menu  { display: none \!important; }
+}
+
+/* ---- Mini ROI calculator ---- */
+.mkt-v2-roi {
+  background: var(--mkt-card);
+  border: 1px solid var(--mkt-line);
+  border-radius: var(--mkt-radius-lg);
+  box-shadow: var(--mkt-shadow-md);
+  overflow: hidden;
+}
+
+.mkt-v2-roi__inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--mkt-line);
+  border-bottom: 1px solid var(--mkt-line);
+}
+
+.mkt-v2-roi__input-group {
+  background: var(--mkt-paper-soft);
+  padding: 32px 36px;
+}
+
+.mkt-v2-roi__input-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 16px;
+}
+
+.mkt-v2-roi__label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--mkt-ink-2);
+}
+
+.mkt-v2-roi__val {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--mkt-sage-deep);
+  letter-spacing: -0.01em;
+}
+
+/* Range slider — Sage accent */
+.mkt-v2-roi__slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--mkt-line-strong);
+  outline: none;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+.mkt-v2-roi__slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--mkt-sage-deep);
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(31,42,42,0.15);
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+.mkt-v2-roi__slider::-webkit-slider-thumb:hover { transform: scale(1.15); }
+.mkt-v2-roi__slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: none;
+  background: var(--mkt-sage-deep);
+  cursor: pointer;
+}
+.mkt-v2-roi__slider:focus-visible {
+  outline: 2px solid var(--mkt-sage);
+  outline-offset: 2px;
+}
+
+.mkt-v2-roi__ticks {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--mkt-graphite);
+  font-family: 'Geist Mono', monospace;
+}
+
+/* Output row */
+.mkt-v2-roi__outputs {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  background: var(--mkt-paper);
+}
+
+.mkt-v2-roi__out {
+  flex: 1;
+  padding: 36px 36px;
+}
+
+.mkt-v2-roi__out--protect {
+  background: var(--mkt-ink);
+}
+
+.mkt-v2-roi__divider {
+  font-size: 22px;
+  color: var(--mkt-line-strong);
+  padding: 0 4px;
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.mkt-v2-roi__out-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--mkt-graphite);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.mkt-v2-roi__out--protect .mkt-v2-roi__out-label {
+  color: var(--mkt-sage-soft);
+}
+
+.mkt-v2-roi__out-num {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 44px;
+  font-weight: 400;
+  color: var(--mkt-ink);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  margin-bottom: 10px;
+}
+
+.mkt-v2-roi__out--protect .mkt-v2-roi__out-num {
+  color: var(--mkt-paper);
+}
+
+.mkt-v2-roi__out-yr {
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  opacity: 0.7;
+}
+
+.mkt-v2-roi__out-sub {
+  font-size: 13px;
+  color: var(--mkt-graphite);
+  line-height: 1.4;
+}
+
+.mkt-v2-roi__out--protect .mkt-v2-roi__out-sub {
+  color: var(--mkt-sage-soft);
+  opacity: 0.75;
+}
+
+/* Footer */
+.mkt-v2-roi__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 18px 36px;
+  border-top: 1px solid var(--mkt-line);
+  background: var(--mkt-paper-soft);
+}
+
+.mkt-v2-roi__disclaimer {
+  font-size: 12px;
+  color: var(--mkt-graphite);
+  margin: 0;
+}
+
+.mkt-v2-roi__more {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--mkt-sage-deep);
+  white-space: nowrap;
+  text-decoration: none;
+}
+.mkt-v2-roi__more:hover { text-decoration: underline; }
+
+/* ROI responsive */
+@media (max-width: 780px) {
+  .mkt-v2-roi__inputs { grid-template-columns: 1fr; }
+  .mkt-v2-roi__outputs { flex-direction: column; gap: 0; }
+  .mkt-v2-roi__out { width: 100%; padding: 28px 24px; }
+  .mkt-v2-roi__divider { display: none; }
+  .mkt-v2-roi__out-num { font-size: 36px; }
+  .mkt-v2-roi__input-group { padding: 24px 24px; }
+  .mkt-v2-roi__footer { flex-direction: column; align-items: flex-start; padding: 16px 24px; }
+}

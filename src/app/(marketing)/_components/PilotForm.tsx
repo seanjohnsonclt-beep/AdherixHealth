@@ -169,7 +169,7 @@ export function PilotForm() {
           className="mkt-btn mkt-btn--primary"
           disabled={status === 'submitting'}
         >
-          {status === 'submitting' ? 'Sending\u2026' : 'Request a demo'}
+          {status === 'submitting' ? 'Sending\u2026' : 'Book a demo'}
         </button>
         <span style={{ fontSize: 13, color: 'var(--mkt-muted)' }}>
           No spam, no sales auto-drip. A real person replies.
