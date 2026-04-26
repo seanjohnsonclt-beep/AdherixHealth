@@ -154,10 +154,10 @@ export default function RoiPage() {
             letterSpacing: '-0.01em',
           }}
         >
-          MyAdherix
+          Adherix Health
         </a>
         <a
-          href="/demo"
+          href="/"
           style={{
             fontSize: 13,
             color: '#6b6b66',
