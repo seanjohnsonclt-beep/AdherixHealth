@@ -135,9 +135,11 @@ function DriftVisual({ patients, protected_, atRisk }: { patients: number; prote
 
       {/* ── Bottom band ── */}
       <rect x="30" y="226" width="380" height="44" rx="12" fill="var(--mkt-ink)"/>
-      <text x="220" y="253" fontFamily="Fraunces,Georgia,serif" fontSize="18" fontWeight="500"
+      <text x="220" y="245" fontFamily="Geist,system-ui,sans-serif" fontSize="11"
+        textAnchor="middle" fill="rgba(244,239,230,0.55)" letterSpacing="0.05em">ANNUAL PROGRAM EXPOSURE</text>
+      <text x="220" y="262" fontFamily="Fraunces,Georgia,serif" fontSize="15" fontWeight="500"
         textAnchor="middle" fill="white">
-        {fmt(protected_)} recovered · {fmt(atRisk)} still at risk without full pilot
+        {fmt(protected_)} recovered · {fmt(atRisk)} at risk
       </text>
     </svg>
   );
