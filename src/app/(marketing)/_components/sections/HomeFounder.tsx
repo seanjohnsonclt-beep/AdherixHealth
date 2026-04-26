@@ -1,15 +1,12 @@
 'use client';
 
+import Image from 'next/image';
 import { FadeRise } from '../animation/MotionPrimitives';
 
 /**
  * Founder credibility section — homepage.
  *
  * Human signal before the conversion CTA. One voice, one story.
- * Silhouette is a placeholder — replace with a real headshot at
- * public/founder.jpg and swap the <Silhouette /> for an <img> tag.
- *
- * TODO(sean): Replace Silhouette with real headshot + update sign block.
  */
 export function HomeFounder() {
   return (
@@ -21,7 +18,14 @@ export function HomeFounder() {
 
         <div className="mkt-v2-founder__row">
           <FadeRise className="mkt-v2-founder__avatar" delay={0.05}>
-            <Silhouette />
+            <Image
+              src="/founder.png"
+              alt="Sean Johnson, Founder of Adherix Health"
+              width={96}
+              height={96}
+              className="mkt-v2-founder__photo"
+              priority
+            />
           </FadeRise>
 
           <FadeRise className="mkt-v2-founder__body" delay={0.1}>
@@ -58,32 +62,5 @@ export function HomeFounder() {
         </div>
       </div>
     </section>
-  );
-}
-
-function Silhouette() {
-  return (
-    <svg
-      width="96"
-      height="96"
-      viewBox="0 0 96 96"
-      role="img"
-      aria-label="Founder portrait placeholder"
-      className="mkt-v2-founder__silhouette"
-    >
-      <defs>
-        <linearGradient id="founder-grad-v2" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="var(--mkt-sage)"      stopOpacity="0.18" />
-          <stop offset="100%" stopColor="var(--mkt-sage-deep)" stopOpacity="0.28" />
-        </linearGradient>
-      </defs>
-      <circle cx="48" cy="48" r="46" fill="url(#founder-grad-v2)" />
-      <circle cx="48" cy="38" r="14" fill="var(--mkt-paper)" opacity="0.9" />
-      <path
-        d="M 18 84 C 24 68, 36 60, 48 60 C 60 60, 72 68, 78 84 Z"
-        fill="var(--mkt-paper)"
-        opacity="0.9"
-      />
-    </svg>
   );
 }
