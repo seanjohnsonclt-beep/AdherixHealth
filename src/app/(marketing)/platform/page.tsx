@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { PlatformHero } from '../_components/sections/PlatformHero';
 import { Engine } from '../_components/sections/Engine';
+import { PatientSmsView } from '../_components/sections/PatientSmsView';
 import { TriggerLogic } from '../_components/sections/TriggerLogic';
 import { SmsAlone } from '../_components/sections/SmsAlone';
 import { DashboardPreview } from '../_components/sections/DashboardPreview';
@@ -34,6 +35,7 @@ export default function PlatformPage() {
     <>
       <PlatformHero />
       <Engine />
+      <PatientSmsView />
       <TriggerLogic />
       <SmsAlone />
       <DashboardPreview />

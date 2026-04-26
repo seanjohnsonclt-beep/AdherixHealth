@@ -61,7 +61,7 @@ export function HomeRoi() {
                 className="mkt-v2-roi__slider"
                 min={20}
                 max={1000}
-                step={10}
+                step={5}
                 value={patients}
                 onChange={(e) => setPatients(Number(e.target.value))}
               />
@@ -86,7 +86,7 @@ export function HomeRoi() {
                 className="mkt-v2-roi__slider"
                 min={200}
                 max={2000}
-                step={50}
+                step={25}
                 value={monthly}
                 onChange={(e) => setMonthly(Number(e.target.value))}
               />
