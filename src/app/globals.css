@@ -3423,3 +3423,111 @@ h3 { font-size: 17px; line-height: 1.3; }
   .mkt-v2-roi__input-group { padding: 24px 24px; }
   .mkt-v2-roi__footer { flex-direction: column; align-items: flex-start; padding: 16px 24px; }
 }
+
+/* =========================================================================
+   Slider drag fix + Founder section — 2026-04
+   ========================================================================= */
+
+/* ---- ROI slider drag fix ----
+   overflow:hidden on .mkt-v2-roi clips the slider thumb's pointer events.
+   Remove it here; restore border-radius on the first/last child instead.  */
+.mkt-v2-roi {
+  overflow: visible;
+}
+.mkt-v2-roi__inputs {
+  border-radius: var(--mkt-radius-lg) var(--mkt-radius-lg) 0 0;
+  overflow: hidden;
+}
+.mkt-v2-roi__footer {
+  border-radius: 0 0 var(--mkt-radius-lg) var(--mkt-radius-lg);
+}
+/* Ensure slider track + thumb are never clipped */
+.mkt-v2-roi__input-group {
+  overflow: visible;
+}
+.mkt-v2-roi__slider {
+  position: relative;
+  z-index: 2;
+  touch-action: pan-x;
+  cursor: grab;
+}
+.mkt-v2-roi__slider:active {
+  cursor: grabbing;
+}
+/* Widen the invisible hit area without changing visual height */
+.mkt-v2-roi__slider::-webkit-slider-container {
+  padding: 10px 0;
+}
+
+/* ---- Founder section ---- */
+.mkt-v2-founder {
+  max-width: 840px;
+  margin: 0 auto;
+}
+.mkt-v2-founder > .mkt-eyebrow {
+  display: block;
+  margin-bottom: 40px;
+}
+.mkt-v2-founder__row {
+  display: flex;
+  gap: 48px;
+  align-items: flex-start;
+}
+.mkt-v2-founder__avatar {
+  flex-shrink: 0;
+}
+.mkt-v2-founder__silhouette {
+  display: block;
+  border-radius: 50%;
+}
+.mkt-v2-founder__body {
+  font-size: 16px;
+  line-height: 1.75;
+  color: var(--mkt-ink-2);
+}
+.mkt-v2-founder__body p {
+  margin: 0 0 18px;
+}
+.mkt-v2-founder__body p:last-of-type {
+  margin-bottom: 0;
+}
+.mkt-v2-founder__lede {
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--mkt-ink);
+  line-height: 1.6;
+}
+.mkt-v2-founder__vision {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--mkt-sage-deep);
+  font-style: italic;
+  border-left: 3px solid var(--mkt-sage-soft);
+  padding-left: 20px;
+  margin-top: 28px \!important;
+}
+.mkt-v2-founder__sign {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid var(--mkt-line);
+}
+.mkt-v2-founder__name {
+  font-weight: 600;
+  color: var(--mkt-ink);
+  font-size: 15px;
+}
+.mkt-v2-founder__role {
+  font-size: 13px;
+  color: var(--mkt-graphite);
+}
+
+@media (max-width: 600px) {
+  .mkt-v2-founder__row {
+    flex-direction: column;
+    gap: 28px;
+  }
+}

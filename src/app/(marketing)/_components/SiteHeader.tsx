@@ -5,7 +5,7 @@ import { MobileNav } from './MobileNav';
 /**
  * Sticky public site header.
  *
- * Desktop nav: Platform | ROI calculator | Sign in | Book a demo
+ * Desktop nav: Overview | Platform | ROI calculator | Sign in | Book a demo
  * Mobile: logo + hamburger via MobileNav (client component)
  */
 export function SiteHeader() {
@@ -23,6 +23,7 @@ export function SiteHeader() {
 
           {/* Desktop nav — hidden on mobile via CSS */}
           <nav className="mkt-nav mkt-nav--desktop" aria-label="Primary">
+            <Link href="/">Overview</Link>
             <Link href="/platform">Platform</Link>
             <Link href="/roi">ROI calculator</Link>
             <Link href="/login">Sign in</Link>
