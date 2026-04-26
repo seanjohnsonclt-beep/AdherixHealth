@@ -3966,3 +3966,312 @@ h3 { font-size: 17px; line-height: 1.3; }
 .mkt-legal__body a:hover {
   color: var(--mkt-ink);
 }
+
+/* =========================================================================
+   /roi page — three-calculator layout
+   roi-* namespace. Self-contained; does not affect any .mkt-* rules.
+   ========================================================================= */
+
+/* ── Hero ───────────────────────────────────────────────────────────────── */
+.roi-hero {
+  background: var(--mkt-paper);
+  padding: 112px 0 88px;
+  text-align: center;
+}
+.roi-hero__inner {
+  max-width: 800px;
+  margin: 0 auto;
+}
+.roi-hero__title {
+  margin: 14px auto 22px;
+  max-width: 760px;
+}
+.roi-hero__sub {
+  max-width: 600px;
+  margin: 0 auto 44px;
+}
+.roi-hero__nav {
+  display: inline-flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.roi-hero__jump {
+  display: inline-block;
+  padding: 9px 20px;
+  border: 1px solid var(--mkt-line);
+  border-radius: 999px;
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--mkt-ink-2);
+  text-decoration: none;
+  background: var(--mkt-paper-soft);
+  transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+}
+.roi-hero__jump:hover {
+  border-color: var(--mkt-sage);
+  color: var(--mkt-sage-deep);
+  background: var(--mkt-sage-mist);
+}
+
+/* ── Section scaffold ───────────────────────────────────────────────────── */
+.roi-section {
+  padding: 100px 0;
+  background: var(--mkt-paper);
+}
+.roi-section--alt {
+  background: var(--mkt-paper-soft);
+}
+
+/* Inner grid: visual left, calc right */
+.roi-section__inner {
+  display: grid;
+  gap: 72px;
+  align-items: center;
+}
+.roi-section__inner--a {
+  grid-template-columns: 1fr 1fr;
+}
+/* Flipped: calc left, visual right */
+.roi-section__inner--b {
+  grid-template-columns: 1fr 1fr;
+}
+
+/* ── SVG visual ─────────────────────────────────────────────────────────── */
+.roi-visual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.roi-svg {
+  width: 100%;
+  max-width: 460px;
+  height: auto;
+  display: block;
+}
+
+/* ── Calculator card ────────────────────────────────────────────────────── */
+.roi-calc {
+  display: flex;
+  flex-direction: column;
+}
+.roi-calc .mkt-eyebrow {
+  margin-bottom: 12px;
+}
+.roi-calc .mkt-h2 {
+  margin-bottom: 16px;
+}
+.roi-calc__sub {
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--mkt-ink-2);
+  margin-bottom: 32px;
+}
+.roi-calc__inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 28px;
+}
+.roi-calc__outputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+.roi-calc__outputs--three {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+/* ── Number input field ─────────────────────────────────────────────────── */
+.roi-field {}
+.roi-field__label {
+  display: block;
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--mkt-graphite);
+  margin-bottom: 8px;
+  letter-spacing: -0.01em;
+}
+.roi-field__wrap {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--mkt-line);
+  border-radius: 8px;
+  background: var(--mkt-paper-soft);
+  overflow: hidden;
+  transition: border-color 0.15s ease;
+}
+.roi-field__wrap:focus-within {
+  border-color: var(--mkt-sage);
+}
+.roi-field__affix {
+  padding: 0 12px;
+  font-family: 'Geist Mono', monospace;
+  font-size: 13px;
+  color: var(--mkt-graphite);
+  background: var(--mkt-line);
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  border-right: 1px solid var(--mkt-line);
+  user-select: none;
+}
+.roi-field__affix--right {
+  border-right: none;
+  border-left: 1px solid var(--mkt-line);
+}
+.roi-field__input {
+  flex: 1;
+  padding: 10px 12px;
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--mkt-ink);
+  background: transparent;
+  border: none;
+  outline: none;
+  min-width: 0;
+}
+.roi-field__input::-webkit-inner-spin-button,
+.roi-field__input::-webkit-outer-spin-button {
+  opacity: 0.5;
+}
+
+/* ── Output cards ───────────────────────────────────────────────────────── */
+.roi-output {
+  padding: 18px 20px;
+  border-radius: 10px;
+  border: 1px solid var(--mkt-line);
+  background: var(--mkt-paper-soft);
+}
+.roi-output--risk {
+  background: var(--mkt-warn-soft, #F5E1DB);
+  border-color: var(--mkt-clay-soft, #E8C989);
+}
+.roi-output--protect {
+  background: var(--mkt-sage-mist);
+  border-color: var(--mkt-sage-soft);
+}
+.roi-output--warn {
+  background: #FEF3C7;
+  border-color: #F9CE74;
+}
+.roi-output--neutral {
+  background: var(--mkt-paper-soft);
+  border-color: var(--mkt-line);
+}
+.roi-output__label {
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--mkt-graphite);
+  margin-bottom: 8px;
+}
+.roi-output__num {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 28px;
+  font-weight: 500;
+  color: var(--mkt-ink);
+  letter-spacing: -0.025em;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.roi-output--risk .roi-output__num  { color: var(--mkt-clay-deep, #A8584A); }
+.roi-output--protect .roi-output__num { color: var(--mkt-sage-deep); }
+.roi-output--warn .roi-output__num { color: #92400E; }
+.roi-output__yr {
+  font-size: 16px;
+  font-weight: 400;
+  opacity: 0.65;
+  margin-left: 2px;
+}
+.roi-output__sub {
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 12px;
+  color: var(--mkt-graphite);
+  line-height: 1.4;
+}
+
+/* ── Section CTA ────────────────────────────────────────────────────────── */
+.roi-cta {
+  display: inline-block;
+  align-self: flex-start;
+  padding: 12px 24px;
+  background: var(--mkt-sage-deep);
+  color: white;
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background 0.15s ease, transform 0.15s ease;
+  margin-bottom: 12px;
+}
+.roi-cta:hover {
+  background: var(--mkt-ink);
+  transform: translateY(-1px);
+  color: white;
+}
+
+/* ── Disclaimer ─────────────────────────────────────────────────────────── */
+.roi-disclaimer {
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 12px;
+  color: var(--mkt-faint);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ── Final CTA band ─────────────────────────────────────────────────────── */
+.roi-final {
+  background: var(--mkt-ink);
+  padding: 96px 0;
+  text-align: center;
+}
+.roi-final__inner {
+  max-width: 640px;
+  margin: 0 auto;
+}
+.roi-final .mkt-h2 {
+  color: var(--mkt-paper);
+  margin-bottom: 18px;
+}
+.roi-final .mkt-subhead {
+  color: rgba(244, 239, 230, 0.72);
+  margin-bottom: 36px;
+}
+
+/* ── Responsive ─────────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .roi-section__inner--a,
+  .roi-section__inner--b {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+  /* On mobile, visual goes below the calculator for section B (calc-first layout) */
+  .roi-section__inner--b .roi-visual {
+    order: 2;
+  }
+  .roi-section__inner--b .roi-calc {
+    order: 1;
+  }
+  .roi-calc__outputs--three {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-width: 640px) {
+  .roi-hero { padding: 72px 0 56px; }
+  .roi-hero__title { font-size: 36px; }
+  .roi-hero__nav { gap: 8px; }
+  .roi-section { padding: 72px 0; }
+  .roi-calc__outputs { grid-template-columns: 1fr; }
+  .roi-calc__outputs--three { grid-template-columns: 1fr; }
+  .roi-output__num { font-size: 24px; }
+  .roi-final { padding: 72px 0; }
+}

@@ -31,9 +31,9 @@ export default function PrivacyPage() {
         <section>
           <h2>2. Scope</h2>
           <p>
-            This policy covers data collected through our marketing website (adherix-health.vercel.app),
-            the Adherix platform accessed by Clinic Operators, and patient-facing SMS interactions
-            delivered on behalf of Clinic Operators.
+            This policy covers data collected through our marketing website, the Adherix platform
+            accessed by Clinic Operators, and patient-facing SMS interactions delivered on behalf
+            of Clinic Operators.
           </p>
           <p>
             Adherix operates as a <strong>Business Associate</strong> under HIPAA when processing
@@ -91,22 +91,18 @@ export default function PrivacyPage() {
         </section>
 
         <section>
-          <h2>5. Sub-processors</h2>
+          <h2>5. Service providers</h2>
           <p>
-            Adherix uses the following sub-processors to deliver the service. Each has been evaluated
-            for compliance with applicable data protection requirements:
+            Adherix works with a limited set of infrastructure and communications service providers
+            to deliver the platform. Each provider has been evaluated for compliance with applicable
+            data protection standards, including SOC 2 certification and HIPAA eligibility where
+            relevant. A full list of sub-processors is available to Clinic Operators upon request
+            and is provided as part of the Business Associate Agreement for covered deployments.
           </p>
-          <ul>
-            <li><strong>Twilio</strong> — SMS delivery infrastructure. Processes patient phone numbers
-            and message content to deliver and receive text messages. Twilio is HIPAA-eligible and
-            SOC 2 Type II certified.</li>
-            <li><strong>Supabase</strong> — Database and authentication infrastructure. Stores clinic,
-            patient, and message data. Supabase is HIPAA-eligible and SOC 2 Type II certified.</li>
-            <li><strong>Vercel</strong> — Application hosting. Processes request traffic. Vercel is
-            SOC 2 Type II certified.</li>
-            <li><strong>Resend</strong> — Transactional email delivery for clinic delivery-failure
-            alerts. Processes clinic administrator email addresses.</li>
-          </ul>
+          <p>
+            We do not share patient or clinic data with any service provider beyond what is strictly
+            necessary to deliver the contracted service.
+          </p>
         </section>
 
         <section>
