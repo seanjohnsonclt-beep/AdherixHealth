@@ -12,17 +12,17 @@ import { FadeRise, StaggerGroup } from '../animation/MotionPrimitives';
 
 const pillars = [
   {
-    num: '01',
+    num: 'Detect',
     title: 'Behavioral signals',
     body: 'Detect subtle disengagement before churn happens. Reply cadence, dose timing, silence patterns — evaluated every 60 seconds across your entire panel.',
   },
   {
-    num: '02',
+    num: 'Act',
     title: 'Smart interventions',
     body: 'Right outreach, right timing, right patient. Phase-aware SMS that knows when to automate and when to route a patient to your care team.',
   },
   {
-    num: '03',
+    num: 'Optimize',
     title: 'Retention intelligence',
     body: 'Know where revenue risk lives across your roster. Weekly digests, clinic alerts, and exportable reports give operators the full picture.',
   },
@@ -45,7 +45,7 @@ export function HomePillars() {
         <StaggerGroup className="mkt-v2-pillars" stagger={0.1} amount={0.25}>
           {pillars.map((p) => (
             <article key={p.num} className="mkt-v2-pillar">
-              <div className="mkt-v2-pillar__num">{p.num}</div>
+              <div className="mkt-v2-pillar__tag">{p.num}</div>
               <h3 className="mkt-v2-pillar__title">{p.title}</h3>
               <p className="mkt-v2-pillar__body">{p.body}</p>
             </article>

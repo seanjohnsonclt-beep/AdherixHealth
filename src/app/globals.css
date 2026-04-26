@@ -3811,3 +3811,66 @@ h3 { font-size: 17px; line-height: 1.3; }
   margin: 10px auto 0;
   opacity: 0.2;
 }
+
+/* =========================================================================
+   Tier-button ROI + Pillar tag — 2026-04-26
+   ========================================================================= */
+
+/* Pillar tag: replaces mono number with a semantic word label */
+.mkt-v2-pillar__tag {
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--mkt-sage-deep);
+  margin-bottom: 16px;
+}
+
+/* ROI tier buttons — replace sliders */
+.mkt-v2-roi__input-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--mkt-graphite);
+  margin-bottom: 14px;
+  letter-spacing: -0.01em;
+}
+.mkt-v2-roi__tiers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.mkt-v2-roi__tier {
+  appearance: none;
+  border: 1px solid var(--mkt-line);
+  background: var(--mkt-paper);
+  color: var(--mkt-ink-2);
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 7px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+  line-height: 1;
+}
+.mkt-v2-roi__tier:hover {
+  border-color: var(--mkt-sage);
+  color: var(--mkt-sage-deep);
+}
+.mkt-v2-roi__tier.is-active {
+  background: var(--mkt-sage-deep);
+  border-color: var(--mkt-sage-deep);
+  color: white;
+  font-weight: 600;
+}
+/* Mobile: full-width tier rows */
+@media (max-width: 600px) {
+  .mkt-v2-roi__tiers {
+    gap: 6px;
+  }
+  .mkt-v2-roi__tier {
+    flex: 1 1 calc(33.33% - 6px);
+    text-align: center;
+  }
+}

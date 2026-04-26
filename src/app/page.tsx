@@ -4,7 +4,6 @@ import { HomeHero } from '@/app/(marketing)/_components/sections/HomeHero';
 import { HomeProblem } from '@/app/(marketing)/_components/sections/HomeProblem';
 import { HomePillars } from '@/app/(marketing)/_components/sections/HomePillars';
 import { HomeRoi } from '@/app/(marketing)/_components/sections/HomeRoi';
-import { HomeFounder } from '@/app/(marketing)/_components/sections/HomeFounder';
 import { HomeTrustCta } from '@/app/(marketing)/_components/sections/HomeTrustCta';
 
 export const metadata = {
@@ -22,7 +21,6 @@ export default function MarketingHome() {
         <HomeProblem />
         <HomePillars />
         <HomeRoi />
-        <HomeFounder />
         <HomeTrustCta />
       </main>
       <SiteFooter />
