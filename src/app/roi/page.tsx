@@ -96,65 +96,97 @@ function RevenueCalc() {
 }
 
 function DriftVisual({ patients, protected_, atRisk }: { patients: number; protected_: number; atRisk: number }) {
-  const pct = atRisk > 0 ? Math.min(protected_ / atRisk, 1) : 0;
-  const dots = Math.min(Math.max(Math.round(patients / 10), 6), 20);
-  const drifting = Math.round(dots * 0.35);
-  const saved    = Math.round(drifting * 0.18);
+  // Segment bar widths (out of 360px usable)
+  const BAR_W = 360;
+  const retainedW = Math.round(BAR_W * 0.65);
+  const driftW    = Math.round(BAR_W * 0.35);
+  const recovW    = Math.round(driftW * 0.18);
+  const X0 = 40;
+  const BAR_Y1 = 108; // "without" bar top
+  const BAR_Y2 = 196; // "with" bar top
+  const BAR_H = 44;
 
   return (
-    <svg viewBox="0 0 440 360" fill="none" xmlns="http://www.w3.org/2000/svg" className="roi-svg" aria-hidden="true">
-      {/* Background card */}
-      <rect x="20" y="20" width="400" height="320" rx="16" fill="var(--mkt-paper-soft)" stroke="var(--mkt-line)" strokeWidth="1"/>
+    <svg viewBox="0 0 440 370" fill="none" xmlns="http://www.w3.org/2000/svg" className="roi-svg" aria-hidden="true">
+      {/* Card */}
+      <rect x="10" y="10" width="420" height="350" rx="16" fill="var(--mkt-paper-soft)" stroke="var(--mkt-line)" strokeWidth="1"/>
 
-      {/* Title */}
-      <text x="40" y="58" fontFamily="Geist,system-ui,sans-serif" fontSize="11" fontWeight="600"
-        letterSpacing="0.08em" textTransform="uppercase" fill="var(--mkt-graphite)">PATIENT PANEL</text>
+      {/* ── Row label: Without ── */}
+      <text x={X0} y="92" fontFamily="Geist,system-ui,sans-serif" fontSize="12" fontWeight="600"
+        fill="var(--mkt-graphite)" letterSpacing="-0.01em">WITHOUT ADHERIX</text>
 
-      {/* Patient dots — stable */}
-      {Array.from({ length: dots - drifting }).map((_, i) => {
-        const col = i % 5;
-        const row = Math.floor(i / 5);
-        return (
-          <circle key={i} cx={52 + col * 36} cy={90 + row * 36} r="12"
-            fill="var(--mkt-sage-mist)" stroke="var(--mkt-sage)" strokeWidth="1.5"/>
-        );
-      })}
+      {/* Without bar: retained */}
+      <rect x={X0} y={BAR_Y1} width={retainedW} height={BAR_H} rx="0"
+        fill="var(--mkt-sage-mist)" stroke="none"/>
+      {/* Without bar: drift */}
+      <rect x={X0 + retainedW} y={BAR_Y1} width={driftW} height={BAR_H} rx="0"
+        fill="#F5E1DB" stroke="none"/>
+      {/* Without bar: outline */}
+      <rect x={X0} y={BAR_Y1} width={BAR_W} height={BAR_H} rx="6" fill="none"
+        stroke="var(--mkt-line)" strokeWidth="1.5"/>
+      {/* Divider tick */}
+      <line x1={X0 + retainedW} y1={BAR_Y1} x2={X0 + retainedW} y2={BAR_Y1 + BAR_H}
+        stroke="var(--mkt-line)" strokeWidth="1.5"/>
 
-      {/* Drifting dots */}
-      {Array.from({ length: drifting }).map((_, i) => {
-        const isSaved = i < saved;
-        const startX = 52 + ((dots - drifting + i) % 5) * 36;
-        const startY = 90 + Math.floor((dots - drifting + i) / 5) * 36;
-        const endX   = startX + 90 + i * 8;
-        const endY   = startY + 20;
-        return (
-          <g key={`d-${i}`}>
-            <circle cx={isSaved ? startX + 45 : endX} cy={isSaved ? startY + 10 : endY} r="12"
-              fill={isSaved ? 'var(--mkt-sage-mist)' : 'var(--mkt-line)'}
-              stroke={isSaved ? 'var(--mkt-sage-deep)' : 'var(--mkt-graphite)'}
-              strokeWidth="1.5" opacity={isSaved ? 1 : 0.4} strokeDasharray={isSaved ? '0' : '3 2'}/>
-          </g>
-        );
-      })}
+      {/* Without bar labels inside */}
+      <text x={X0 + retainedW / 2} y={BAR_Y1 + BAR_H / 2 + 5}
+        fontFamily="Geist,system-ui,sans-serif" fontSize="13" fontWeight="600"
+        textAnchor="middle" fill="var(--mkt-sage-deep)">65% retained</text>
+      <text x={X0 + retainedW + driftW / 2} y={BAR_Y1 + BAR_H / 2 + 5}
+        fontFamily="Geist,system-ui,sans-serif" fontSize="13" fontWeight="600"
+        textAnchor="middle" fill="#A8584A">35% drifting</text>
 
-      {/* Arrow + save indicator */}
-      <path d="M 290 180 L 360 180" stroke="var(--mkt-sage-deep)" strokeWidth="2" strokeDasharray="4 3"/>
-      <polygon points="360,175 370,180 360,185" fill="var(--mkt-sage-deep)"/>
+      {/* Without loss callout */}
+      <text x={X0 + retainedW + driftW / 2} y={BAR_Y1 + BAR_H + 18}
+        fontFamily="Geist Mono,monospace" fontSize="12" fontWeight="500"
+        textAnchor="middle" fill="#A8584A">{fmt(atRisk)} at risk / yr</text>
 
-      {/* Protected bar */}
-      <rect x="280" y="220" width="120" height="12" rx="6" fill="var(--mkt-line)"/>
-      <rect x="280" y="220" width={120 * pct} height="12" rx="6" fill="var(--mkt-sage)"/>
-      <text x="280" y="250" fontFamily="Geist,system-ui,sans-serif" fontSize="11" fill="var(--mkt-graphite)">
-        {Math.round(pct * 100)}% of at-risk revenue protected
+      {/* ── Row label: With ── */}
+      <text x={X0} y="182" fontFamily="Geist,system-ui,sans-serif" fontSize="12" fontWeight="600"
+        fill="var(--mkt-sage-deep)" letterSpacing="-0.01em">WITH ADHERIX</text>
+
+      {/* With bar: retained */}
+      <rect x={X0} y={BAR_Y2} width={retainedW} height={BAR_H} rx="0"
+        fill="var(--mkt-sage-mist)" stroke="none"/>
+      {/* With bar: recovered slice */}
+      <rect x={X0 + retainedW} y={BAR_Y2} width={recovW} height={BAR_H} rx="0"
+        fill="var(--mkt-sage)" stroke="none"/>
+      {/* With bar: still-drifting slice */}
+      <rect x={X0 + retainedW + recovW} y={BAR_Y2} width={driftW - recovW} height={BAR_H} rx="0"
+        fill="#F5E1DB" opacity="0.55" stroke="none"/>
+      {/* With bar: outline */}
+      <rect x={X0} y={BAR_Y2} width={BAR_W} height={BAR_H} rx="6" fill="none"
+        stroke="var(--mkt-sage-soft)" strokeWidth="1.5"/>
+      {/* Divider ticks */}
+      <line x1={X0 + retainedW} y1={BAR_Y2} x2={X0 + retainedW} y2={BAR_Y2 + BAR_H}
+        stroke="var(--mkt-line)" strokeWidth="1.5"/>
+      <line x1={X0 + retainedW + recovW} y1={BAR_Y2} x2={X0 + retainedW + recovW} y2={BAR_Y2 + BAR_H}
+        stroke="var(--mkt-sage-soft)" strokeWidth="1.5" strokeDasharray="3 2"/>
+
+      {/* With bar labels inside */}
+      <text x={X0 + retainedW / 2} y={BAR_Y2 + BAR_H / 2 + 5}
+        fontFamily="Geist,system-ui,sans-serif" fontSize="13" fontWeight="600"
+        textAnchor="middle" fill="var(--mkt-sage-deep)">65% retained</text>
+      <text x={X0 + retainedW + recovW / 2} y={BAR_Y2 + BAR_H / 2 + 5}
+        fontFamily="Geist,system-ui,sans-serif" fontSize="10" fontWeight="700"
+        textAnchor="middle" fill="white">↑ back</text>
+
+      {/* Recovered callout */}
+      <text x={X0 + retainedW + recovW / 2} y={BAR_Y2 + BAR_H + 18}
+        fontFamily="Geist Mono,monospace" fontSize="12" fontWeight="500"
+        textAnchor="middle" fill="var(--mkt-sage-deep)">{fmt(protected_)} recovered</text>
+
+      {/* ── Bottom: dark summary band ── */}
+      <rect x="30" y="278" width="380" height="62" rx="12" fill="var(--mkt-ink)"/>
+
+      <text x="220" y="302" fontFamily="Geist,system-ui,sans-serif" fontSize="11"
+        textAnchor="middle" fill="rgba(244,239,230,0.6)" letterSpacing="0.04em">
+        ADHERIX PROTECTS
       </text>
-
-      {/* Legend */}
-      <circle cx="40" cy="300" r="7" fill="var(--mkt-sage-mist)" stroke="var(--mkt-sage)" strokeWidth="1.5"/>
-      <text x="54" y="304" fontFamily="Geist,system-ui,sans-serif" fontSize="11" fill="var(--mkt-ink-2)">Retained</text>
-      <circle cx="130" cy="300" r="7" fill="var(--mkt-line)" stroke="var(--mkt-graphite)" strokeWidth="1.5" opacity="0.5"/>
-      <text x="144" y="304" fontFamily="Geist,system-ui,sans-serif" fontSize="11" fill="var(--mkt-ink-2)">Drifting</text>
-      <circle cx="225" cy="300" r="7" fill="var(--mkt-sage-mist)" stroke="var(--mkt-sage-deep)" strokeWidth="1.5"/>
-      <text x="239" y="304" fontFamily="Geist,system-ui,sans-serif" fontSize="11" fill="var(--mkt-ink-2)">Recovered</text>
+      <text x="220" y="325" fontFamily="Fraunces,Georgia,serif" fontSize="22" fontWeight="500"
+        textAnchor="middle" fill="white">
+        {fmt(protected_)} of your {fmt(atRisk)} at-risk revenue
+      </text>
     </svg>
   );
 }
@@ -366,73 +398,106 @@ function WaitingCalc() {
 }
 
 function EscalationVisual({ r48h, r5day, churners }: { r48h: number; r5day: number; churners: number }) {
-  // Draw escalation cost curve: x = time (0 to 10 days), y = revenue loss
-  const W = 400; const H = 240; const PAD = 50;
-  const chartW = W - PAD * 2; const chartH = H - PAD * 1.5;
+  // Chart area
+  const CX = 52;   // chart left
+  const CY = 54;   // chart top
+  const CW = 330;  // chart width
+  const CH = 150;  // chart height
 
-  // Cost curve: starts at 0, rises steeply after day 2, plateaus after day 7
-  const points: [number, number][] = [
-    [0, 0], [1, 5], [2, 12], [3, 28], [4, 42], [5, 57],
-    [6, 68], [7, 76], [8, 82], [9, 86], [10, 90],
+  // Cost-of-delay curve (day 0–10, loss 0–100%)
+  const pts: [number, number][] = [
+    [0,0],[1,5],[2,12],[3,28],[4,42],[5,57],[6,68],[7,76],[8,82],[9,86],[10,90],
   ];
-  const toSVG = ([x, y]: [number, number]) =>
-    [PAD + (x / 10) * chartW, H - PAD * 0.5 - (y / 100) * chartH] as [number, number];
+  const sx = (d: number) => CX + (d / 10) * CW;
+  const sy = (v: number) => CY + CH - (v / 100) * CH;
 
-  const svgPoints = points.map(toSVG);
-  const pathD = svgPoints.map(([x, y], i) => `${i === 0 ? 'M' : 'L'} ${x} ${y}`).join(' ');
+  const linePath = pts.map(([d, v], i) => `${i === 0 ? 'M' : 'L'}${sx(d)},${sy(v)}`).join(' ');
+  const areaPath = linePath + ` L${sx(10)},${sy(0)} L${sx(0)},${sy(0)} Z`;
 
-  // Area fill
-  const areaD = pathD + ` L ${svgPoints[svgPoints.length - 1][0]} ${H - PAD * 0.5} L ${PAD} ${H - PAD * 0.5} Z`;
+  // Shaded gap area between Day 2 and Day 5
+  const gapPts: [number, number][] = [[2,12],[3,28],[4,42],[5,57]];
+  const gapTop = gapPts.map(([d,v]) => `${sx(d)},${sy(v)}`).join(' L');
+  const gapPath = `M${sx(2)},${sy(0)} L${gapTop} L${sx(5)},${sy(0)} Z`;
 
-  const [x48, y48] = toSVG([2, 12]);
-  const [x5d, y5d] = toSVG([5, 57]);
+  // Marker coords
+  const m48x = sx(2); const m48y = sy(12);
+  const m5dx = sx(5); const m5dy = sy(57);
 
   return (
-    <svg viewBox={`0 0 ${W + 40} ${H + 120}`} fill="none" xmlns="http://www.w3.org/2000/svg" className="roi-svg" aria-hidden="true">
-      <rect x="10" y="10" width={W + 20} height={H + 110} rx="16" fill="var(--mkt-paper-soft)" stroke="var(--mkt-line)" strokeWidth="1"/>
+    <svg viewBox="0 0 440 390" fill="none" xmlns="http://www.w3.org/2000/svg" className="roi-svg" aria-hidden="true">
+      {/* Card */}
+      <rect x="10" y="10" width="420" height="370" rx="16" fill="var(--mkt-paper-soft)" stroke="var(--mkt-line)" strokeWidth="1"/>
 
       {/* Title */}
-      <text x="30" y="42" fontFamily="Geist,system-ui,sans-serif" fontSize="11" fontWeight="600"
-        letterSpacing="0.08em" fill="var(--mkt-graphite)">COST OF DELAY</text>
+      <text x="32" y="38" fontFamily="Geist,system-ui,sans-serif" fontSize="11" fontWeight="600"
+        letterSpacing="0.08em" fill="var(--mkt-graphite)">REVENUE RECOVERY RATE vs. RESPONSE TIME</text>
 
-      <g transform="translate(20, 55)">
-        {/* Area fill */}
-        <path d={areaD} fill="var(--mkt-sage-mist)" opacity="0.6"/>
-        {/* Cost curve */}
-        <path d={pathD} stroke="var(--mkt-sage-deep)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+      {/* Area under curve */}
+      <path d={areaPath} fill="var(--mkt-sage-mist)" opacity="0.5"/>
+      {/* Gap zone (Day 2 → Day 5): cost of waiting */}
+      <path d={gapPath} fill="#F5E1DB" opacity="0.7"/>
 
-        {/* Baseline */}
-        <line x1={PAD} y1={H - PAD * 0.5} x2={PAD + chartW} y2={H - PAD * 0.5} stroke="var(--mkt-line)" strokeWidth="1"/>
-        <line x1={PAD} y1={PAD * 0.3} x2={PAD} y2={H - PAD * 0.5} stroke="var(--mkt-line)" strokeWidth="1"/>
+      {/* Curve line */}
+      <path d={linePath} stroke="var(--mkt-sage-deep)" strokeWidth="2.5"
+        strokeLinecap="round" strokeLinejoin="round"/>
 
-        {/* X-axis labels */}
-        {[0, 2, 5, 7, 10].map((d) => {
-          const [sx] = toSVG([d, 0]);
-          return <text key={d} x={sx} y={H - PAD * 0.5 + 16} fontFamily="Geist Mono,monospace" fontSize="10"
-            textAnchor="middle" fill="var(--mkt-graphite)">Day {d}</text>;
-        })}
+      {/* Axes */}
+      <line x1={CX} y1={CY} x2={CX} y2={CY + CH} stroke="var(--mkt-line)" strokeWidth="1"/>
+      <line x1={CX} y1={CY + CH} x2={CX + CW} y2={CY + CH} stroke="var(--mkt-line)" strokeWidth="1"/>
 
-        {/* 48h marker */}
-        <line x1={x48} y1={y48} x2={x48} y2={H - PAD * 0.5} stroke="var(--mkt-sage-deep)" strokeWidth="1.5" strokeDasharray="4 3"/>
-        <circle cx={x48} cy={y48} r="6" fill="var(--mkt-sage-deep)"/>
-        <rect x={x48 - 36} y={y48 - 38} width="72" height="26" rx="6" fill="var(--mkt-sage-deep)"/>
-        <text x={x48} y={y48 - 20} fontFamily="Geist,system-ui,sans-serif" fontSize="10" fontWeight="600"
-          textAnchor="middle" fill="white">48h · 85% recovery</text>
+      {/* X-axis day labels */}
+      {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((d) => (
+        <text key={d} x={sx(d)} y={CY + CH + 16} fontFamily="Geist Mono,monospace" fontSize="10"
+          textAnchor="middle" fill="var(--mkt-graphite)">
+          {d === 0 ? '0' : d === 2 ? '2' : d === 5 ? '5' : d === 10 ? '10' : ''}
+        </text>
+      ))}
+      <text x={CX + CW / 2} y={CY + CH + 30} fontFamily="Geist,system-ui,sans-serif" fontSize="10"
+        textAnchor="middle" fill="var(--mkt-graphite)" letterSpacing="0.04em">Days since last patient response</text>
 
-        {/* 5-day marker */}
-        <line x1={x5d} y1={y5d} x2={x5d} y2={H - PAD * 0.5} stroke="#b45309" strokeWidth="1.5" strokeDasharray="4 3"/>
-        <circle cx={x5d} cy={y5d} r="6" fill="#b45309"/>
-        <rect x={x5d - 40} y={y5d - 38} width="80" height="26" rx="6" fill="#b45309"/>
-        <text x={x5d} y={y5d - 20} fontFamily="Geist,system-ui,sans-serif" fontSize="10" fontWeight="600"
-          textAnchor="middle" fill="white">Day 5 · 58% recovery</text>
-      </g>
+      {/* Y-axis label */}
+      <text x="18" y={CY + CH / 2} fontFamily="Geist,system-ui,sans-serif" fontSize="10"
+        textAnchor="middle" fill="var(--mkt-graphite)" transform={`rotate(-90, 18, ${CY + CH / 2})`}>
+        Revenue recovered
+      </text>
 
-      {/* Summary row */}
-      <rect x="30" y={H + 82} width={W - 20} height="52" rx="10" fill="var(--mkt-ink)" />
-      <text x={W / 2 + 10} y={H + 105} fontFamily="Geist,system-ui,sans-serif" fontSize="11"
-        textAnchor="middle" fill="var(--mkt-sage-soft)">{churners} patients drift annually</text>
-      <text x={W / 2 + 10} y={H + 123} fontFamily="Fraunces,Georgia,serif" fontSize="16" fontWeight="500"
-        textAnchor="middle" fill="white">{fmt(r48h - r5day)} lost by waiting to Day 5</text>
+      {/* ── 48h marker ── */}
+      <line x1={m48x} y1={m48y} x2={m48x} y2={CY + CH}
+        stroke="var(--mkt-sage-deep)" strokeWidth="1.5" strokeDasharray="4 3"/>
+      <circle cx={m48x} cy={m48y} r="7" fill="var(--mkt-sage-deep)"/>
+      {/* Label below x-axis */}
+      <rect x={m48x - 68} y={CY + CH + 38} width="136" height="36" rx="8"
+        fill="var(--mkt-sage-deep)"/>
+      <text x={m48x} y={CY + CH + 53} fontFamily="Geist,system-ui,sans-serif" fontSize="11"
+        fontWeight="700" textAnchor="middle" fill="white">48-hour nudge</text>
+      <text x={m48x} y={CY + CH + 67} fontFamily="Geist,system-ui,sans-serif" fontSize="10"
+        textAnchor="middle" fill="rgba(255,255,255,0.8)">85% re-engagement rate</text>
+
+      {/* ── Day 5 marker ── */}
+      <line x1={m5dx} y1={m5dy} x2={m5dx} y2={CY + CH}
+        stroke="#b45309" strokeWidth="1.5" strokeDasharray="4 3"/>
+      <circle cx={m5dx} cy={m5dy} r="7" fill="#b45309"/>
+      {/* Label below x-axis */}
+      <rect x={m5dx - 68} y={CY + CH + 38} width="136" height="36" rx="8" fill="#b45309"/>
+      <text x={m5dx} y={CY + CH + 53} fontFamily="Geist,system-ui,sans-serif" fontSize="11"
+        fontWeight="700" textAnchor="middle" fill="white">Day 5 escalation</text>
+      <text x={m5dx} y={CY + CH + 67} fontFamily="Geist,system-ui,sans-serif" fontSize="10"
+        textAnchor="middle" fill="rgba(255,255,255,0.8)">58% re-engagement rate</text>
+
+      {/* Gap label in the shaded zone */}
+      <text x={(m48x + m5dx) / 2} y={sy(35)} fontFamily="Geist,system-ui,sans-serif" fontSize="10"
+        fontWeight="600" textAnchor="middle" fill="#92400E">← gap →</text>
+
+      {/* Bottom summary band */}
+      <rect x="30" y="318" width="380" height="52" rx="12" fill="var(--mkt-ink)"/>
+      <text x="220" y="340" fontFamily="Geist,system-ui,sans-serif" fontSize="11"
+        textAnchor="middle" fill="rgba(244,239,230,0.6)" letterSpacing="0.04em">
+        {churners} PATIENTS DRIFT / YR · COST OF WAITING
+      </text>
+      <text x="220" y="360" fontFamily="Fraunces,Georgia,serif" fontSize="20" fontWeight="500"
+        textAnchor="middle" fill="white">
+        {fmt(r48h - r5day)} lost by not acting at 48 hours
+      </text>
     </svg>
   );
 }
