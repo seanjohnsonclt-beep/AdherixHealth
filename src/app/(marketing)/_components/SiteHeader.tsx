@@ -2,11 +2,13 @@ import Link from 'next/link';
 import { AdherixLogo } from './AdherixLogo';
 
 /**
- * Sticky public site header. Marketing nav per the brief:
- *   Platform · Dashboard · ROI · Request a demo
+ * Sticky public site header.
  *
- * "Sign in" is intentionally a low-emphasis link — the site exists to
- * convert clinics, not to herd existing users to the dashboard.
+ * Nav links now point to real pages, not in-page anchors.
+ *   Platform      → /platform
+ *   ROI calculator → /roi
+ *   Sign in       → /login (low emphasis)
+ *   CTA           → /pilot (Book a demo)
  */
 export function SiteHeader() {
   return (
@@ -22,12 +24,11 @@ export function SiteHeader() {
           </Link>
 
           <nav className="mkt-nav" aria-label="Primary">
-            <Link href="/#platform">Platform</Link>
-            <Link href="/#dashboard-preview">Dashboard</Link>
-            <Link href="/#roi">ROI</Link>
+            <Link href="/platform">Platform</Link>
+            <Link href="/roi">ROI calculator</Link>
             <Link href="/login">Sign in</Link>
             <Link href="/pilot" className="mkt-btn mkt-btn--primary mkt-btn--sm mkt-nav__cta">
-              Request a demo
+              Book a demo
             </Link>
           </nav>
         </div>
