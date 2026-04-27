@@ -23,10 +23,19 @@ export async function enrollPatientAction(formData: FormData) {
     redirect('/patients/new?error=invalid_phone');
   }
 
+  // Adherence fields — optional
+  const medication     = String(formData.get('medication') || '').trim() || undefined;
+  const startingDose   = String(formData.get('starting_dose') || '').trim() || undefined;
+  const supplyRaw      = String(formData.get('supply_quantity') || '').trim();
+  const supplyQuantity = supplyRaw ? parseInt(supplyRaw, 10) || undefined : undefined;
+
   const id = await enrollPatient({
     clinicId: user.clinicId,
     phone,
     firstName,
+    medication,
+    startingDose,
+    supplyQuantity,
   });
 
   revalidatePath('/');

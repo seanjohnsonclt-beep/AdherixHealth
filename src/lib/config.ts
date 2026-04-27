@@ -30,7 +30,7 @@ export type Trigger = {
   condition: string;
   args?: Record<string, any>;
   only_in_phases?: number[];
-  action: 'send_template' | 'flag_patient' | 'advance_phase';
+  action: 'send_template' | 'flag_patient' | 'advance_phase' | 'injection_confirm' | 'advance_titration';
   template?: string;
   reason?: string;
   dedupe_window_hours: number;
@@ -131,19 +131,105 @@ const TEMPLATES: Template[] = [
     body: "Noticed you've gone quiet. No judgement — but I want to make sure you haven't stopped. Reply YES if you're still in." },
   { key: 'trigger.flagged_for_clinic', internal: true,
     body: 'Patient flagged: 5+ days no response. Consider direct outreach.' },
+
+  // ─── Injection confirmation loop ─────────────────────────────────────────────
+  // HIPAA: no medication names, doses, or clinical specifics in SMS bodies.
+  // Patient already knows what they're taking. Generic language only.
+
+  { key: 'trigger.injection_confirmation',
+    body: 'Hi {first_name} — did you take your dose this week? Reply YES or NO.' },
+
+  { key: 'trigger.missed_injection_followup',
+    body: "Missed dose noted. Happens. Your next injection window is coming up — we'll check in then. Reply if you need anything." },
+
+  { key: 'trigger.missed_injection_escalation',
+    body: "Checking in — you've missed a couple of doses recently. Still going? Reply YES to stay on track or NO if you need a break." },
+
+  // ─── Titration lifecycle ─────────────────────────────────────────────────────
+
+  { key: 'trigger.titration_prep',
+    body: 'Your dose is scheduled to change soon. Expect some adjustment as your body adapts — that\'s normal. Reply OK.' },
+
+  { key: 'trigger.post_titration_check',
+    body: 'Checking in on the new dose. Any side effects this week? Reply YES or NO.' },
+
+  // ─── Refill ──────────────────────────────────────────────────────────────────
+
+  { key: 'trigger.refill_reminder',
+    body: "Heads up — your current supply is running low. Time to plan your next refill. Reply OK." },
+
+  // ─── Streak milestones ───────────────────────────────────────────────────────
+
+  { key: 'trigger.streak_4wk',
+    body: '4 weeks of confirmed doses. That consistency is exactly what drives results. Keep going.' },
+
+  { key: 'trigger.streak_8wk',
+    body: '8 weeks straight. Patients who stay consistent this long see the best outcomes. You\'re in that group.' },
+
+  { key: 'trigger.streak_12wk',
+    body: '12 weeks of confirmed injections. That\'s rare. You\'ve made this a real habit now. Keep it going.' },
 ];
 
 // ─── Triggers ─────────────────────────────────────────────────────────────────
 
 const TRIGGERS: Trigger[] = [
+  // ─── Existing engagement triggers ────────────────────────────────────────────
   { key: 'no_response_48h',  condition: 'hours_since_last_inbound_gte', args: { hours: 48 },
     only_in_phases: [1, 2, 3], action: 'send_template', template: 'trigger.no_response_48h', dedupe_window_hours: 72 },
   { key: 'no_response_5d',   condition: 'hours_since_last_inbound_gte', args: { hours: 120 },
     only_in_phases: [1, 2, 3, 4], action: 'send_template', template: 'trigger.no_response_5d', dedupe_window_hours: 168 },
   { key: 'flag_for_clinic',  condition: 'hours_since_last_inbound_gte', args: { hours: 144 },
     only_in_phases: [1, 2, 3, 4], action: 'flag_patient', reason: 'no_response_6d', dedupe_window_hours: 168 },
+
+  // Phase advancement — behavioral gate applied inside the condition function.
+  // Patients with medication must have ≥ 50% confirmation rate and < 3 consecutive
+  // misses before advancing. Legacy patients (no medication) advance on time alone.
   { key: 'phase_auto_advance', condition: 'phase_duration_elapsed',
     action: 'advance_phase', dedupe_window_hours: 24 },
+
+  // ─── Injection confirmation loop ─────────────────────────────────────────────
+  // Fires weekly for patients with a medication set.
+  // Action creates an injection_events record + queues the confirmation SMS.
+  // Dedupe window: 6 days — ensures one confirmation per injection cycle.
+  { key: 'weekly_injection_confirmation', condition: 'injection_confirmation_due',
+    action: 'injection_confirm', dedupe_window_hours: 144 },
+
+  // No reply to confirmation after 48h → mark as missed, send followup
+  { key: 'missed_injection_noresponse', condition: 'has_overdue_confirmation',
+    action: 'send_template', template: 'trigger.missed_injection_followup', dedupe_window_hours: 144 },
+
+  // 2+ consecutive missed injections → escalate
+  { key: 'missed_injection_escalation', condition: 'consecutive_misses_gte', args: { count: 2 },
+    action: 'send_template', template: 'trigger.missed_injection_escalation', dedupe_window_hours: 168 },
+
+  // ─── Titration lifecycle ─────────────────────────────────────────────────────
+
+  // 3 days before titration date → prep message
+  { key: 'upcoming_titration', condition: 'titration_approaching',
+    action: 'send_template', template: 'trigger.titration_prep', dedupe_window_hours: 96 },
+
+  // Titration date has passed → auto-advance dose in DB
+  { key: 'auto_titration', condition: 'titration_due',
+    action: 'advance_titration', dedupe_window_hours: 24 },
+
+  // 3 days after last titration → side-effect check-in
+  { key: 'post_titration_check', condition: 'post_titration_window',
+    action: 'send_template', template: 'trigger.post_titration_check', dedupe_window_hours: 72 },
+
+  // ─── Refill window ───────────────────────────────────────────────────────────
+  // Fires when supply_remaining drops to 2 doses
+  { key: 'refill_window', condition: 'supply_low', args: { threshold: 2 },
+    action: 'send_template', template: 'trigger.refill_reminder', dedupe_window_hours: 168 },
+
+  // ─── Streak milestones ───────────────────────────────────────────────────────
+  // Very large dedupe window = fires once per milestone (streak resets on miss,
+  // so the patient would have to rebuild to the milestone to trigger again).
+  { key: 'injection_streak_4wk',  condition: 'injection_streak_at', args: { weeks: 4 },
+    action: 'send_template', template: 'trigger.streak_4wk',  dedupe_window_hours: 8760 },
+  { key: 'injection_streak_8wk',  condition: 'injection_streak_at', args: { weeks: 8 },
+    action: 'send_template', template: 'trigger.streak_8wk',  dedupe_window_hours: 8760 },
+  { key: 'injection_streak_12wk', condition: 'injection_streak_at', args: { weeks: 12 },
+    action: 'send_template', template: 'trigger.streak_12wk', dedupe_window_hours: 8760 },
 ];
 
 // ─── Accessors ────────────────────────────────────────────────────────────────
