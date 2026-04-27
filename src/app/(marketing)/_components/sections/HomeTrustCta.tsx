@@ -13,9 +13,9 @@ import { HomeInlineCapture } from '../HomeInlineCapture';
  */
 
 const stats = [
-  { n: '18%', label: 'fewer early drop-offs*' },
-  { n: '$714', label: 'protected revenue per patient*' },
-  { n: '8 hrs/wk', label: 'staff time recovered*' },
+  { n: '60 sec', label: 'Engine checks every patient, every minute' },
+  { n: '5 phases', label: 'Structured from first dose through maintenance' },
+  { n: 'SMS-first', label: 'Patients respond to texts — not apps' },
 ];
 
 export function HomeTrustCta() {
@@ -60,12 +60,8 @@ export function HomeTrustCta() {
           ))}
         </FadeRise>
 
-        <FadeRise as="p" className="mkt-v2-trust__disclaimer" delay={0.26}>
-          *Modeled estimates against a $600/month program at industry-baseline churn. Pilots
-          validate against your actual program data.
-        </FadeRise>
 
-      </div>
+</div>
     </section>
   );
 }
