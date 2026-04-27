@@ -65,13 +65,6 @@ export function HomeTrustCta() {
           validate against your actual program data.
         </FadeRise>
 
-        <FadeRise className="mkt-v2-trust__strip" delay={0.3}>
-          <span>Built on Twilio &amp; Supabase</span>
-          <span aria-hidden="true">·</span>
-          <span>HIPAA-aware architecture</span>
-          <span aria-hidden="true">·</span>
-          <span>Accepting early clinic partnerships</span>
-        </FadeRise>
       </div>
     </section>
   );
