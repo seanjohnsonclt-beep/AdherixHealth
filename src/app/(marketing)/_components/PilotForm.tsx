@@ -3,12 +3,22 @@
 import { useState } from 'react';
 
 /**
- * Request a Demo form.
- * Posts to /api/pilot, which emails the Adherix team via Resend.
+ * Request a Demo form — powered by Formspree.
  *
- * Designed to be low-friction: 6 fields, clear labels, forgiving UX.
- * Conservative copy — no guarantees of revenue lift, no "AI," no hype.
+ * To activate:
+ *   1. Create a form at formspree.io named "Adherix - Demo Request"
+ *   2. Add NEXT_PUBLIC_FORMSPREE_PILOT_ID=<your_form_id> to:
+ *      - Vercel project env vars (Settings → Environment Variables)
+ *      - .env.local for local dev
+ *   3. Redeploy — no code changes needed.
+ *
+ * Formspree handles: email notification, spam filtering, submission history, CSV export.
  */
+
+const FORMSPREE_ID = process.env.NEXT_PUBLIC_FORMSPREE_PILOT_ID ?? '';
+const ENDPOINT = FORMSPREE_ID
+  ? `https://formspree.io/f/${FORMSPREE_ID}`
+  : '/api/pilot'; // fallback to old route until ID is set
 
 type Status = 'idle' | 'submitting' | 'success' | 'error';
 
@@ -23,43 +33,59 @@ export function PilotForm() {
 
     const form = e.currentTarget;
     const data = new FormData(form);
-    const payload = {
-      fullName:    String(data.get('fullName')    || '').trim(),
-      email:       String(data.get('email')       || '').trim(),
-      clinicName:  String(data.get('clinicName')  || '').trim(),
-      role:        String(data.get('role')        || '').trim(),
-      phone:       String(data.get('phone')       || '').trim(),
-      patients:    String(data.get('patients')    || '').trim(),
-      notes:       String(data.get('notes')       || '').trim(),
-    };
 
-    // Minimal client-side validation
-    if (!payload.fullName || !payload.email || !payload.clinicName) {
+    const fullName   = String(data.get('fullName')   || '').trim();
+    const email      = String(data.get('email')      || '').trim();
+    const clinicName = String(data.get('clinicName') || '').trim();
+    const role       = String(data.get('role')       || '').trim();
+    const phone      = String(data.get('phone')      || '').trim();
+    const patients   = String(data.get('patients')   || '').trim();
+    const notes      = String(data.get('notes')      || '').trim();
+
+    if (!fullName || !email || !clinicName) {
       setStatus('error');
       setErrorMsg('Please fill in your name, email, and clinic name.');
       return;
     }
-    if (!/^\S+@\S+\.\S+$/.test(payload.email)) {
+    if (!/^\S+@\S+\.\S+$/.test(email)) {
       setStatus('error');
       setErrorMsg('That email doesn\u2019t look right. Double-check it?');
       return;
     }
 
     try {
-      const res = await fetch('/api/pilot', {
+      const res = await fetch(ENDPOINT, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({
+          // Human-readable field names for Formspree email notifications
+          'Full name':     fullName,
+          'Work email':    email,
+          'Clinic':        clinicName,
+          'Role':          role,
+          'Phone':         phone || '—',
+          'Patient count': patients || '—',
+          'Notes':         notes || '—',
+          // Formspree magic fields
+          _replyto:        email,
+          _subject:        `Demo request — ${fullName} (${clinicName})`,
+        }),
       });
+
+      const body = await res.json().catch(() => ({}));
+
       if (!res.ok) {
-        const body = await res.json().catch(() => ({}));
-        throw new Error(body?.error || `Request failed (${res.status})`);
+        throw new Error((body as any)?.error || `Request failed (${res.status})`);
       }
+
       setStatus('success');
       form.reset();
     } catch (err: unknown) {
       setStatus('error');
-      setErrorMsg(err instanceof Error ? err.message : 'Something went wrong.');
+      setErrorMsg(err instanceof Error ? err.message : 'Something went wrong. Try emailing demos@adherixhealth.com directly.');
     }
   }
 

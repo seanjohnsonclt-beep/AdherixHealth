@@ -3036,6 +3036,74 @@ h3 { font-size: 17px; line-height: 1.3; }
   color: #6b7878;
 }
 
+/* ---- Inline capture form (HomeTrustCta dark band) ---- */
+.mkt-capture {
+  width: 100%;
+  max-width: 680px;
+  margin: 0 auto 8px;
+}
+.mkt-capture__fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr auto;
+  gap: 10px;
+  align-items: stretch;
+}
+.mkt-capture__input {
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: var(--mkt-radius);
+  color: var(--mkt-paper);
+  font-family: var(--font-sans, 'Geist', sans-serif);
+  font-size: 15px;
+  padding: 12px 14px;
+  outline: none;
+  transition: border-color 0.15s, background 0.15s;
+  width: 100%;
+}
+.mkt-capture__input::placeholder {
+  color: rgba(244,239,230,0.45);
+}
+.mkt-capture__input:focus {
+  border-color: var(--mkt-sage);
+  background: rgba(255,255,255,0.11);
+}
+.mkt-capture__btn {
+  white-space: nowrap;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+.mkt-capture__note {
+  font-size: 12px;
+  color: rgba(244,239,230,0.4);
+  text-align: center;
+  margin-top: 10px;
+  margin-bottom: 0;
+}
+.mkt-capture__error {
+  font-size: 13px;
+  color: #f6a19a;
+  text-align: center;
+  margin-top: 8px;
+}
+.mkt-capture__error a {
+  color: #f6a19a;
+  text-decoration: underline;
+}
+.mkt-capture__success {
+  text-align: center;
+  color: var(--mkt-sage-soft);
+  font-size: 16px;
+  padding: 18px 0 8px;
+}
+@media (max-width: 700px) {
+  .mkt-capture__fields {
+    grid-template-columns: 1fr;
+  }
+  .mkt-capture__btn {
+    width: 100%;
+  }
+}
+
 /* ---- Platform hero ---- */
 .mkt-v2-plat-hero {
   background: var(--mkt-paper);

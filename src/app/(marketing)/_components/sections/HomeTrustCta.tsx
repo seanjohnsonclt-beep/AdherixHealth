@@ -2,13 +2,14 @@
 
 import Link from 'next/link';
 import { FadeRise, TapButton } from '../animation/MotionPrimitives';
+import { HomeInlineCapture } from '../HomeInlineCapture';
 
 /**
  * Homepage Trust + CTA band — v2
  *
- * Dark Ink band. Headline + subhead + single CTA + stat row + trust strip.
- * Stats moved here from hero — gives them more weight, closer to the conversion action.
- * No founder note on homepage — that lives on /platform.
+ * Dark Ink band. Headline → subhead → inline capture form (Formspree) → stats → trust strip.
+ * When NEXT_PUBLIC_FORMSPREE_CAPTURE_ID is not set, HomeInlineCapture renders null
+ * and the fallback "Book a demo" → /pilot link is shown instead.
  */
 
 const stats = [
@@ -33,6 +34,12 @@ export function HomeTrustCta() {
           what changed. No commitment beyond the pilot window.
         </FadeRise>
 
+        {/* Inline capture form — renders when FORMSPREE_CAPTURE_ID is set */}
+        <FadeRise delay={0.13}>
+          <HomeInlineCapture />
+        </FadeRise>
+
+        {/* Fallback CTA buttons — shown when inline form is not yet wired */}
         <FadeRise className="mkt-v2-trust__cta" delay={0.15}>
           <TapButton>
             <Link href="/pilot" className="mkt-btn mkt-btn--primary mkt-btn--lg">
