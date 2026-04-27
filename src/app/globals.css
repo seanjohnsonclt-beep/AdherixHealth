@@ -2995,6 +2995,13 @@ h3 { font-size: 17px; line-height: 1.3; }
   flex-wrap: wrap;
   margin-bottom: 64px;
 }
+.mkt-v2-trust__secondary-cta {
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+  margin-bottom: 56px;
+  opacity: 0.75;
+}
 .mkt-v2-trust__stats {
   display: flex;
   gap: 48px;

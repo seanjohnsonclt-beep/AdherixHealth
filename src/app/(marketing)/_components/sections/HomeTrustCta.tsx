@@ -29,7 +29,7 @@ export function HomeTrustCta() {
         </FadeRise>
 
         <FadeRise as="p" className="mkt-subhead mkt-v2-trust__sub" delay={0.08}>
-          Run a four-week behavioral pilot in your clinic. Bring your existing
+          Run a three-month behavioral pilot in your clinic. Bring your existing
           patient panel — we instrument retention, surface drift, and report on
           what changed. No commitment beyond the pilot window.
         </FadeRise>
@@ -39,17 +39,12 @@ export function HomeTrustCta() {
           <HomeInlineCapture />
         </FadeRise>
 
-        {/* Fallback CTA buttons — shown when inline form is not yet wired */}
-        <FadeRise className="mkt-v2-trust__cta" delay={0.15}>
-          <TapButton>
-            <Link href="/pilot" className="mkt-btn mkt-btn--primary mkt-btn--lg">
-              Book a demo
-            </Link>
-          </TapButton>
+        {/* Secondary nav link — visible below the form */}
+        <FadeRise className="mkt-v2-trust__secondary-cta" delay={0.15}>
           <TapButton>
             <Link
               href="/platform"
-              className="mkt-btn mkt-btn--ghost mkt-btn--ghost-on-dark mkt-btn--lg"
+              className="mkt-btn mkt-btn--ghost mkt-btn--ghost-on-dark"
             >
               See the platform
             </Link>
