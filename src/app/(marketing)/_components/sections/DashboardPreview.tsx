@@ -53,7 +53,17 @@ export function DashboardPreview() {
               <span />
               <span />
             </div>
-            <div className="mkt-r-dash__url">adherix-health.vercel.app</div>
+            <div className="mkt-r-dash__url">app.adherixhealth.com</div>
+          </div>
+
+          {/* In-app top nav */}
+          <div className="mkt-r-dash__topnav">
+            <div className="mkt-r-dash__topnav-logo">Adherix</div>
+            <div className="mkt-r-dash__topnav-clinic">Johnson Clinic</div>
+            <div className="mkt-r-dash__topnav-right">
+              <span className="mkt-r-dash__topnav-dot" />
+              <span className="mkt-r-dash__topnav-live">Live</span>
+            </div>
           </div>
 
           <div className="mkt-r-dash__body">
