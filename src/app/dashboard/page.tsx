@@ -150,9 +150,14 @@ export default async function HomePage() {
             <div className="label">Today at</div>
             <h1 style={{ fontSize: 30, marginTop: 4 }}>{user.clinicName}</h1>
           </div>
-          <Link href="/patients/new" className="btn" title="Enroll a new patient">
-            Enroll patient
-          </Link>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <Link href="/patients/import" className="btn btn--ghost" title="Import patients from CSV or PDF">
+              Import
+            </Link>
+            <Link href="/patients/new" className="btn" title="Enroll a new patient">
+              Enroll patient
+            </Link>
+          </div>
         </div>
 
         <div className="hero-grid">

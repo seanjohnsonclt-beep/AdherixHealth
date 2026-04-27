@@ -18,7 +18,7 @@ export function PilotBand() {
           Pilot Adherix
         </FadeRise>
         <FadeRise as="h2" className="mkt-h2 mkt-r-pilot__title">
-          Run a four-week behavioral pilot in your clinic.
+          Run a three-month behavioral pilot in your clinic.
         </FadeRise>
         <FadeRise as="p" className="mkt-subhead mkt-r-pilot__sub" delay={0.05}>
           Bring your existing patient panel. We instrument retention, surface

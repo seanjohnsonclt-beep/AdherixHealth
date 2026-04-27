@@ -5,13 +5,13 @@
 //   1. Sign up at resend.com (free tier: 100 emails/day)
 //   2. Create an API key
 //   3. Add RESEND_API_KEY to Vercel env vars
-//   4. Optionally add RESEND_FROM once you verify a domain (e.g. alerts@adherix.health)
+//   4. Optionally add RESEND_FROM once you verify a domain (e.g. alerts@adherixhealth.com)
 //      Until then, Resend's shared sender is used automatically.
 //
 // If RESEND_API_KEY is not set, emails are logged but not sent (safe for dry-run).
 
 const FROM = process.env.RESEND_FROM || 'Adherix Alerts <onboarding@resend.dev>';
-const APP_URL = process.env.APP_URL || 'https://adherix-health.vercel.app';
+const APP_URL = process.env.APP_URL || 'https://adherixhealth.com';
 
 type Email = {
   to: string;

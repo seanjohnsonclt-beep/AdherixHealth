@@ -451,11 +451,11 @@ export default function RoiPage() {
           <div className="mkt-container roi-final__inner">
             <h2 className="mkt-h2">Ready to run these numbers against your actual program?</h2>
             <p className="mkt-subhead">
-              A four-week pilot validates the model against your real patient panel.
+              A three-month pilot validates the model against your real patient panel.
               No commitment beyond the pilot window.
             </p>
             <Link href="/pilot" className="mkt-btn mkt-btn--primary mkt-btn--lg">
-              Book a pilot &rarr;
+              Book a demo &rarr;
             </Link>
           </div>
         </section>

@@ -162,6 +162,65 @@ export async function reactivatePatientAction(formData: FormData) {
   revalidatePath('/');
 }
 
+// ─── Bulk import ─────────────────────────────────────────────────────────────
+
+export type ImportRow = {
+  first_name: string;
+  phone: string;
+  medication?: string;
+  starting_dose?: string;
+  supply_quantity?: number;
+};
+
+export type ImportResult = {
+  row: ImportRow;
+  status: 'enrolled' | 'skipped' | 'error';
+  reason?: string;
+  patientId?: string;
+};
+
+export async function importPatientsAction(rows: ImportRow[]): Promise<ImportResult[]> {
+  const user = await requireUser();
+  const results: ImportResult[] = [];
+
+  for (const row of rows) {
+    const phone = normalizePhone(row.phone);
+    if (!phone || phone.length < 10) {
+      results.push({ row, status: 'error', reason: 'Invalid phone number' });
+      continue;
+    }
+
+    // Check for duplicate within this clinic
+    const existing = await queryOne(
+      `select id from patients where phone = $1`,
+      [phone]
+    );
+    if (existing) {
+      results.push({ row, status: 'skipped', reason: 'Phone already enrolled' });
+      continue;
+    }
+
+    try {
+      const id = await enrollPatient({
+        clinicId: user.clinicId,
+        phone,
+        firstName: row.first_name || undefined,
+        medication: row.medication || undefined,
+        startingDose: row.starting_dose || undefined,
+        supplyQuantity: row.supply_quantity || undefined,
+      });
+      results.push({ row, status: 'enrolled', patientId: id });
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Unknown error';
+      results.push({ row, status: 'error', reason: msg });
+    }
+  }
+
+  revalidatePath('/');
+  revalidatePath('/dashboard');
+  return results;
+}
+
 // Discharge: marks churned + cancels pending messages. Keeps record for reporting.
 export async function dischargePatientAction(formData: FormData) {
   const user = await requireUser();
