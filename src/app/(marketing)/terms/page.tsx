@@ -178,7 +178,7 @@ export default function TermsPage() {
           <h2>13. Contact</h2>
           <p>
             Questions about these Terms:{' '}
-            <a href="mailto:hello@adherix.health">hello@adherix.health</a>
+            <a href="mailto:hello@adherixhealth.com">hello@adherixhealth.com</a>
           </p>
         </section>
 

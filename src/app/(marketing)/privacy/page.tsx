@@ -24,7 +24,7 @@ export default function PrivacyPage() {
             to healthcare clinics and metabolic care programs (&ldquo;Clinic Operators&rdquo;).
           </p>
           <p>
-            Contact: <a href="mailto:hello@adherix.health">hello@adherix.health</a>
+            Contact: <a href="mailto:hello@adherixhealth.com">hello@adherixhealth.com</a>
           </p>
         </section>
 
@@ -111,7 +111,7 @@ export default function PrivacyPage() {
             Patient and message data is retained for the duration of the clinic&rsquo;s active
             relationship with Adherix plus a reasonable period to support reporting and audit
             obligations. Clinic Operators may request deletion of their patient data by contacting
-            us at <a href="mailto:hello@adherix.health">hello@adherix.health</a>. We will action
+            us at <a href="mailto:hello@adherixhealth.com">hello@adherixhealth.com</a>. We will action
             deletion requests within 30 days.
           </p>
         </section>
@@ -149,7 +149,7 @@ export default function PrivacyPage() {
             When Adherix processes PHI on behalf of a Covered Entity, a signed Business Associate
             Agreement is required before production use of the platform. Pilot programs that involve
             real patient data require a BAA in place prior to data processing. To request a BAA,
-            contact <a href="mailto:hello@adherix.health">hello@adherix.health</a>.
+            contact <a href="mailto:hello@adherixhealth.com">hello@adherixhealth.com</a>.
           </p>
         </section>
 
@@ -166,7 +166,7 @@ export default function PrivacyPage() {
           <h2>11. Contact</h2>
           <p>
             Questions about this policy or data handling practices:{' '}
-            <a href="mailto:hello@adherix.health">hello@adherix.health</a>
+            <a href="mailto:hello@adherixhealth.com">hello@adherixhealth.com</a>
           </p>
         </section>
 

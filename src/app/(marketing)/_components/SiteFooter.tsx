@@ -25,7 +25,7 @@ export function SiteFooter() {
           <div className="mkt-footer__col">
             <h4>Account</h4>
             <Link href="/login">Sign in</Link>
-            <a href="mailto:hello@adherix.health">Contact us</a>
+            <a href="mailto:hello@adherixhealth.com">Contact us</a>
           </div>
           <div className="mkt-footer__col">
             <h4>Legal &amp; security</h4>

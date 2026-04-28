@@ -373,3 +373,134 @@ When adding to Section 13, use this format:
 ```
 
 Keep entries terse. Link commits when they exist. If a change is a workaround (not a fix), say so explicitly.
+
+---
+
+## 19. Adherence Intelligence Gap (April 27, 2026)
+
+**Critical distinction:** Adherix is currently an **engagement engine**, not an **adherence intelligence engine**. This section documents what the system knows, what it's missing, and what's required to unlock true dose-level adherence tracking.
+
+### What Adherix Currently Knows
+
+When a clinic enrolls a patient, the system captures:
+- `first_name`, `phone`, `timezone`
+- `enrolled_at` (enrollment date)
+- `phase` (0–5) and `phase_started_at` (when phase began)
+- `status` (active/flagged/paused)
+- `last_patient_reply_at` (when patient last replied to SMS)
+
+**That is the entire patient state.** Nothing else.
+
+### What It Does NOT Know
+
+- ❌ Which GLP-1 drug (Ozempic, Mounjaro, Saxenda, compounded, etc.)
+- ❌ Starting dose (0.25mg, 0.5mg, etc.)
+- ❌ Target dose or escalation schedule
+- ❌ Injection frequency (weekly, bi-weekly, monthly)
+- ❌ When the patient actually injected
+- ❌ Expected vs. actual dose timing (are they on schedule?)
+- ❌ Whether they're drifting from their protocol
+- ❌ Any clinical baseline (weight, health conditions, contraindications)
+
+### How It Decides When to Text (Today)
+
+**1. Time-based (primary driver):**
+Message templates have `phase`, `after` (days offset), `send_at_local` (time of day), and `body`. The engine checks: "Is patient in phase X? Did phase_started_at happen N+ days ago? Is it Y o'clock their time?" → Schedule it. Example: Phase 1, day 3, 9:00 AM → "Time for your first dose prep. Reply READY when set."
+
+**2. Behavioral triggers (secondary):**
+- `no_response_48h` → nudge
+- `no_response_5d` → flag for clinic
+- `phase_auto_advance` → move to next phase
+- `flag_for_clinic` → alert
+
+**3. Manual:**
+Clinic changes patient `status` (active/flagged/paused).
+
+### The Core Problem
+
+The system responds to **engagement signals** (did they reply?), but has **no way to know if they actually injected**. Result: silence could mean disengagement OR they're taking doses on schedule but not responding to texts.
+
+### What's Needed for True Adherence Intelligence
+
+**At enrollment, capture:**
+```
+Drug & Dose Information:
+  ├── glp1_drug (enum: ozempic, mounjaro, saxenda, compounded, other)
+  ├── starting_dose (e.g., 0.25mg)
+  ├── target_dose (e.g., 1.0mg)
+  ├── dose_escalation_schedule (e.g., "0.25 → 0.5 → 1.0 every 4 weeks")
+  └── injection_frequency (weekly, bi-weekly, monthly, custom)
+
+Clinical Baseline:
+  ├── current_weight
+  ├── health_conditions
+  └── prior_adherence_history
+```
+
+**New `patients` table fields:**
+- `glp1_drug` — which drug
+- `starting_dose` — dose strength
+- `target_dose` — goal dose
+- `current_dose` — what they should be taking NOW (e.g., "0.5mg")
+- `next_escalation_date` — when dose increases
+- `injection_frequency` — cadence
+
+**New `dose_events` table:**
+```sql
+dose_events (
+  id,
+  patient_id,
+  planned_dose,        -- what they were supposed to take
+  actual_dose,         -- what they reported
+  planned_date,        -- expected injection date
+  administered_at,     -- when they actually injected
+  source,              -- "SMS reply", "clinic record", "integration"
+  created_at
+)
+```
+
+### Messaging Evolution
+
+**Today (phase-generic):**
+```
+"Hi {{first_name}}, you're day 3 of dose prep. Reply READY when set."
+(No reference to actual dose or schedule)
+```
+
+**With adherence intelligence:**
+```
+"Hi {{first_name}}, your next dose is 0.5mg on Wed at 9am. Ready? Reply YES/NO when done."
+(Specific dose, specific date, trackable adherence)
+```
+
+### Next Phase Build Roadmap
+
+1. **Expand enrollment form** (`/patients/new`) to capture GLP-1 drug, starting/target dose, escalation schedule, injection frequency.
+2. **Set initial state** — at enrollment, populate `current_dose` and `next_escalation_date` based on the escalation plan.
+3. **Create `dose_events` table** to log when patients report taking doses (from SMS replies like "Done at 9am").
+4. **Build dose-aware scheduling** — messages reference expected dose, date, and strength. Example template: "Your next dose is {{current_dose}}mg on {{next_injection_date}}. Reply done when complete."
+5. **Track dose adherence vs. engagement** — two separate signals. Patient can be low-engagement (not replying) but high-adherence (taking doses on time), or vice versa.
+6. **Expose adherence metrics** to clinic dashboard:
+   - % doses taken on time
+   - Dose timing drift (e.g., "You're injecting Tuesdays instead of Wednesdays")
+   - Escalation adherence (when did they actually move to next dose?)
+   - Risk flags: missed 2+ doses in a row → escalate severity
+7. **Build dose-response logic**:
+   - Patient reports side effects at low dose → don't rush escalation
+   - Patient skips doses → clinic alert
+   - Patient escalates faster than plan → validate (or caution)
+
+### Current MVP Role (Why This Gap Exists)
+
+Adherix is designed as a **lightweight engagement + phase-navigation engine for low-motivation patients**. It succeeds at that: many patients drop out due to confusion or lost motivation, not because their dose is wrong. The system keeps them thinking about treatment and nudges them when they go silent.
+
+But it's not yet a **clinical adherence tracker**. That requires dose-level data, injection tracking, and escalation awareness.
+
+### Important Note for Pilots
+
+Before a real clinic pilot, clarify with stakeholders:
+1. **Is adherence tracking required?** Or is engagement/retention (the current MVP) sufficient?
+2. **How will you collect dose data?** Enrollment form? EHR integration? Patient self-report via SMS?
+3. **Will you track actual injections or just engagement?** If the former, add dose_events capture to messaging logic.
+
+Underestimating this scope will cause pilot friction.

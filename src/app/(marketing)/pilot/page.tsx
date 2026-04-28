@@ -58,7 +58,7 @@ export default function PilotPage() {
                 <div className="mkt-aside-note__title">Questions first?</div>
                 <div className="mkt-aside-note__body">
                   Email{' '}
-                  <a href="mailto:demos@adherix.health">demos@adherix.health</a>{' '}
+                  <a href="mailto:demos@adherixhealth.com">demos@adherixhealth.com</a>{' '}
                   &mdash; we keep the back-and-forth short and human.
                 </div>
               </div>

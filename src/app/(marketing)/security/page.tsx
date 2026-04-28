@@ -97,7 +97,7 @@ export default function SecurityPage() {
           </p>
           <p>
             To request a BAA, contact{' '}
-            <a href="mailto:hello@adherix.health">hello@adherix.health</a>.
+            <a href="mailto:hello@adherixhealth.com">hello@adherixhealth.com</a>.
           </p>
         </section>
 
@@ -115,7 +115,7 @@ export default function SecurityPage() {
           <h2>Vulnerability disclosure</h2>
           <p>
             If you discover a potential security issue in the Adherix platform, please report it
-            to <a href="mailto:hello@adherix.health">hello@adherix.health</a> before public
+            to <a href="mailto:hello@adherixhealth.com">hello@adherixhealth.com</a> before public
             disclosure. We will acknowledge receipt within 48 hours and work to resolve confirmed
             issues promptly.
           </p>
@@ -125,7 +125,7 @@ export default function SecurityPage() {
           <h2>Questions</h2>
           <p>
             Security questions, BAA requests, or sub-processor inquiries:{' '}
-            <a href="mailto:hello@adherix.health">hello@adherix.health</a>
+            <a href="mailto:hello@adherixhealth.com">hello@adherixhealth.com</a>
           </p>
         </section>
 

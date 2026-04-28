@@ -25,4 +25,14 @@ next-env.d.ts
 # Vercel
 .vercel
 
-.vercel
+# Local commit/deploy scripts — not part of source
+COMMIT_*.bat
+MIGRATE.bat
+INSTALL_*.bat
+PUSH.bat
+SET_*.bat
+
+# Accidental empty files from shell mis-runs
+Book
+three-month
+adherixhealth.com
