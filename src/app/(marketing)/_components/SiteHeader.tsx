@@ -25,6 +25,7 @@ export function SiteHeader() {
           <nav className="mkt-nav mkt-nav--desktop" aria-label="Primary">
             <Link href="/">Overview</Link>
             <Link href="/platform">Platform</Link>
+            <Link href="/demo">Demo</Link>
             <Link href="/roi">ROI calculator</Link>
             <Link href="/login">Sign in</Link>
             <Link href="/pilot" className="mkt-btn mkt-btn--primary mkt-btn--sm mkt-nav__cta">
