@@ -3,6 +3,7 @@ import { query } from '@/lib/db';
 import { findPhase } from '@/lib/config';
 import { getClinicMetrics, fmtMoney } from '@/lib/metrics';
 import { Topbar } from '@/app/_components/Topbar';
+import { ReseedButton } from './ReseedButton';
 import Link from 'next/link';
 
 type PatientRow = {
@@ -150,7 +151,8 @@ export default async function HomePage() {
             <div className="label">Today at</div>
             <h1 style={{ fontSize: 30, marginTop: 4 }}>{user.clinicName}</h1>
           </div>
-          <div style={{ display: 'flex', gap: 8 }}>
+          <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+            <ReseedButton />
             <Link href="/patients/import" className="btn btn--ghost" title="Import patients from CSV or PDF">
               Import
             </Link>
