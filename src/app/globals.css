@@ -4760,6 +4760,11 @@ h3 { font-size: 17px; line-height: 1.3; }
    DRIFT CORRECTION PAGE  (reuses mkt-iphone, mkt-v2-*, mkt-r-hero)
    ═══════════════════════════════════════════════════════════════════ */
 
+/* DC page — force hero centering regardless of FadeRise wrapper */
+.dc-page .mkt-r-hero { text-align: center; }
+.dc-page .mkt-r-hero__title { text-align: center; }
+.dc-page .mkt-r-hero__sub { text-align: center; }
+
 /* How-it-works cards */
 .dc-how-grid {
   display: grid;

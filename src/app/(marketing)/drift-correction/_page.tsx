@@ -162,7 +162,7 @@ export function DriftCorrectionPage() {
   const [activePattern, setActivePattern] = useState(0);
 
   return (
-    <main>
+    <main className="dc-page">
 
       {/* ── Hero ── */}
       <section className="mkt-r-hero" style={{ textAlign: 'center', padding: '72px 0 56px' }}>
@@ -175,10 +175,11 @@ export function DriftCorrectionPage() {
           </FadeRise>
           <FadeRise as="p" className="mkt-subhead" delay={0.1}
             style={{ maxWidth: 580, margin: '0 auto 40px' }}>
-            Most SMS programs detect drift and send a nudge. Adherix identifies
-            the specific behavioral pattern, sends a targeted correction, then
-            tracks whether the patient comes back. If they don&rsquo;t, the
-            clinic is alerted. Automatically.
+            Every drop-off starts as a pattern.
+            A missed check-in. A slower reply. A subtle change in behavior.
+            Adherix reads the pattern, interrupts the drift the moment it starts
+            &mdash; responds in real time, and confirms whether the patient re-engages.
+            If not, it escalates automatically.
           </FadeRise>
           <FadeRise delay={0.16}>
             <Link href="/pilot" className="mkt-btn mkt-btn--primary">Book a demo</Link>
