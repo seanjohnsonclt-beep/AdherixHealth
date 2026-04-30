@@ -165,7 +165,7 @@ export function DriftCorrectionPage() {
     <main>
 
       {/* ── Hero ── */}
-      <section className="mkt-r-hero" style={{ textAlign: 'center' }}>
+      <section className="mkt-r-hero" style={{ textAlign: 'center', padding: '72px 0 56px' }}>
         <div className="mkt-container">
           <FadeRise as="span" className="mkt-eyebrow" style={{ marginBottom: 20, display: 'block' }}>
             Drift Correction
@@ -187,9 +187,9 @@ export function DriftCorrectionPage() {
       </section>
 
       {/* ── How it works — scroll-animated cards ── */}
-      <section className="mkt-v2-section mkt-v2-section--alt" id="how">
+      <section className="mkt-v2-section mkt-v2-section--alt" id="how" style={{ padding: '64px 0' }}>
         <div className="mkt-container">
-          <div className="mkt-v2-section__head">
+          <div className="mkt-v2-section__head" style={{ marginBottom: 40 }}>
             <FadeRise as="span" className="mkt-eyebrow">How it works</FadeRise>
             <FadeRise as="h2" className="mkt-h2" delay={0.05}>
               Four steps. No manual monitoring.

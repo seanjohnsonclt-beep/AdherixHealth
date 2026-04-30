@@ -4768,7 +4768,7 @@ h3 { font-size: 17px; line-height: 1.3; }
   border: 1px solid var(--mkt-line);
 }
 .dc-how-card {
-  padding: 36px 32px;
+  padding: 28px 26px;
   border-right: 1px solid var(--mkt-line);
   background: white;
   transition: background 0.18s;
@@ -4777,10 +4777,10 @@ h3 { font-size: 17px; line-height: 1.3; }
 .dc-how-card:hover { background: color-mix(in srgb, var(--mkt-sage) 6%, white); }
 .dc-how-card__label {
   font-family: var(--mkt-serif);
-  font-size: 19px;
+  font-size: 17px;
   font-weight: 400;
   color: var(--mkt-ink);
-  margin: 0 0 12px;
+  margin: 0 0 8px;
 }
 .dc-how-card__body {
   font-size: 14px;
