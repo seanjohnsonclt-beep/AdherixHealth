@@ -34,7 +34,7 @@ export function DashboardPreview() {
       <div className="mkt-container">
         <div className="mkt-r-section__head">
           <FadeRise as="span" className="mkt-eyebrow">
-            The platform
+            Clinic dashboard
           </FadeRise>
           <FadeRise as="h2" className="mkt-h2">
             One view. Every patient. Where they are, and what&rsquo;s next.
@@ -120,23 +120,3 @@ function Trendline({ trend }: { trend: Trend }) {
   };
   const colorClass: Record<Trend, string> = {
     up: 'mkt-r-dash__spark--up',
-    flat: 'mkt-r-dash__spark--flat',
-    down: 'mkt-r-dash__spark--down',
-  };
-  return (
-    <svg
-      className={`mkt-r-dash__spark ${colorClass[trend]}`}
-      width="56"
-      height="18"
-      viewBox="0 0 56 18"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.6"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d={paths[trend]} />
-    </svg>
-  );
-}

@@ -14,9 +14,8 @@ const patterns = [
     escalates: '24h',
     color: '#5b7fa6',
     systemMsg:
-      "What you're feeling at this stage is a recognized part of the adjustment period — most patients experience some version of it between weeks 3 and 6. It doesn't mean the medication isn't working. Your next dose is Thursday. If anything feels severe, reply CALL and someone from the clinic will reach out today.",
-    patientReply: 'ok thank you that actually helps',
-    outcome: 'auto_resolved',
+      "What you're feeling is a recognized part of the adjustment period — most patients experience this between weeks 3 and 6. It doesn't mean the medication isn't working. Your next dose is Thursday. If anything feels severe, reply CALL.",
+    patientReply: 'ok thank you — that actually helps',
   },
   {
     id: 'missed-dose',
@@ -25,9 +24,8 @@ const patterns = [
     escalates: '48h',
     color: '#7a6fa6',
     systemMsg:
-      "Missed a dose — don't double up. Just take the next one on schedule: Thursday. Missing one dose doesn't affect your overall progress or your protocol. You're still on track.",
+      "Missed a dose — don't double up. Just take the next one on schedule: Thursday. Missing one dose doesn't affect your overall progress. You're still on track.",
     patientReply: 'got it, will do thursday',
-    outcome: 'auto_resolved',
   },
   {
     id: 'withdrawal',
@@ -38,7 +36,6 @@ const patterns = [
     systemMsg:
       "Around this point in the program, a lot of people find it harder to stay in the rhythm — not for any one reason, just the reality of week 6. Your next dose is Thursday. No catch-up needed. You're still exactly where you should be.",
     patientReply: 'yeah its been rough. thanks for checking in',
-    outcome: 'auto_resolved',
   },
   {
     id: 'plateau',
@@ -47,9 +44,8 @@ const patterns = [
     escalates: '72h',
     color: '#5b8a6f',
     systemMsg:
-      "Around week 8, most patients hit a window where progress feels like it has stalled. It hasn't. This is a recognized adjustment period — your body is recalibrating, not resisting. The patients who push through this window see the clearest results on the other side. Your next dose is Thursday. That's the only step right now.",
-    patientReply: "that's reassuring, I'll stay with it",
-    outcome: 'auto_resolved',
+      "Around week 8, most patients hit a window where progress feels like it has stalled. It hasn't. Your body is recalibrating, not resisting. Your next dose is Thursday. That's the only step right now.",
+    patientReply: "that's reassuring — I'll stay with it",
   },
 ];
 
@@ -57,29 +53,34 @@ const patterns = [
 
 function AnimatedPhone({ pattern }: { pattern: typeof patterns[0] }) {
   const [stage, setStage] = useState<'idle' | 'message' | 'typing' | 'reply' | 'resolved'>('idle');
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const timerRef = useRef<ReturnType<typeof setTimeout>[]>([]);
+
+  function clearAll() {
+    timerRef.current.forEach(clearTimeout);
+    timerRef.current = [];
+  }
 
   useEffect(() => {
-    // Run the animation sequence once on mount, then loop
     function run() {
       setStage('idle');
-      timerRef.current = setTimeout(() => setStage('message'), 600);
-      timerRef.current = setTimeout(() => setStage('typing'), 2200);
-      timerRef.current = setTimeout(() => setStage('reply'), 4000);
-      timerRef.current = setTimeout(() => setStage('resolved'), 5200);
-      timerRef.current = setTimeout(run, 9000);
+      const t1 = setTimeout(() => setStage('message'), 700);
+      const t2 = setTimeout(() => setStage('typing'), 2600);
+      const t3 = setTimeout(() => setStage('reply'), 4400);
+      const t4 = setTimeout(() => setStage('resolved'), 5600);
+      const t5 = setTimeout(run, 9500);
+      timerRef.current = [t1, t2, t3, t4, t5];
     }
     run();
-    return () => { if (timerRef.current) clearTimeout(timerRef.current); };
+    return clearAll;
   }, [pattern.id]);
 
   return (
-    <div className="dc-phone">
-      <div className="dc-phone__frame">
-        <div className="dc-phone__island" />
-        <div className="dc-phone__status">
-          <span className="dc-phone__time">9:41</span>
-          <span className="dc-phone__status-icons">
+    <div className="mkt-iphone">
+      <div className="mkt-iphone__frame">
+        <div className="mkt-iphone__island" />
+        <div className="mkt-iphone__status">
+          <span className="mkt-iphone__time">9:41</span>
+          <span className="mkt-iphone__status-icons">
             <svg width="17" height="12" viewBox="0 0 17 12" fill="currentColor" aria-hidden="true">
               <rect x="0" y="8" width="3" height="4" rx="0.6" opacity="0.35"/>
               <rect x="4.7" y="5" width="3" height="7" rx="0.6" opacity="0.35"/>
@@ -93,60 +94,66 @@ function AnimatedPhone({ pattern }: { pattern: typeof patterns[0] }) {
             </svg>
           </span>
         </div>
-
-        <div className="dc-phone__header">
-          <div className="dc-phone__avatar">A</div>
+        <div className="mkt-iphone__header">
+          <div className="mkt-iphone__avatar">A</div>
           <div>
-            <div className="dc-phone__contact">Adherix Health</div>
-            <div className="dc-phone__contact-sub">text message</div>
+            <div className="mkt-iphone__contact">Adherix Health</div>
+            <div className="mkt-iphone__contact-sub">text message</div>
           </div>
         </div>
+        <div className="mkt-iphone__thread">
+          <div className="mkt-iphone__thread-date">Today 9:41 AM</div>
 
-        <div className="dc-phone__thread">
-          <div className="dc-phone__date">Today 9:41 AM</div>
-
-          {/* System correction message */}
-          <div className={`dc-phone__bubble dc-phone__bubble--in dc-phone__bubble--fade ${stage !== 'idle' ? 'is-visible' : ''}`}>
+          <div className={`mkt-iphone__bubble mkt-iphone__bubble--in dc-bubble-fade${stage !== 'idle' ? ' is-visible' : ''}`}>
             {pattern.systemMsg}
           </div>
 
-          {/* Typing indicator OR patient reply */}
           {stage === 'typing' && (
-            <div className="dc-phone__bubble dc-phone__bubble--out dc-phone__typing">
+            <div className="mkt-iphone__bubble mkt-iphone__bubble--out dc-typing-indicator">
               <span /><span /><span />
             </div>
           )}
+
           {(stage === 'reply' || stage === 'resolved') && (
-            <div className={`dc-phone__bubble dc-phone__bubble--out dc-phone__bubble--fade is-visible`}>
+            <div className="mkt-iphone__bubble mkt-iphone__bubble--out dc-bubble-fade is-visible">
               {pattern.patientReply}
             </div>
           )}
 
-          {/* Resolution badge */}
           {stage === 'resolved' && (
-            <div className="dc-phone__resolved dc-phone__resolved--fade is-visible">
-              <span className="dc-phone__resolved-icon">✓</span>
-              Resolved automatically
+            <div className="dc-resolved-badge dc-bubble-fade is-visible">
+              <span>✓</span> Resolved automatically
             </div>
           )}
         </div>
-
-        <div className="dc-phone__bar">
-          <div className="dc-phone__field">iMessage</div>
+        <div className="mkt-iphone__bar">
+          <div className="mkt-iphone__field">iMessage</div>
         </div>
-        <div className="dc-phone__indicator" />
+        <div className="mkt-iphone__indicator" />
       </div>
     </div>
   );
 }
 
-// ─── Flow diagram ─────────────────────────────────────────────────────────────
+// ─── How it works cards ───────────────────────────────────────────────────────
 
-const flowSteps = [
-  { step: '01', label: 'Signal detected', body: 'Patient keywords, silence duration, and trajectory score evaluated every 60 seconds.' },
-  { step: '02', label: 'Pattern identified', body: 'Engine classifies the drift: side effect, missed dose, withdrawal, or plateau.' },
-  { step: '03', label: 'Correction sent', body: 'Locked, pattern-specific SMS delivered. Not a generic nudge — a targeted behavioral message.' },
-  { step: '04', label: 'Response tracked', body: 'Auto-resolves on reply. Escalates to the clinic if silence exceeds the threshold.' },
+const howItWorks = [
+  {
+    label: 'Signal detected',
+    body: 'Patient keywords, silence duration, and engagement trajectory scored every 60 seconds.',
+  },
+  {
+    label: 'Pattern identified',
+    body: 'Engine classifies the drift: side effect, missed dose, withdrawal, or plateau.',
+  },
+  {
+    label: 'Correction sent',
+    body: 'Locked, pattern-specific SMS. Not a generic nudge — a message calibrated to what the patient is actually experiencing.',
+  },
+  {
+    label: 'Loop closed',
+    body: 'Auto-resolves on reply. Escalates to the clinic if silence crosses the threshold.',
+  },
 ];
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
@@ -158,79 +165,79 @@ export function DriftCorrectionPage() {
     <main>
 
       {/* ── Hero ── */}
-      <section className="dc-hero">
-        <div className="mkt-container dc-hero__inner">
-          <FadeRise as="span" className="mkt-eyebrow dc-hero__eyebrow">
+      <section className="mkt-r-hero" style={{ textAlign: 'center' }}>
+        <div className="mkt-container">
+          <FadeRise as="span" className="mkt-eyebrow" style={{ marginBottom: 20, display: 'block' }}>
             Drift Correction
           </FadeRise>
-          <FadeRise as="h1" className="dc-hero__title" delay={0.05}>
-            The loop that<br />closes itself.
+          <FadeRise as="h1" className="mkt-r-hero__title" delay={0.05}>
+            The loop that closes itself.
           </FadeRise>
-          <FadeRise as="p" className="dc-hero__sub" delay={0.12}>
+          <FadeRise as="p" className="mkt-subhead" delay={0.1}
+            style={{ maxWidth: 580, margin: '0 auto 40px' }}>
             Most SMS programs detect drift and send a nudge. Adherix identifies
-            the specific behavioral pattern — side effect, missed dose, withdrawal,
-            plateau — sends a targeted correction, then tracks whether the patient
-            comes back. If they don't, the clinic is alerted. Automatically.
+            the specific behavioral pattern, sends a targeted correction, then
+            tracks whether the patient comes back. If they don&rsquo;t, the
+            clinic is alerted. Automatically.
           </FadeRise>
-          <FadeRise delay={0.18}>
-            <Link href="/pilot" className="mkt-btn mkt-btn--primary">
-              Book a demo
-            </Link>
+          <FadeRise delay={0.16}>
+            <Link href="/pilot" className="mkt-btn mkt-btn--primary">Book a demo</Link>
           </FadeRise>
         </div>
       </section>
 
-      {/* ── Flow ── */}
-      <section className="dc-flow">
+      {/* ── How it works — scroll-animated cards ── */}
+      <section className="mkt-v2-section mkt-v2-section--alt" id="how">
         <div className="mkt-container">
-          <FadeRise className="dc-flow__head">
-            <span className="mkt-eyebrow">How it works</span>
-            <h2 className="mkt-h2">Four steps. No manual monitoring.</h2>
-          </FadeRise>
-
-          <StaggerGroup className="dc-flow__steps" stagger={0.1} amount={0.2}>
-            {flowSteps.map((s) => (
-              <div key={s.step} className="dc-flow__step">
-                <div className="dc-flow__step-num">{s.step}</div>
-                <h3 className="dc-flow__step-label">{s.label}</h3>
-                <p className="dc-flow__step-body">{s.body}</p>
+          <div className="mkt-v2-section__head">
+            <FadeRise as="span" className="mkt-eyebrow">How it works</FadeRise>
+            <FadeRise as="h2" className="mkt-h2" delay={0.05}>
+              Four steps. No manual monitoring.
+            </FadeRise>
+          </div>
+          <StaggerGroup className="dc-how-grid" stagger={0.12} amount={0.3}>
+            {howItWorks.map((s) => (
+              <div key={s.label} className="dc-how-card">
+                <h3 className="dc-how-card__label">{s.label}</h3>
+                <p className="dc-how-card__body">{s.body}</p>
               </div>
             ))}
           </StaggerGroup>
         </div>
       </section>
 
-      {/* ── Patterns + live phone ── */}
-      <section className="dc-patterns">
-        <div className="mkt-container dc-patterns__inner">
+      {/* ── Patterns + iPhone — mirrors PatientSmsView layout ── */}
+      <section className="mkt-v2-section" id="patterns">
+        <div className="mkt-container mkt-v2-sms-view" style={{ alignItems: 'start' }}>
 
-          {/* Left: pattern selector */}
-          <div className="dc-patterns__list">
-            <FadeRise>
-              <span className="mkt-eyebrow">Four patterns</span>
-              <h2 className="mkt-h2" style={{ marginBottom: 32 }}>
-                Every correction is specific.
-              </h2>
-            </FadeRise>
+          <FadeRise className="mkt-v2-sms-view__copy">
+            <span className="mkt-eyebrow">Four patterns</span>
+            <h2 className="mkt-h2">Every correction is specific.</h2>
+            <p className="mkt-subhead" style={{ marginBottom: 32 }}>
+              The engine doesn&rsquo;t send a generic check-in. It classifies
+              the behavioral signal and delivers the message written for that
+              exact situation — then watches for a reply.
+            </p>
 
-            {patterns.map((p, i) => (
-              <button
-                key={p.id}
-                className={`dc-pattern-tab ${i === activePattern ? 'is-active' : ''}`}
-                onClick={() => setActivePattern(i)}
-                style={{ '--pattern-color': p.color } as React.CSSProperties}
-              >
-                <div className="dc-pattern-tab__label">{p.label}</div>
-                <div className="dc-pattern-tab__signal">{p.signal}</div>
-                <div className="dc-pattern-tab__escalates">
-                  escalates if no response in {p.escalates}
-                </div>
-              </button>
-            ))}
-          </div>
+            <div className="dc-pattern-list">
+              {patterns.map((p, i) => (
+                <button
+                  key={p.id}
+                  className={`dc-pattern-tab${i === activePattern ? ' is-active' : ''}`}
+                  onClick={() => setActivePattern(i)}
+                  style={{ '--pattern-color': p.color } as React.CSSProperties}
+                >
+                  <div className="dc-pattern-tab__label">{p.label}</div>
+                  <div className="dc-pattern-tab__signal">{p.signal}</div>
+                  <div className="dc-pattern-tab__escalates">
+                    escalates if no reply in {p.escalates}
+                  </div>
+                </button>
+              ))}
+            </div>
+          </FadeRise>
 
-          {/* Right: animated phone */}
-          <FadeRise className="dc-patterns__phone" delay={0.1}>
+          <FadeRise className="mkt-v2-sms-view__phone" delay={0.12}>
             <AnimatedPhone key={activePattern} pattern={patterns[activePattern]} />
           </FadeRise>
 
@@ -238,45 +245,46 @@ export function DriftCorrectionPage() {
       </section>
 
       {/* ── Resolution ── */}
-      <section className="dc-resolution">
+      <section className="mkt-v2-section mkt-v2-section--alt" id="resolution">
         <div className="mkt-container">
-          <FadeRise className="dc-resolution__head">
-            <span className="mkt-eyebrow">Resolution</span>
-            <h2 className="mkt-h2">Every correction has an outcome.</h2>
-            <p className="mkt-subhead">
-              The engine doesn't just send — it waits, measures, and acts on
-              what it observes. No correction is ever left open.
-            </p>
-          </FadeRise>
-
-          <StaggerGroup className="dc-resolution__grid" stagger={0.1} amount={0.25}>
-            <div className="dc-resolution__card dc-resolution__card--green">
-              <div className="dc-resolution__card-icon">✓</div>
-              <h3>Auto-resolved</h3>
-              <p>Patient replies after the correction is sent. Engine marks resolved, logs time-to-resolution. No clinic action needed.</p>
+          <div className="mkt-v2-section__head">
+            <FadeRise as="span" className="mkt-eyebrow">Resolution</FadeRise>
+            <FadeRise as="h2" className="mkt-h2" delay={0.05}>
+              Every correction has an outcome.
+            </FadeRise>
+            <FadeRise as="p" className="mkt-subhead" delay={0.1}>
+              The engine doesn&rsquo;t just send — it waits, measures, and acts.
+              No correction is ever left open.
+            </FadeRise>
+          </div>
+          <StaggerGroup className="dc-resolution-grid" stagger={0.1} amount={0.25}>
+            <div className="dc-res-card">
+              <div className="dc-res-card__icon dc-res-card__icon--green">✓</div>
+              <h3 className="dc-res-card__title">Auto-resolved</h3>
+              <p className="dc-res-card__body">Patient replies. Engine marks resolved, logs time-to-resolution. No clinic action needed.</p>
             </div>
-            <div className="dc-resolution__card dc-resolution__card--amber">
-              <div className="dc-resolution__card-icon">→</div>
-              <h3>Escalated to clinic</h3>
-              <p>No reply within 24–72 hours depending on pattern. Patient flagged. Clinic alerted. One call, right patient, right moment.</p>
+            <div className="dc-res-card">
+              <div className="dc-res-card__icon dc-res-card__icon--amber">→</div>
+              <h3 className="dc-res-card__title">Escalated to clinic</h3>
+              <p className="dc-res-card__body">No reply within 24–72 hours. Patient flagged. Clinic alerted. One call, right patient, right moment.</p>
             </div>
-            <div className="dc-resolution__card dc-resolution__card--red">
-              <div className="dc-resolution__card-icon">!</div>
-              <h3>Immediate escalation</h3>
-              <p>Patient texts CALL or HELP at any time. Bypasses all thresholds. Clinic notified within the same tick — under 60 seconds.</p>
+            <div className="dc-res-card">
+              <div className="dc-res-card__icon dc-res-card__icon--red">!</div>
+              <h3 className="dc-res-card__title">Immediate escalation</h3>
+              <p className="dc-res-card__body">Patient texts CALL or HELP at any time. Bypasses all thresholds. Clinic notified within 60 seconds.</p>
             </div>
           </StaggerGroup>
         </div>
       </section>
 
       {/* ── CTA ── */}
-      <section className="dc-cta">
-        <div className="mkt-container dc-cta__inner">
+      <section className="mkt-v2-section" style={{ textAlign: 'center' }}>
+        <div className="mkt-container">
           <FadeRise>
             <h2 className="mkt-h2">Ready to close the loop?</h2>
-            <p className="mkt-subhead" style={{ marginBottom: 36 }}>
-              Drift Correction is live in the Adherix engine. Every tick, every
-              patient, every pattern — automatically.
+            <p className="mkt-subhead" style={{ maxWidth: 480, margin: '0 auto 36px' }}>
+              Drift Correction runs automatically. Every tick, every patient,
+              every pattern — no coordinator required.
             </p>
             <div style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
               <Link href="/pilot" className="mkt-btn mkt-btn--primary">Book a demo</Link>

@@ -37,15 +37,13 @@ export function Engine() {
       <div className="mkt-container">
         <div className="mkt-r-section__head">
           <FadeRise as="span" className="mkt-eyebrow">
-            The platform
+            How it works
           </FadeRise>
           <FadeRise as="h2" className="mkt-h2">
-            Behavioral adherence intelligence, not another reminder app.
+            Six phases. Every patient, on their own clock.
           </FadeRise>
           <FadeRise as="p" className="mkt-subhead" delay={0.1}>
-            Adherix runs a six-phase behavioral engine on top of SMS. It knows
-            where every patient is, when they last replied, and what should
-            happen next — without anyone in the clinic having to think about it.
+            Each phase has its own message cadence, reply gates, and behavioral triggers. The engine advances patients automatically — no coordinator involvement required.
           </FadeRise>
         </div>
 
