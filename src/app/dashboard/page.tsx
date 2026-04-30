@@ -54,7 +54,7 @@ function recommendedAction(p: PatientRow): { label: string; tone: 'none' | 'soft
   if (p.status === 'churned') return { label: 'Win-back campaign', tone: 'soft' };
   if (p.status === 'paused') return { label: 'No action needed', tone: 'none' };
   if (p.recent_failed > 0) return { label: 'Verify delivery', tone: 'strong' };
-  if (p.status === 'flagged') return { label: 'Send human outreach', tone: 'strong' };
+  if (p.status === 'flagged') return { label: 'Call patient today', tone: 'strong' };
   if (p.engagement_score < 40) return { label: 'Recover now', tone: 'strong' };
   if (p.current_phase === 3 && p.engagement_score < 70)
     return { label: 'Plateau intervention suggested', tone: 'soft' };
@@ -192,7 +192,7 @@ export default async function HomePage() {
             <div className="hero-stat__num" style={{ color: metrics.needStaffOutreach > 0 ? '#b45309' : 'var(--fg)' }}>
               {metrics.needStaffOutreach}
             </div>
-            <div className="hero-stat__lbl">Need staff outreach</div>
+            <div className="hero-stat__lbl">Flagged — call today</div>
           </div>
         </div>
       </div>
@@ -232,7 +232,7 @@ export default async function HomePage() {
         <KpiCard
           label="Staff hours saved"
           value={metrics.staffHoursSaved30d}
-          sub={`${metrics.outboundSent30d} auto-outreaches`}
+          sub={`${metrics.outboundSent30d} messages sent`}
           tone="neutral"
         />
       </div>

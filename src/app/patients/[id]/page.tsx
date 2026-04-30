@@ -237,8 +237,8 @@ export default async function PatientPage({ params }: { params: { id: string } }
             <div className="failure-banner failure-banner--soft" style={{ marginBottom: 12 }}>
               <span className="failure-banner__icon">●</span>
               <span>
-                <strong>Escalated — staff outreach needed.</strong>
-                {' '}Patient did not respond to the {PATTERN_LABELS[openDcEvent.drift_pattern] ?? openDcEvent.drift_pattern} correction message.
+                <strong>No response — call this patient today.</strong>
+                {' '}Did not respond to the {PATTERN_LABELS[openDcEvent.drift_pattern] ?? openDcEvent.drift_pattern} check-in.
               </span>
             </div>
           )}
