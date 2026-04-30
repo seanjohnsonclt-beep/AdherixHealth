@@ -2,14 +2,6 @@
 
 import { FadeRise, StaggerGroup } from '../animation/MotionPrimitives';
 
-/**
- * Section 6 — Dashboard preview.
- *
- * Browser-frame mockup of the clinic dashboard. Anchor target for the hero's
- * "See the platform" CTA. KPI strip + patient table with engagement
- * sparklines. Data is illustrative.
- */
-
 const kpis = [
   { label: 'Active patients', value: '142' },
   { label: 'In Activation', value: '38' },
@@ -20,12 +12,12 @@ const kpis = [
 type Trend = 'up' | 'flat' | 'down';
 
 const rows: { name: string; phase: string; days: string; trend: Trend; status: string }[] = [
-  { name: 'P. Alvarez', phase: 'Onboarding', days: '4d', trend: 'up', status: 'On track' },
-  { name: 'M. Chen', phase: 'Activation', days: '11d', trend: 'up', status: 'On track' },
-  { name: 'J. Rivera', phase: 'Momentum', days: '23d', trend: 'flat', status: 'Watch' },
-  { name: 'L. Okafor', phase: 'Plateau', days: '47d', trend: 'down', status: 'Flagged' },
-  { name: 'S. Kim', phase: 'Activation', days: '9d', trend: 'up', status: 'On track' },
-  { name: 'D. Patel', phase: 'Momentum', days: '31d', trend: 'flat', status: 'On track' },
+  { name: 'P. Alvarez', phase: 'Onboarding',  days: '4d',  trend: 'up',   status: 'On track' },
+  { name: 'M. Chen',    phase: 'Activation',  days: '11d', trend: 'up',   status: 'On track' },
+  { name: 'J. Rivera',  phase: 'Momentum',    days: '23d', trend: 'flat', status: 'Watch'    },
+  { name: 'L. Okafor',  phase: 'Plateau',     days: '47d', trend: 'down', status: 'Flagged'  },
+  { name: 'S. Kim',     phase: 'Activation',  days: '9d',  trend: 'up',   status: 'On track' },
+  { name: 'D. Patel',   phase: 'Momentum',    days: '31d', trend: 'flat', status: 'On track' },
 ];
 
 export function DashboardPreview() {
@@ -41,7 +33,7 @@ export function DashboardPreview() {
           </FadeRise>
           <FadeRise as="p" className="mkt-subhead" delay={0.1}>
             The clinic dashboard surfaces drift before it becomes churn.
-            Coordinators see who needs a human, who&rsquo;s on rails, and what
+            Coordinators see who needs a call, who&rsquo;s on rails, and what
             the engine has already done on their behalf.
           </FadeRise>
         </div>
@@ -49,9 +41,7 @@ export function DashboardPreview() {
         <FadeRise className="mkt-r-dash__frame">
           <div className="mkt-r-dash__chrome">
             <div className="mkt-r-dash__dots">
-              <span />
-              <span />
-              <span />
+              <span /><span /><span />
             </div>
             <div className="mkt-r-dash__url">app.adherixhealth.com</div>
           </div>
@@ -59,51 +49,45 @@ export function DashboardPreview() {
           {/* In-app top nav */}
           <div className="mkt-r-dash__topnav">
             <div className="mkt-r-dash__topnav-logo">Adherix</div>
-            <div className="mkt-r-dash__topnav-clinic">Johnson Clinic</div>
-            <div className="mkt-r-dash__topnav-right">
-              <span className="mkt-r-dash__topnav-dot" />
-              <span className="mkt-r-dash__topnav-live">Live</span>
+            <div className="mkt-r-dash__topnav-links">
+              <span className="mkt-r-dash__topnav-link mkt-r-dash__topnav-link--active">Patients</span>
+              <span className="mkt-r-dash__topnav-link">Reports</span>
+              <span className="mkt-r-dash__topnav-link">Settings</span>
             </div>
           </div>
 
-          <div className="mkt-r-dash__body">
-            <StaggerGroup className="mkt-r-dash__kpis" stagger={0.06} amount={0.2}>
-              {kpis.map((k) => (
-                <div key={k.label} className="mkt-r-dash__kpi">
-                  <div className="mkt-r-dash__kpi-value">{k.value}</div>
-                  <div className="mkt-r-dash__kpi-label">{k.label}</div>
-                </div>
-              ))}
-            </StaggerGroup>
-
-            <div className="mkt-r-dash__table" role="table" aria-label="Sample patient list">
-              <div className="mkt-r-dash__row mkt-r-dash__row--head" role="row">
-                <div role="columnheader">Patient</div>
-                <div role="columnheader">Phase</div>
-                <div role="columnheader">Day in phase</div>
-                <div role="columnheader">Engagement</div>
-                <div role="columnheader">Status</div>
+          {/* KPI strip */}
+          <div className="mkt-r-dash__kpis">
+            {kpis.map((k) => (
+              <div key={k.label} className="mkt-r-dash__kpi">
+                <div className="mkt-r-dash__kpi-val">{k.value}</div>
+                <div className="mkt-r-dash__kpi-lbl">{k.label}</div>
               </div>
-              {rows.map((r) => (
-                <div key={r.name} className="mkt-r-dash__row" role="row">
-                  <div role="cell">{r.name}</div>
-                  <div role="cell">{r.phase}</div>
-                  <div role="cell">{r.days}</div>
-                  <div role="cell">
-                    <Trendline trend={r.trend} />
-                  </div>
-                  <div role="cell">
-                    <span
-                      className={`mkt-r-dash__chip mkt-r-dash__chip--${r.status
-                        .toLowerCase()
-                        .replace(/\s/g, '-')}`}
-                    >
-                      {r.status}
-                    </span>
-                  </div>
-                </div>
-              ))}
+            ))}
+          </div>
+
+          {/* Patient table */}
+          <div className="mkt-r-dash__table">
+            <div className="mkt-r-dash__thead">
+              <span>Patient</span>
+              <span>Phase</span>
+              <span>Days</span>
+              <span>Engagement</span>
+              <span>Status</span>
             </div>
+            {rows.map((r) => (
+              <div key={r.name} className={`mkt-r-dash__row${r.status === 'Flagged' ? ' mkt-r-dash__row--flagged' : ''}`}>
+                <span className="mkt-r-dash__name">{r.name}</span>
+                <span className="mkt-r-dash__phase">{r.phase}</span>
+                <span className="mkt-r-dash__days mkt-r-dash__mono">{r.days}</span>
+                <span className="mkt-r-dash__spark-wrap">
+                  <Trendline trend={r.trend} />
+                </span>
+                <span className={`mkt-r-dash__status mkt-r-dash__status--${r.status === 'Flagged' ? 'flagged' : r.status === 'Watch' ? 'watch' : 'ok'}`}>
+                  {r.status}
+                </span>
+              </div>
+            ))}
           </div>
         </FadeRise>
       </div>
@@ -112,11 +96,25 @@ export function DashboardPreview() {
 }
 
 function Trendline({ trend }: { trend: Trend }) {
-  // Simple inline SVG sparkline. Same width across rows for alignment.
   const paths: Record<Trend, string> = {
-    up: 'M 2 14 L 12 11 L 22 12 L 32 8 L 42 5 L 52 4',
+    up:   'M 2 14 L 12 11 L 22 12 L 32 8 L 42 5 L 52 4',
     flat: 'M 2 9 L 12 10 L 22 8 L 32 9 L 42 9 L 52 8',
     down: 'M 2 4 L 12 6 L 22 7 L 32 10 L 42 12 L 52 14',
   };
   const colorClass: Record<Trend, string> = {
-    up: 'mkt-r-dash__spark--up',
+    up:   'mkt-r-dash__spark--up',
+    flat: 'mkt-r-dash__spark--flat',
+    down: 'mkt-r-dash__spark--down',
+  };
+  return (
+    <svg
+      viewBox="0 0 54 18"
+      width="54"
+      height="18"
+      className={`mkt-r-dash__spark ${colorClass[trend]}`}
+      aria-hidden="true"
+    >
+      <path d={paths[trend]} fill="none" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
