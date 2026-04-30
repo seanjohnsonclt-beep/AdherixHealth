@@ -28,6 +28,7 @@ export async function enrollPatientAction(formData: FormData) {
   const startingDose   = String(formData.get('starting_dose') || '').trim() || undefined;
   const supplyRaw      = String(formData.get('supply_quantity') || '').trim();
   const supplyQuantity = supplyRaw ? parseInt(supplyRaw, 10) || undefined : undefined;
+  const nextDoseDay    = String(formData.get('next_dose_day') || '').trim() || undefined;
 
   const id = await enrollPatient({
     clinicId: user.clinicId,
@@ -37,6 +38,11 @@ export async function enrollPatientAction(formData: FormData) {
     startingDose,
     supplyQuantity,
   });
+
+  // Set next_dose_day if provided (column added in 0006 migration)
+  if (nextDoseDay) {
+    await query(`update patients set next_dose_day = $1 where id = $2`, [nextDoseDay, id]);
+  }
 
   revalidatePath('/');
   redirect(`/patients/${id}`);
@@ -109,6 +115,22 @@ export async function updatePatientAction(formData: FormData) {
 
   revalidatePath(`/patients/${id}`);
   redirect(`/patients/${id}`);
+}
+
+// Update injection day — used from patient detail page.
+export async function setNextDoseDayAction(formData: FormData) {
+  const user = await requireUser();
+  const id          = String(formData.get('patient_id') || '');
+  const nextDoseDay = String(formData.get('next_dose_day') || '').trim() || null;
+  await assertPatientInClinic(id, user.clinicId);
+
+  await query(`update patients set next_dose_day = $1 where id = $2`, [nextDoseDay, id]);
+  await query(
+    `insert into events (patient_id, kind, payload) values ($1, 'next_dose_day_updated', $2)`,
+    [id, JSON.stringify({ next_dose_day: nextDoseDay, by: 'clinic_admin' })]
+  );
+
+  revalidatePath(`/patients/${id}`);
 }
 
 // Pause: temporary stop — scheduled messages wait, triggers don't evaluate,

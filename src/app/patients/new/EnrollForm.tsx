@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { MEDICATION_PROTOCOLS } from '@/engine/medications';
 import { enrollPatientAction } from '@/app/patients/actions';
 
+const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+
 export function EnrollForm({ error }: { error?: string }) {
   const [selectedMed, setSelectedMed] = useState('');
 
@@ -64,6 +66,20 @@ export function EnrollForm({ error }: { error?: string }) {
           </select>
           <p className="small faint" style={{ marginTop: 6 }}>
             Titration schedule auto-calculated from enrollment date.
+          </p>
+        </div>
+      )}
+
+      {/* ── Injection day ────────────────────────────────────────────────── */}
+      {protocol && (
+        <div style={{ marginBottom: 16 }}>
+          <label className="label" htmlFor="next_dose_day">Injection day</label>
+          <select className="input" name="next_dose_day" id="next_dose_day">
+            <option value="">— Unknown —</option>
+            {DAYS.map(d => <option key={d} value={d}>{d}</option>)}
+          </select>
+          <p className="small faint" style={{ marginTop: 6 }}>
+            Used in correction messages (e.g. "your next dose is Thursday").
           </p>
         </div>
       )}
