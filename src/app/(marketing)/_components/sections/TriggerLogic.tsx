@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { FadeRise, StaggerGroup } from '../animation/MotionPrimitives';
 
 const triggers = [
@@ -33,43 +34,10 @@ const triggers = [
   },
 ];
 
-const corrections = [
-  {
-    pattern: 'Side effect',
-    signal: 'Patient texts a side-effect keyword',
-    message:
-      'Validates the experience, normalizes the adjustment period, provides a clear action (next dose date or reply CALL for clinic contact).',
-    resolves: '24h',
-  },
-  {
-    pattern: 'Missed dose',
-    signal: 'Patient signals a missed or skipped dose',
-    message:
-      'No catch-up instruction. Confirms next scheduled dose, removes shame, keeps protocol intact.',
-    resolves: '48h',
-  },
-  {
-    pattern: 'Withdrawal',
-    signal: '72h+ silence, inconsistent or declining trajectory',
-    message:
-      `Acknowledges that week-N is hard without naming the patient's specific struggle. Normalizes the pattern. Re-anchors to next dose.`,
-    resolves: '72h',
-  },
-  {
-    pattern: 'Plateau',
-    signal: 'Phase 2–4, 48h+ silence, 21+ days in phase',
-    message:
-      'Reframes plateau as a recognized recalibration period. Directs to next dose as the only required action.',
-    resolves: '72h',
-  },
-];
-
 export function TriggerLogic() {
   return (
     <section className="mkt-v2-section mkt-v2-section--alt" id="triggers">
       <div className="mkt-container">
-
-        {/* ── Trigger layer ─────────────────────────────────────────────── */}
         <div className="mkt-v2-section__head">
           <FadeRise as="span" className="mkt-eyebrow">
             Trigger logic
@@ -96,66 +64,27 @@ export function TriggerLogic() {
           ))}
         </StaggerGroup>
 
-        {/* ── Drift correction layer ────────────────────────────────────── */}
-        <div className="mkt-v2-section__head" style={{ marginTop: 80 }}>
-          <FadeRise as="span" className="mkt-eyebrow">
-            Drift correction
-          </FadeRise>
-          <FadeRise as="h2" className="mkt-h2" delay={0.05}>
-            Beyond detection — closing the loop.
-          </FadeRise>
-          <FadeRise as="p" className="mkt-subhead" delay={0.1}>
-            When a behavioral signal fires, the engine identifies the specific
-            pattern and sends a targeted correction — not a generic nudge. Every
-            correction is tracked. Patients who reply auto-resolve. Patients who
-            don&rsquo;t are escalated to the clinic before they disappear.
-          </FadeRise>
-        </div>
-
-        <StaggerGroup className="mkt-v2-triggers" stagger={0.09} amount={0.2}>
-          {corrections.map((c) => (
-            <div key={c.pattern} className="mkt-v2-trigger">
-              <div className="mkt-v2-trigger__head">
-                <span className="mkt-v2-trigger__label">{c.pattern}</span>
-                <code className="mkt-v2-trigger__key">
-                  escalates in {c.resolves}
-                </code>
-              </div>
-              <div className="mkt-v2-trigger__timing">{c.signal}</div>
-              <p className="mkt-v2-trigger__action">{c.message}</p>
-            </div>
-          ))}
-        </StaggerGroup>
-
-        {/* ── Resolution note ───────────────────────────────────────────── */}
         <FadeRise>
-          <div className="mkt-v2-resolution-note">
-            <div className="mkt-v2-resolution-note__row">
-              <div className="mkt-v2-resolution-note__item">
-                <span className="mkt-v2-resolution-note__icon mkt-v2-resolution-note__icon--green">✓</span>
-                <div>
-                  <strong>Patient replies</strong>
-                  <p>Auto-resolved. Time-to-resolution logged. No clinic action needed.</p>
-                </div>
-              </div>
-              <div className="mkt-v2-resolution-note__item">
-                <span className="mkt-v2-resolution-note__icon mkt-v2-resolution-note__icon--amber">→</span>
-                <div>
-                  <strong>No response past threshold</strong>
-                  <p>Patient flagged. Clinic alerted. One call, right patient, right moment.</p>
-                </div>
-              </div>
-              <div className="mkt-v2-resolution-note__item">
-                <span className="mkt-v2-resolution-note__icon mkt-v2-resolution-note__icon--red">!</span>
-                <div>
-                  <strong>Patient texts CALL or HELP</strong>
-                  <p>Immediate escalation. Bypasses all time thresholds. Clinic notified now.</p>
-                </div>
-              </div>
+          <div className="mkt-v2-dc-callout">
+            <div className="mkt-v2-dc-callout__content">
+              <span className="mkt-eyebrow" style={{ marginBottom: 8, display: 'block' }}>
+                Drift Correction
+              </span>
+              <h3 className="mkt-h3" style={{ margin: '0 0 10px' }}>
+                Beyond triggers — the loop that closes itself.
+              </h3>
+              <p style={{ margin: '0 0 24px', color: 'var(--mkt-ink-2)', fontSize: 15, lineHeight: 1.65 }}>
+                When a patient drifts, the engine identifies the specific behavioral
+                pattern — side effect, missed dose, withdrawal, plateau — sends a
+                targeted correction, and tracks whether they come back. Auto-resolves
+                on reply. Escalates to the clinic if they don&rsquo;t.
+              </p>
+              <Link href="/drift-correction" className="mkt-btn mkt-btn--primary mkt-btn--sm">
+                See Drift Correction →
+              </Link>
             </div>
           </div>
         </FadeRise>
-
       </div>
     </section>
   );

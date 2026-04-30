@@ -46,6 +46,7 @@ export function MobileNav() {
           <div className="mkt-mobile-menu__inner">
             <Link href="/"         className="mkt-mobile-menu__link" onClick={close}>Overview</Link>
             <Link href="/platform" className="mkt-mobile-menu__link" onClick={close}>Platform</Link>
+            <Link href="/drift-correction" className="mkt-mobile-menu__link" onClick={close}>Drift Correction</Link>
             <Link href="/roi"      className="mkt-mobile-menu__link" onClick={close}>ROI calculator</Link>
             <Link href="/login"    className="mkt-mobile-menu__link mkt-mobile-menu__link--muted" onClick={close}>Sign in</Link>
             <Link href="/pilot"    className="mkt-btn mkt-btn--primary mkt-mobile-menu__cta" onClick={close}>
