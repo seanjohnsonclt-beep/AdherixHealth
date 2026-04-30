@@ -4767,20 +4767,31 @@ h3 { font-size: 17px; line-height: 1.3; }
   gap: 0;
   border: 1px solid var(--mkt-line);
 }
+.dc-how-grid--2x2 {
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  border: none;
+}
 .dc-how-card {
   padding: 28px 26px;
   border-right: 1px solid var(--mkt-line);
   background: white;
   transition: background 0.18s;
 }
+.dc-how-grid--2x2 .dc-how-card {
+  border: 1px solid var(--mkt-line);
+  border-right: 1px solid var(--mkt-line);
+  padding: 32px 30px;
+}
 .dc-how-card:last-child { border-right: none; }
+.dc-how-grid--2x2 .dc-how-card:last-child { border-right: 1px solid var(--mkt-line); }
 .dc-how-card:hover { background: color-mix(in srgb, var(--mkt-sage) 6%, white); }
 .dc-how-card__label {
   font-family: var(--mkt-serif);
-  font-size: 17px;
+  font-size: 18px;
   font-weight: 400;
   color: var(--mkt-ink);
-  margin: 0 0 8px;
+  margin: 0 0 10px;
 }
 .dc-how-card__body {
   font-size: 14px;
@@ -4929,6 +4940,7 @@ h3 { font-size: 17px; line-height: 1.3; }
 @media (max-width: 900px) {
   .dc-how-grid { grid-template-columns: repeat(2, 1fr); }
   .dc-how-card { border-bottom: 1px solid var(--mkt-line); }
+  .dc-how-grid--2x2 { grid-template-columns: 1fr; gap: 12px; }
   .dc-resolution-grid { grid-template-columns: 1fr; }
   .dc-res-card { border-right: none; border-bottom: 1px solid var(--mkt-line); }
   .dc-res-card:last-child { border-bottom: none; }

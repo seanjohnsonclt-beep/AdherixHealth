@@ -170,7 +170,7 @@ export function DriftCorrectionPage() {
           <FadeRise as="span" className="mkt-eyebrow" style={{ marginBottom: 20, display: 'block' }}>
             Drift Correction
           </FadeRise>
-          <FadeRise as="h1" className="mkt-r-hero__title" delay={0.05}>
+          <FadeRise as="h1" className="mkt-r-hero__title" delay={0.05} style={{ textAlign: 'center' }}>
             The loop that closes itself.
           </FadeRise>
           <FadeRise as="p" className="mkt-subhead" delay={0.1}
@@ -195,7 +195,7 @@ export function DriftCorrectionPage() {
               Four steps. No manual monitoring.
             </FadeRise>
           </div>
-          <StaggerGroup className="dc-how-grid" stagger={0.12} amount={0.3}>
+          <StaggerGroup className="dc-how-grid dc-how-grid--2x2" stagger={0.12} amount={0.3}>
             {howItWorks.map((s) => (
               <div key={s.label} className="dc-how-card">
                 <h3 className="dc-how-card__label">{s.label}</h3>
