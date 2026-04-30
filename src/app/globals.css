@@ -708,10 +708,10 @@ h3 { font-size: 17px; line-height: 1.3; }
 }
 .mkt-btn--primary {
   background: #1A3D38;
-  color: #F4EFE6;
+  color: #ffffff;
   box-shadow: 0 1px 0 rgba(255,255,255,0.12) inset, 0 6px 24px rgba(26, 61, 56, 0.28);
 }
-.mkt-btn--primary:hover { background: #0F2825; transform: translateY(-1px); box-shadow: 0 1px 0 rgba(255,255,255,0.12) inset, 0 8px 28px rgba(26, 61, 56, 0.36); }
+.mkt-btn--primary:hover { background: transparent; color: #1A3D38; border-color: #1A3D38; transform: translateY(-1px); box-shadow: none; }
 .mkt-btn--ghost {
   background: transparent;
   color: var(--mkt-fg);
