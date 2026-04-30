@@ -4959,3 +4959,171 @@ h3 { font-size: 17px; line-height: 1.3; }
 @media (max-width: 680px) {
   .dc-how-grid { grid-template-columns: 1fr; }
 }
+
+
+/* =========================================================================
+   Drift Correction page — resolution section premium redesign
+   dc-res-section, dc-res-cards, dc-res-card--* variants
+   New classes only; does not conflict with old .dc-res-card base rule.
+   ========================================================================= */
+
+/* ── Dark section wrapper ── */
+.dc-res-section {
+  background: var(--mkt-ink);
+  padding: 96px 0 112px;
+  position: relative;
+}
+.dc-res-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 70% 50% at 20% 0%,  rgba(91,155,148,0.12), transparent 60%),
+    radial-gradient(ellipse 60% 40% at 85% 100%, rgba(217,152,119,0.07), transparent 60%);
+}
+.dc-res-section > .mkt-container { position: relative; }
+
+/* ── Section head ── */
+.dc-res-section__head {
+  max-width: 640px;
+  margin: 0 auto 64px;
+  text-align: center;
+}
+.dc-res-eyebrow {
+  display: block;
+  font-family: 'Geist Mono', ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--mkt-sage-soft);
+  margin-bottom: 18px;
+}
+.dc-res-title {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: clamp(28px, 3.5vw, 40px);
+  font-weight: 400;
+  color: var(--mkt-paper);
+  letter-spacing: -0.025em;
+  line-height: 1.12;
+  margin: 0 0 16px;
+}
+.dc-res-subtitle {
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.65;
+  color: rgba(244,239,230,0.65);
+  margin: 0;
+}
+
+/* ── 3-column card grid ── */
+.dc-res-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+/* ── Card base — overrides old .dc-res-card for new design ── */
+.dc-res-card--green,
+.dc-res-card--amber,
+.dc-res-card--red {
+  position: relative;
+  background: #fff;
+  border-radius: 12px;
+  padding: 0;            /* accent bar + content inside */
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.28), 0 1px 4px rgba(0,0,0,0.18);
+  display: flex;
+  flex-direction: column;
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+.dc-res-card--green:hover,
+.dc-res-card--amber:hover,
+.dc-res-card--red:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 36px rgba(0,0,0,0.36), 0 2px 8px rgba(0,0,0,0.2);
+}
+
+/* ── Colored accent bar at top of each card ── */
+.dc-res-card__accent {
+  height: 4px;
+  width: 100%;
+  flex-shrink: 0;
+}
+.dc-res-card--green .dc-res-card__accent { background: #22c55e; }
+.dc-res-card--amber .dc-res-card__accent { background: #f59e0b; }
+.dc-res-card--red   .dc-res-card__accent { background: #ef4444; }
+
+/* ── Card icon wrap ── */
+.dc-res-card__icon-wrap {
+  padding: 28px 28px 0;
+}
+.dc-res-card--green .dc-res-card__icon-wrap { color: #16a34a; }
+.dc-res-card--amber .dc-res-card__icon-wrap { color: #b45309; }
+.dc-res-card--red   .dc-res-card__icon-wrap { color: #dc2626; }
+
+/* ── Card title (overrides old .dc-res-card__title) ── */
+.dc-res-card--green .dc-res-card__title,
+.dc-res-card--amber .dc-res-card__title,
+.dc-res-card--red   .dc-res-card__title {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 20px;
+  font-weight: 500;
+  color: #0f172a;
+  margin: 16px 28px 10px;
+  letter-spacing: -0.015em;
+}
+
+/* ── Card body (overrides old .dc-res-card__body) ── */
+.dc-res-card--green .dc-res-card__body,
+.dc-res-card--amber .dc-res-card__body,
+.dc-res-card--red   .dc-res-card__body {
+  font-size: 14.5px;
+  line-height: 1.7;
+  color: #475569;
+  margin: 0 28px;
+  flex: 1;
+}
+
+/* ── Stat row ── */
+.dc-res-card__stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 24px 28px 28px;
+  padding: 14px 18px;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+.dc-res-card--green .dc-res-card__stat { background: #f0fdf4; border: 1px solid #bbf7d0; }
+.dc-res-card--amber .dc-res-card__stat { background: #fffbeb; border: 1px solid #fde68a; }
+.dc-res-card--red   .dc-res-card__stat { background: #fef2f2; border: 1px solid #fecaca; }
+
+.dc-res-card__stat-label {
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: #64748b;
+  letter-spacing: -0.005em;
+}
+.dc-res-card__stat-val {
+  font-family: 'Geist Mono', ui-monospace, monospace;
+  font-size: 13px;
+  font-weight: 600;
+}
+.dc-res-card--green .dc-res-card__stat-val { color: #15803d; }
+.dc-res-card--amber .dc-res-card__stat-val { color: #92400e; }
+.dc-res-card--red   .dc-res-card__stat-val { color: #b91c1c; }
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .dc-res-section { padding: 72px 0 88px; }
+  .dc-res-cards { grid-template-columns: 1fr; gap: 16px; }
+}
+@media (max-width: 680px) {
+  .dc-res-section { padding: 56px 0 72px; }
+  .dc-res-section__head { margin-bottom: 44px; }
+  .dc-res-title { font-size: 28px; }
+}

@@ -248,34 +248,79 @@ export function DriftCorrectionPage() {
       </section>
 
       {/* ── Resolution ── */}
-      <section className="mkt-v2-section mkt-v2-section--alt" id="resolution">
+      <section className="dc-res-section" id="resolution">
         <div className="mkt-container">
-          <div className="mkt-v2-section__head">
-            <FadeRise as="span" className="mkt-eyebrow">Resolution</FadeRise>
-            <FadeRise as="h2" className="mkt-h2" delay={0.05}>
-              Every correction has an outcome.
-            </FadeRise>
-            <FadeRise as="p" className="mkt-subhead" delay={0.1}>
+          <FadeRise className="dc-res-section__head">
+            <span className="dc-res-eyebrow">Resolution</span>
+            <h2 className="dc-res-title">Every correction has an outcome.</h2>
+            <p className="dc-res-subtitle">
               The engine doesn&rsquo;t just send — it waits, measures, and acts.
               No correction is ever left open.
-            </FadeRise>
-          </div>
-          <StaggerGroup className="dc-resolution-grid" stagger={0.1} amount={0.25}>
-            <div className="dc-res-card">
-              <div className="dc-res-card__icon dc-res-card__icon--green">✓</div>
+            </p>
+          </FadeRise>
+
+          <StaggerGroup className="dc-res-cards" stagger={0.13} amount={0.3}>
+
+            {/* Card 1 — Auto-resolved */}
+            <div className="dc-res-card dc-res-card--green">
+              <div className="dc-res-card__accent" />
+              <div className="dc-res-card__icon-wrap">
+                <svg width="40" height="40" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+                  <circle cx="20" cy="20" r="19" stroke="currentColor" strokeWidth="1.5" opacity="0.25"/>
+                  <path d="M 28 14 C 22 14 16 16 14 22 C 16 18 22 16 28 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" fill="none" opacity="0.4"/>
+                  <path d="M 12 21 L 18 27 L 29 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
               <h3 className="dc-res-card__title">Auto-resolved</h3>
-              <p className="dc-res-card__body">Patient replies. Engine marks resolved, logs time-to-resolution. No clinic action needed.</p>
+              <p className="dc-res-card__body">
+                Patient replies after the correction is sent. The engine marks it resolved, logs time-to-resolution, and moves on. Zero clinic involvement required.
+              </p>
+              <div className="dc-res-card__stat">
+                <span className="dc-res-card__stat-label">Typical resolution</span>
+                <span className="dc-res-card__stat-val">2 – 8 hours</span>
+              </div>
             </div>
-            <div className="dc-res-card">
-              <div className="dc-res-card__icon dc-res-card__icon--amber">→</div>
+
+            {/* Card 2 — Escalated */}
+            <div className="dc-res-card dc-res-card--amber">
+              <div className="dc-res-card__accent" />
+              <div className="dc-res-card__icon-wrap">
+                <svg width="40" height="40" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+                  <circle cx="20" cy="20" r="19" stroke="currentColor" strokeWidth="1.5" opacity="0.25"/>
+                  <circle cx="20" cy="15" r="4" stroke="currentColor" strokeWidth="2"/>
+                  <path d="M 11 31 C 11 26 14.5 23 20 23 C 25.5 23 29 26 29 31" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                  <path d="M 29 18 L 32 18 M 30.5 16.5 L 30.5 19.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+                </svg>
+              </div>
               <h3 className="dc-res-card__title">Escalated to clinic</h3>
-              <p className="dc-res-card__body">No reply within 24–72 hours. Patient flagged. Clinic alerted. One call, right patient, right moment.</p>
+              <p className="dc-res-card__body">
+                Silence crosses the threshold — 24h for side effects, up to 72h for plateau. Patient flagged. Clinic alerted. One call, right patient, right moment.
+              </p>
+              <div className="dc-res-card__stat">
+                <span className="dc-res-card__stat-label">Escalation window</span>
+                <span className="dc-res-card__stat-val">24 – 72 hours</span>
+              </div>
             </div>
-            <div className="dc-res-card">
-              <div className="dc-res-card__icon dc-res-card__icon--red">!</div>
+
+            {/* Card 3 — Immediate */}
+            <div className="dc-res-card dc-res-card--red">
+              <div className="dc-res-card__accent" />
+              <div className="dc-res-card__icon-wrap">
+                <svg width="40" height="40" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+                  <circle cx="20" cy="20" r="19" stroke="currentColor" strokeWidth="1.5" opacity="0.25"/>
+                  <path d="M 22.5 11 L 15 22 L 19.5 22 L 17.5 29 L 25 18 L 20.5 18 Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" fill="currentColor" fillOpacity="0.15"/>
+                </svg>
+              </div>
               <h3 className="dc-res-card__title">Immediate escalation</h3>
-              <p className="dc-res-card__body">Patient texts CALL or HELP at any time. Bypasses all thresholds. Clinic notified within 60 seconds.</p>
+              <p className="dc-res-card__body">
+                Patient texts CALL or HELP. Every threshold bypassed. Clinic notified within the next engine tick — under 60 seconds, any time, any phase.
+              </p>
+              <div className="dc-res-card__stat">
+                <span className="dc-res-card__stat-label">Response time</span>
+                <span className="dc-res-card__stat-val">&lt; 60 seconds</span>
+              </div>
             </div>
+
           </StaggerGroup>
         </div>
       </section>
