@@ -706,12 +706,22 @@ h3 { font-size: 17px; line-height: 1.3; }
   text-align: center;
   white-space: nowrap;
 }
-.mkt-btn--primary {
+.mkt-btn--primary,
+a.mkt-btn--primary,
+.mkt-page a.mkt-btn--primary {
   background: #1A3D38;
-  color: #ffffff;
+  color: #ffffff !important;
   box-shadow: 0 1px 0 rgba(255,255,255,0.12) inset, 0 6px 24px rgba(26, 61, 56, 0.28);
 }
-.mkt-btn--primary:hover { background: transparent; color: #1A3D38; border-color: #1A3D38; transform: translateY(-1px); box-shadow: none; }
+.mkt-btn--primary:hover,
+a.mkt-btn--primary:hover,
+.mkt-page a.mkt-btn--primary:hover {
+  background: transparent;
+  color: #1A3D38 !important;
+  border-color: #1A3D38;
+  transform: translateY(-1px);
+  box-shadow: none;
+}
 .mkt-btn--ghost {
   background: transparent;
   color: var(--mkt-fg);
