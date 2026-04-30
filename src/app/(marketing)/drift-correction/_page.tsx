@@ -171,7 +171,7 @@ export function DriftCorrectionPage() {
             Drift Correction
           </FadeRise>
           <FadeRise delay={0.05}>
-            <h1 style={{ fontFamily: 'var(--mkt-serif)', fontSize: 'clamp(44px,7vw,80px)', fontWeight: 400, lineHeight: 1.05, letterSpacing: '-0.03em', textAlign: 'center', margin: '0 auto 24px', maxWidth: 800 }}>
+            <h1 style={{ fontFamily: 'var(--mkt-serif)', fontSize: 'clamp(36px,4vw,52px)', fontWeight: 400, lineHeight: 1.05, letterSpacing: '-0.03em', textAlign: 'center', margin: '0 auto 24px', maxWidth: 800 }}>
               The loop that closes itself.
             </h1>
           </FadeRise>
