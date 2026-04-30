@@ -2,29 +2,21 @@
 
 import { FadeRise, StaggerGroup } from '../animation/MotionPrimitives';
 
-/**
- * Homepage Pillars — v2
- *
- * Three-column grid. Each pillar has a monospaced number, Fraunces title,
- * and a specific (not generic) body. The grid is bordered and flush — feels
- * like a table rather than floating cards.
- */
-
 const pillars = [
   {
     num: 'Detect',
     title: 'Behavioral signals',
-    body: 'Detect subtle disengagement before churn happens. Reply cadence, dose timing, silence patterns — evaluated every 60 seconds across your entire panel.',
+    body: 'Detect subtle disengagement before churn happens. Reply cadence, dose timing, silence patterns — scored every 60 seconds across your entire panel.',
   },
   {
-    num: 'Act',
-    title: 'Smart interventions',
-    body: 'Right outreach, right timing, right patient. Phase-aware SMS that knows when to automate and when to route a patient to your care team.',
+    num: 'Correct',
+    title: 'Targeted intervention',
+    body: 'When a patient drifts, the engine identifies the pattern — side effect, missed dose, withdrawal, plateau — and sends a precise, locked correction message. No generic nudges.',
   },
   {
-    num: 'Optimize',
-    title: 'Retention intelligence',
-    body: 'Know where revenue risk lives across your roster. Weekly digests, clinic alerts, and exportable reports give operators the full picture.',
+    num: 'Close the loop',
+    title: 'Tracked resolution',
+    body: 'Every correction is tracked. If the patient responds, it resolves automatically. If they go silent past the threshold, the clinic is alerted — one call, right patient, right moment.',
   },
 ];
 

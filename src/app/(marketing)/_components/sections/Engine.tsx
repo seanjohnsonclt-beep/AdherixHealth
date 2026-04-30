@@ -2,16 +2,6 @@
 
 import { FadeRise, ScrollWidth, StaggerGroup } from '../animation/MotionPrimitives';
 
-/**
- * Section 4 — Behavioral adherence intelligence.
- *
- * Three pillar cards (Phase-aware, Trigger-driven, Clinic routing) plus a
- * horizontal phase timeline that animates its bars on scroll.
- *
- * Phase widths are weighted to reflect duration intent (1d / 7d / 14d / 30d /
- * 30d / ongoing). Maintenance is given a soft fade tail.
- */
-
 const pillars = [
   {
     title: 'Phase-aware progression',
@@ -21,12 +11,12 @@ const pillars = [
   {
     title: 'Trigger-driven outreach',
     body:
-      'Predicates evaluated every 60 seconds: drift after 48 hours, escalation after 5 days, plateau acknowledgement, manual flag. Same trigger never fires twice in a day.',
+      'Behavioral predicates evaluated every 60 seconds: drift after 48 hours, escalation after 5 days, plateau acknowledgement, phase advancement. Same trigger never fires twice in a day.',
   },
   {
-    title: 'Clinic routing',
+    title: 'Closed-loop correction',
     body:
-      'When behavior crosses a threshold, the patient is flagged and the clinic is alerted by email — one summary per clinic per tick, not a flood of single failures.',
+      'When a patient drifts, the engine detects the pattern, sends a targeted correction, and tracks the response. Auto-resolves on reply. Escalates to the clinic if silence crosses the threshold — no manual monitoring required.',
   },
 ];
 
@@ -55,7 +45,7 @@ export function Engine() {
           <FadeRise as="p" className="mkt-subhead" delay={0.1}>
             Adherix runs a six-phase behavioral engine on top of SMS. It knows
             where every patient is, when they last replied, and what should
-            happen next without anyone in the clinic having to think about it.
+            happen next — without anyone in the clinic having to think about it.
           </FadeRise>
         </div>
 
