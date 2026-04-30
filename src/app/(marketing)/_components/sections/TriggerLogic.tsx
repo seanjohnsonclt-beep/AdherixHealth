@@ -52,7 +52,7 @@ const corrections = [
     pattern: 'Withdrawal',
     signal: '72h+ silence, inconsistent or declining trajectory',
     message:
-      'Acknowledges that week-N is hard without naming the patient's specific struggle. Normalizes the pattern. Re-anchors to next dose.',
+      `Acknowledges that week-N is hard without naming the patient's specific struggle. Normalizes the pattern. Re-anchors to next dose.`,
     resolves: '72h',
   },
   {
