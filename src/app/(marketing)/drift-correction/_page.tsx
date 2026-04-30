@@ -2,9 +2,9 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { FadeRise, StaggerGroup } from '../_components/animation/MotionPrimitives';
+import { FadeRise, StaggerGroup, ScrollDraw } from '../_components/animation/MotionPrimitives';
 
-// ─── Pattern data ─────────────────────────────────────────────────────────────
+// ── Pattern data ──────────────────────────────────────────────────────────────
 
 const patterns = [
   {
@@ -13,8 +13,7 @@ const patterns = [
     signal: 'Patient texts a side-effect keyword',
     escalates: '24h',
     color: '#5b7fa6',
-    systemMsg:
-      "What you're feeling is a recognized part of the adjustment period — most patients experience this between weeks 3 and 6. It doesn't mean the medication isn't working. Your next dose is Thursday. If anything feels severe, reply CALL.",
+    systemMsg: "What you're feeling is a recognized part of the adjustment period — most patients experience this between weeks 3 and 6. It doesn't mean the medication isn't working. Your next dose is Thursday. If anything feels severe, reply CALL.",
     patientReply: 'ok thank you — that actually helps',
   },
   {
@@ -23,8 +22,7 @@ const patterns = [
     signal: 'Patient signals a missed or skipped dose',
     escalates: '48h',
     color: '#7a6fa6',
-    systemMsg:
-      "Missed a dose — don't double up. Just take the next one on schedule: Thursday. Missing one dose doesn't affect your overall progress. You're still on track.",
+    systemMsg: "Missed a dose — don't double up. Just take the next one on schedule: Thursday. Missing one dose doesn't affect your overall progress. You're still on track.",
     patientReply: 'got it, will do thursday',
   },
   {
@@ -33,8 +31,7 @@ const patterns = [
     signal: '72h+ silence, inconsistent or declining trajectory',
     escalates: '72h',
     color: '#a67a5b',
-    systemMsg:
-      "Around this point in the program, a lot of people find it harder to stay in the rhythm — not for any one reason, just the reality of week 6. Your next dose is Thursday. No catch-up needed. You're still exactly where you should be.",
+    systemMsg: "Around this point in the program, a lot of people find it harder to stay in the rhythm — not for any one reason, just the reality of week 6. Your next dose is Thursday. No catch-up needed. You're still exactly where you should be.",
     patientReply: 'yeah its been rough. thanks for checking in',
   },
   {
@@ -43,30 +40,26 @@ const patterns = [
     signal: 'Phase 2–4, 48h+ silence, 21+ days in phase',
     escalates: '72h',
     color: '#5b8a6f',
-    systemMsg:
-      "Around week 8, most patients hit a window where progress feels like it has stalled. It hasn't. Your body is recalibrating, not resisting. Your next dose is Thursday. That's the only step right now.",
+    systemMsg: "Around week 8, most patients hit a window where progress feels like it has stalled. It hasn't. Your body is recalibrating, not resisting. Your next dose is Thursday. That's the only step right now.",
     patientReply: "that's reassuring — I'll stay with it",
   },
 ];
 
-// ─── Animated iPhone ──────────────────────────────────────────────────────────
+// ── Animated iPhone ───────────────────────────────────────────────────────────
 
 function AnimatedPhone({ pattern }: { pattern: typeof patterns[0] }) {
   const [stage, setStage] = useState<'idle' | 'message' | 'typing' | 'reply' | 'resolved'>('idle');
   const timerRef = useRef<ReturnType<typeof setTimeout>[]>([]);
 
-  function clearAll() {
-    timerRef.current.forEach(clearTimeout);
-    timerRef.current = [];
-  }
+  function clearAll() { timerRef.current.forEach(clearTimeout); timerRef.current = []; }
 
   useEffect(() => {
     function run() {
       setStage('idle');
       const t1 = setTimeout(() => setStage('message'), 700);
-      const t2 = setTimeout(() => setStage('typing'), 2600);
-      const t3 = setTimeout(() => setStage('reply'), 4400);
-      const t4 = setTimeout(() => setStage('resolved'), 5600);
+      const t2 = setTimeout(() => setStage('typing'),  2600);
+      const t3 = setTimeout(() => setStage('reply'),   4400);
+      const t4 = setTimeout(() => setStage('resolved'),5600);
       const t5 = setTimeout(run, 9500);
       timerRef.current = [t1, t2, t3, t4, t5];
     }
@@ -103,23 +96,19 @@ function AnimatedPhone({ pattern }: { pattern: typeof patterns[0] }) {
         </div>
         <div className="mkt-iphone__thread">
           <div className="mkt-iphone__thread-date">Today 9:41 AM</div>
-
           <div className={`mkt-iphone__bubble mkt-iphone__bubble--in dc-bubble-fade${stage !== 'idle' ? ' is-visible' : ''}`}>
             {pattern.systemMsg}
           </div>
-
           {stage === 'typing' && (
             <div className="mkt-iphone__bubble mkt-iphone__bubble--out dc-typing-indicator">
               <span /><span /><span />
             </div>
           )}
-
           {(stage === 'reply' || stage === 'resolved') && (
             <div className="mkt-iphone__bubble mkt-iphone__bubble--out dc-bubble-fade is-visible">
               {pattern.patientReply}
             </div>
           )}
-
           {stage === 'resolved' && (
             <div className="dc-resolved-badge dc-bubble-fade is-visible">
               <span>✓</span> Resolved automatically
@@ -135,71 +124,149 @@ function AnimatedPhone({ pattern }: { pattern: typeof patterns[0] }) {
   );
 }
 
-// ─── How it works cards ───────────────────────────────────────────────────────
+// ── Drift chart (same as homepage) ────────────────────────────────────────────
 
-const howItWorks = [
-  {
-    label: 'Signal detected',
-    body: 'Patient keywords, silence duration, and engagement trajectory scored every 60 seconds.',
-  },
-  {
-    label: 'Pattern identified',
-    body: 'Engine classifies the drift: side effect, missed dose, withdrawal, or plateau.',
-  },
-  {
-    label: 'Correction sent',
-    body: 'Locked, pattern-specific SMS. Not a generic nudge — a message calibrated to what the patient is actually experiencing.',
-  },
-  {
-    label: 'Loop closed',
-    body: 'Auto-resolves on reply. Escalates to the clinic if silence crosses the threshold.',
-  },
+function DriftChart() {
+  return (
+    <svg viewBox="0 0 500 260" role="img"
+      aria-label="Patient engagement decay chart"
+      style={{ width: '100%', height: 'auto', display: 'block' }}>
+      <g stroke="var(--mkt-line)" strokeWidth="1" opacity="0.7">
+        <line x1="30" y1="50" x2="475" y2="50" />
+        <line x1="30" y1="110" x2="475" y2="110" />
+        <line x1="30" y1="170" x2="475" y2="170" />
+        <line x1="30" y1="220" x2="475" y2="220" />
+      </g>
+      <g fontFamily="Geist Mono, ui-monospace, monospace" fontSize="9" fill="var(--mkt-graphite)">
+        <text x="30" y="242">Day 0</text>
+        <text x="155" y="242">Day 30</text>
+        <text x="295" y="242">Day 60</text>
+        <text x="425" y="242">Day 90</text>
+      </g>
+      <g fontFamily="Geist, system-ui, sans-serif" fontSize="9" fill="var(--mkt-graphite)">
+        <text x="0" y="54">High</text>
+        <text x="0" y="224">Low</text>
+      </g>
+      <ScrollDraw d="M 40 72 C 150 82, 250 102, 350 128 S 445 162, 470 175"
+        stroke="var(--mkt-sage-deep)" strokeWidth={2.2} duration={1.1} />
+      <ScrollDraw d="M 290 118 C 350 140, 405 178, 455 218"
+        stroke="var(--mkt-graphite)" strokeWidth={1.8} duration={0.85} delay={0.75} />
+      <circle cx="455" cy="218" r="5" fill="var(--mkt-clay-deep)">
+        <animate attributeName="opacity" from="0" to="1" begin="1.6s" dur="0.35s" fill="freeze" />
+      </circle>
+      <text x="44" y="65" fontFamily="Geist, system-ui, sans-serif" fontSize="10"
+        fontWeight="500" fill="var(--mkt-sage-deep)" opacity="0">
+        <animate attributeName="opacity" from="0" to="1" begin="0.9s" dur="0.3s" fill="freeze" />
+        Engaged
+      </text>
+      <text x="360" y="186" fontFamily="Geist, system-ui, sans-serif" fontSize="10"
+        fontWeight="500" fill="var(--mkt-graphite)" opacity="0">
+        <animate attributeName="opacity" from="0" to="1" begin="1.4s" dur="0.3s" fill="freeze" />
+        Drifting
+      </text>
+      <text x="462" y="213" fontFamily="Geist, system-ui, sans-serif" fontSize="10"
+        fontWeight="500" fill="var(--mkt-clay-deep)" opacity="0">
+        <animate attributeName="opacity" from="0" to="1" begin="1.7s" dur="0.3s" fill="freeze" />
+        Churn
+      </text>
+    </svg>
+  );
+}
+
+// ── Without / With comparison lists ──────────────────────────────────────────
+
+const withoutDC = [
+  'Patient goes quiet — no signal is read',
+  'Clinic finds out at the next manual check-in',
+  'By then, the patient is one foot out the door',
+  'Staff phone call: reactive, rushed, often too late',
+  'Outcome: churn logged. Revenue gone.',
 ];
 
-// ─── Page ─────────────────────────────────────────────────────────────────────
+const withDC = [
+  'Silence or keyword triggers the engine in real time',
+  'Pattern classified: side effect, missed dose, withdrawal, or plateau',
+  'Locked, specific SMS sent within the same tick',
+  'If patient replies: resolved automatically, zero clinic time',
+  'If silence continues: clinic alerted with context, not noise',
+];
+
+// ── Page ──────────────────────────────────────────────────────────────────────
 
 export function DriftCorrectionPage() {
   const [activePattern, setActivePattern] = useState(0);
 
   return (
-    <main className="dc-page">
+    <>
 
-      {/* ── Hero ── */}
-      <section className="mkt-r-hero" style={{ textAlign: 'center', padding: '72px 0 56px' }}>
-        <div className="mkt-container">
-          <FadeRise as="span" className="mkt-eyebrow" style={{ marginBottom: 20, display: 'block' }}>
+      {/* ── 1. Hero ── */}
+      <section className="mkt-v2-hero" id="dc-hero">
+        <div className="mkt-v2-hero__wash" aria-hidden="true" />
+        <div className="mkt-container mkt-v2-hero__inner">
+          <FadeRise as="span" className="mkt-eyebrow mkt-v2-hero__eyebrow">
             Drift Correction
           </FadeRise>
-          <FadeRise delay={0.05}>
-            <h1 style={{ fontFamily: 'var(--mkt-serif)', fontSize: 'clamp(36px,4vw,52px)', fontWeight: 400, lineHeight: 1.05, letterSpacing: '-0.03em', textAlign: 'center', margin: '0 auto 24px', maxWidth: 800 }}>
-              The loop that closes itself.
-            </h1>
+          <FadeRise as="h1" className="mkt-h1 mkt-v2-hero__title" delay={0.05}>
+            The loop that closes itself.
           </FadeRise>
-          <FadeRise as="p" className="mkt-subhead" delay={0.1}
-            style={{ maxWidth: 580, margin: '0 auto 40px' }}>
-            Every drop-off starts as a pattern.
-            A missed check-in. A slower reply. A subtle change in behavior.
-            Adherix reads the pattern, interrupts the drift the moment it starts
-            &mdash; responds in real time, and confirms whether the patient re-engages.
-            If not, it escalates automatically.
+          <FadeRise as="p" className="mkt-subhead mkt-v2-hero__sub" delay={0.1}>
+            Every drop-off starts as a pattern. Adherix reads it, responds in
+            real time, and confirms whether the patient re-engages.
+            If not — it escalates automatically.
           </FadeRise>
-          <FadeRise delay={0.16}>
-            <Link href="/pilot" className="mkt-btn mkt-btn--primary">Book a demo</Link>
+          <FadeRise className="mkt-v2-hero__ctas" delay={0.16}>
+            <Link href="/pilot" className="mkt-btn mkt-btn--primary mkt-btn--lg">Book a demo</Link>
+            <Link href="/platform" className="mkt-btn mkt-btn--ghost mkt-btn--lg">See the platform</Link>
           </FadeRise>
         </div>
       </section>
 
-      {/* ── How it works — scroll-animated cards ── */}
-      <section className="mkt-v2-section mkt-v2-section--alt" id="how" style={{ padding: '64px 0' }}>
+      {/* ── 2. Problem ── */}
+      <section className="mkt-v2-section mkt-v2-section--alt" id="dc-problem">
+        <div className="mkt-container mkt-v2-problem">
+          <div className="mkt-v2-problem__copy">
+            <FadeRise as="span" className="mkt-eyebrow">The problem</FadeRise>
+            <FadeRise as="h2" className="mkt-h2" delay={0.05}>
+              The signal most clinics miss.
+            </FadeRise>
+            <FadeRise as="div" className="mkt-v2-problem__body" delay={0.1}>
+              <p>GLP-1 patients don&rsquo;t quit dramatically. They fade.</p>
+              <p>Replies slow. Logs stop. Doses slip. By the time a coordinator notices, the patient is already one foot out the door.</p>
+              <p>No clinic has the bandwidth to watch every patient&rsquo;s reply cadence. The ones that drift quietly are the ones that leave.</p>
+            </FadeRise>
+            <FadeRise className="mkt-v2-problem__pull" delay={0.15}>
+              <div className="mkt-v2-problem__pull-num">~35%</div>
+              <div className="mkt-v2-problem__pull-text">
+                of GLP-1 patients churn within 90 days without active
+                behavioral engagement.<sup>*</sup>
+              </div>
+              <div className="mkt-v2-problem__pull-foot">
+                *Modeled industry baseline. Validated against pilot data.
+              </div>
+            </FadeRise>
+          </div>
+          <FadeRise className="mkt-v2-problem__visual" delay={0.06} amount={0.2}>
+            <DriftChart />
+          </FadeRise>
+        </div>
+      </section>
+
+      {/* ── 3. How it works ── */}
+      <section className="mkt-v2-section" id="dc-how">
         <div className="mkt-container">
-          <div className="mkt-v2-section__head" style={{ marginBottom: 40 }}>
+          <div className="mkt-v2-section__head">
             <FadeRise as="span" className="mkt-eyebrow">How it works</FadeRise>
             <FadeRise as="h2" className="mkt-h2" delay={0.05}>
               Four steps. No manual monitoring.
             </FadeRise>
           </div>
-          <StaggerGroup className="dc-how-grid dc-how-grid--2x2" stagger={0.12} amount={0.3}>
-            {howItWorks.map((s) => (
+          <StaggerGroup className="dc-how-grid dc-how-grid--2x2" stagger={0.1} amount={0.3}>
+            {[
+              { label: 'Signal detected',   body: 'Patient keywords, silence duration, and engagement trajectory scored every 60 seconds.' },
+              { label: 'Pattern identified', body: 'Engine classifies the drift: side effect, missed dose, withdrawal, or plateau.' },
+              { label: 'Correction sent',    body: 'Locked, pattern-specific SMS. Not a generic nudge — a message calibrated to what the patient is actually experiencing.' },
+              { label: 'Loop closed',        body: 'Auto-resolves on reply. Escalates to the clinic if silence crosses the threshold.' },
+            ].map((s) => (
               <div key={s.label} className="dc-how-card">
                 <h3 className="dc-how-card__label">{s.label}</h3>
                 <p className="dc-how-card__body">{s.body}</p>
@@ -209,10 +276,9 @@ export function DriftCorrectionPage() {
         </div>
       </section>
 
-      {/* ── Patterns + iPhone — mirrors PatientSmsView layout ── */}
-      <section className="mkt-v2-section" id="patterns">
+      {/* ── 4. Four patterns + iPhone ── */}
+      <section className="mkt-v2-section mkt-v2-section--alt" id="dc-patterns">
         <div className="mkt-container mkt-v2-sms-view" style={{ alignItems: 'start' }}>
-
           <FadeRise className="mkt-v2-sms-view__copy">
             <span className="mkt-eyebrow">Four patterns</span>
             <h2 className="mkt-h2">Every correction is specific.</h2>
@@ -221,7 +287,6 @@ export function DriftCorrectionPage() {
               the behavioral signal and delivers the message written for that
               exact situation — then watches for a reply.
             </p>
-
             <div className="dc-pattern-list">
               {patterns.map((p, i) => (
                 <button
@@ -239,41 +304,87 @@ export function DriftCorrectionPage() {
               ))}
             </div>
           </FadeRise>
-
           <FadeRise className="mkt-v2-sms-view__phone" delay={0.12}>
             <AnimatedPhone key={activePattern} pattern={patterns[activePattern]} />
           </FadeRise>
-
         </div>
       </section>
 
-      {/* ── Resolution ── */}
-      <section className="dc-res-section" id="resolution">
+      {/* ── 5. Without DC / With DC ── */}
+      <section className="mkt-v2-section" id="dc-compare">
         <div className="mkt-container">
-          <FadeRise className="dc-res-section__head">
-            <span className="dc-res-eyebrow">Resolution</span>
-            <h2 className="dc-res-title">Every correction has an outcome.</h2>
-            <p className="dc-res-subtitle">
+          <div className="mkt-v2-section__head">
+            <FadeRise as="span" className="mkt-eyebrow">The difference</FadeRise>
+            <FadeRise as="h2" className="mkt-h2" delay={0.05}>
+              What happens without it — and with it.
+            </FadeRise>
+          </div>
+          <div className="mkt-r-sms__split">
+            <FadeRise className="mkt-r-sms__col mkt-r-sms__col--dumb">
+              <div className="mkt-r-sms__col-head">
+                <span className="mkt-r-sms__tag mkt-r-sms__tag--dumb">Without Drift Correction</span>
+                <h3 className="mkt-h3">Silent churn</h3>
+              </div>
+              <ul className="mkt-r-sms__list">
+                {withoutDC.map((item) => (
+                  <li key={item} className="mkt-r-sms__item">
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" style={{ flexShrink: 0, marginTop: 4 }}>
+                      <circle cx="7" cy="7" r="6" stroke="var(--mkt-graphite)" strokeWidth="1.2" opacity="0.4"/>
+                      <path d="M4.5 7h5" stroke="var(--mkt-graphite)" strokeWidth="1.5" strokeLinecap="round" opacity="0.4"/>
+                    </svg>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </FadeRise>
+            <FadeRise className="mkt-r-sms__col mkt-r-sms__col--smart" delay={0.08}>
+              <div className="mkt-r-sms__col-head">
+                <span className="mkt-r-sms__tag mkt-r-sms__tag--smart">With Drift Correction</span>
+                <h3 className="mkt-h3">Closed loop</h3>
+              </div>
+              <ul className="mkt-r-sms__list">
+                {withDC.map((item) => (
+                  <li key={item} className="mkt-r-sms__item">
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" style={{ flexShrink: 0, marginTop: 4 }}>
+                      <circle cx="7" cy="7" r="6" fill="var(--mkt-sage-mist)" stroke="var(--mkt-sage-soft)" strokeWidth="1"/>
+                      <path d="M4.5 7l2 2 3-3" stroke="var(--mkt-sage-deep)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </FadeRise>
+          </div>
+        </div>
+      </section>
+
+      {/* ── 6. Resolution ── */}
+      <section className="mkt-v2-section mkt-v2-section--alt" id="dc-resolution">
+        <div className="mkt-container">
+          <div className="mkt-v2-section__head">
+            <FadeRise as="span" className="mkt-eyebrow">Resolution</FadeRise>
+            <FadeRise as="h2" className="mkt-h2" delay={0.05}>
+              Every correction has an outcome.
+            </FadeRise>
+            <FadeRise as="p" className="mkt-subhead" delay={0.1}>
               The engine doesn&rsquo;t just send — it waits, measures, and acts.
               No correction is ever left open.
-            </p>
-          </FadeRise>
+            </FadeRise>
+          </div>
+          <StaggerGroup className="dc-res-cards" stagger={0.1} amount={0.3}>
 
-          <StaggerGroup className="dc-res-cards" stagger={0.13} amount={0.3}>
-
-            {/* Card 1 — Auto-resolved */}
             <div className="dc-res-card dc-res-card--green">
               <div className="dc-res-card__accent" />
               <div className="dc-res-card__icon-wrap">
                 <svg width="40" height="40" viewBox="0 0 40 40" fill="none" aria-hidden="true">
                   <circle cx="20" cy="20" r="19" stroke="currentColor" strokeWidth="1.5" opacity="0.25"/>
-                  <path d="M 28 14 C 22 14 16 16 14 22 C 16 18 22 16 28 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" fill="none" opacity="0.4"/>
                   <path d="M 12 21 L 18 27 L 29 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </div>
               <h3 className="dc-res-card__title">Auto-resolved</h3>
               <p className="dc-res-card__body">
-                Patient replies after the correction is sent. The engine marks it resolved, logs time-to-resolution, and moves on. Zero clinic involvement required.
+                Patient replies after the correction is sent. Engine marks it resolved,
+                logs time-to-resolution, and moves on. Zero clinic involvement.
               </p>
               <div className="dc-res-card__stat">
                 <span className="dc-res-card__stat-label">Typical resolution</span>
@@ -281,7 +392,6 @@ export function DriftCorrectionPage() {
               </div>
             </div>
 
-            {/* Card 2 — Escalated */}
             <div className="dc-res-card dc-res-card--amber">
               <div className="dc-res-card__accent" />
               <div className="dc-res-card__icon-wrap">
@@ -294,7 +404,8 @@ export function DriftCorrectionPage() {
               </div>
               <h3 className="dc-res-card__title">Escalated to clinic</h3>
               <p className="dc-res-card__body">
-                Silence crosses the threshold — 24h for side effects, up to 72h for plateau. Patient flagged. Clinic alerted. One call, right patient, right moment.
+                Silence crosses the threshold — 24h for side effects, up to 72h for
+                plateau. Patient flagged. Clinic alerted. One call, right patient, right moment.
               </p>
               <div className="dc-res-card__stat">
                 <span className="dc-res-card__stat-label">Escalation window</span>
@@ -302,18 +413,20 @@ export function DriftCorrectionPage() {
               </div>
             </div>
 
-            {/* Card 3 — Immediate */}
             <div className="dc-res-card dc-res-card--red">
               <div className="dc-res-card__accent" />
               <div className="dc-res-card__icon-wrap">
                 <svg width="40" height="40" viewBox="0 0 40 40" fill="none" aria-hidden="true">
                   <circle cx="20" cy="20" r="19" stroke="currentColor" strokeWidth="1.5" opacity="0.25"/>
-                  <path d="M 22.5 11 L 15 22 L 19.5 22 L 17.5 29 L 25 18 L 20.5 18 Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" fill="currentColor" fillOpacity="0.15"/>
+                  <path d="M 22.5 11 L 15 22 L 19.5 22 L 17.5 29 L 25 18 L 20.5 18 Z"
+                    stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"
+                    fill="currentColor" fillOpacity="0.15"/>
                 </svg>
               </div>
               <h3 className="dc-res-card__title">Immediate escalation</h3>
               <p className="dc-res-card__body">
-                Patient texts CALL or HELP. Every threshold bypassed. Clinic notified within the next engine tick — under 60 seconds, any time, any phase.
+                Patient texts CALL or HELP. Every threshold bypassed. Clinic notified
+                within the next engine tick — under 60 seconds, any time, any phase.
               </p>
               <div className="dc-res-card__stat">
                 <span className="dc-res-card__stat-label">Response time</span>
@@ -325,23 +438,27 @@ export function DriftCorrectionPage() {
         </div>
       </section>
 
-      {/* ── CTA ── */}
-      <section className="mkt-v2-section" style={{ textAlign: 'center' }}>
-        <div className="mkt-container">
-          <FadeRise>
-            <h2 className="mkt-h2">Ready to close the loop?</h2>
-            <p className="mkt-subhead" style={{ maxWidth: 480, margin: '0 auto 36px' }}>
-              Drift Correction runs automatically. Every tick, every patient,
-              every pattern — no coordinator required.
-            </p>
-            <div style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
-              <Link href="/pilot" className="mkt-btn mkt-btn--primary">Book a demo</Link>
-              <Link href="/platform" className="mkt-btn mkt-btn--ghost">See the full platform</Link>
-            </div>
+      {/* ── 7. Dark CTA ── */}
+      <section className="mkt-v2-section mkt-v2-section--ink" id="dc-cta">
+        <div className="mkt-container mkt-v2-trust">
+          <FadeRise as="h2" className="mkt-h2 mkt-v2-trust__title">
+            Ready to close the loop?
+          </FadeRise>
+          <FadeRise as="p" className="mkt-subhead mkt-v2-trust__sub" delay={0.08}>
+            Drift Correction runs automatically. Every tick, every patient,
+            every pattern — no coordinator required.
+          </FadeRise>
+          <FadeRise className="mkt-v2-trust__cta" delay={0.15}>
+            <Link href="/pilot" className="mkt-btn mkt-btn--primary mkt-btn--lg">
+              Book a demo
+            </Link>
+            <Link href="/platform" className="mkt-btn mkt-btn--ghost mkt-btn--ghost-on-dark mkt-btn--lg">
+              See the full platform
+            </Link>
           </FadeRise>
         </div>
       </section>
 
-    </main>
+    </>
   );
 }
