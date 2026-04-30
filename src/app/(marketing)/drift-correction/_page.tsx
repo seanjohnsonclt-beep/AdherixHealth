@@ -155,19 +155,22 @@ export function DriftCorrectionPage() {
         <div className="mkt-v2-hero__wash" aria-hidden="true" />
         <div className="mkt-container mkt-v2-hero__inner">
           <FadeRise as="span" className="mkt-eyebrow mkt-v2-hero__eyebrow">
-            Drift Correction
+            Drift Correction — already running
           </FadeRise>
           <FadeRise as="h1" className="mkt-h1 mkt-v2-hero__title" delay={0.05}>
-            The loop that closes itself.
+            By the time you notice,
+            <br />
+            it&rsquo;s already corrected.
           </FadeRise>
           <FadeRise as="p" className="mkt-subhead mkt-v2-hero__sub" delay={0.1}>
-            Every drop-off starts as a pattern. Adherix reads it, responds in
-            real time, and confirms whether the patient re-engages.
-            If not — it escalates automatically.
+            The engine runs every 60 seconds. When a patient goes quiet,
+            misses a dose, or signals a side effect — Drift Correction
+            identifies the pattern, sends the right message, and tracks
+            whether it worked. No one has to tell it to.
           </FadeRise>
           <FadeRise className="mkt-v2-hero__ctas" delay={0.16}>
             <Link href="/pilot" className="mkt-btn mkt-btn--primary mkt-btn--lg">Book a demo</Link>
-            <Link href="/platform" className="mkt-btn mkt-btn--ghost mkt-btn--lg">See the platform</Link>
+            <Link href="/platform" className="mkt-btn mkt-btn--ghost mkt-btn--lg">See the full platform</Link>
           </FadeRise>
         </div>
       </section>

@@ -29,18 +29,19 @@ export function HomeHero() {
     <section className="mkt-v2-hero">
       <div className="mkt-container mkt-v2-hero__inner">
         <motion.span className="mkt-eyebrow mkt-v2-hero__eyebrow" {...seq(0)}>
-          Retention intelligence for GLP-1 programs
+          GLP-1 retention — the gap most clinics don&rsquo;t see coming
         </motion.span>
 
         <motion.h1 className="mkt-h1 mkt-v2-hero__title" {...seq(0.08)}>
-          Patients don&rsquo;t drop off.
+          Some of your patients
           <br />
-          They drift.
+          are already drifting.
         </motion.h1>
 
         <motion.p className="mkt-subhead mkt-v2-hero__sub" {...seq(0.18)}>
-          Adherix helps GLP-1 clinics detect disengagement early, trigger smarter
-          interventions, and retain more patients through the treatment journey.
+          They won&rsquo;t tell you. They&rsquo;ll slow down, stop replying, miss a dose
+          — then disappear. Adherix detects the pattern in real time and
+          corrects it automatically, before your team ever has to get involved.
         </motion.p>
 
         <motion.div className="mkt-v2-hero__ctas" {...seq(0.28)}>
@@ -51,7 +52,7 @@ export function HomeHero() {
           </TapButton>
           <TapButton>
             <Link href="/platform" className="mkt-btn mkt-btn--ghost mkt-btn--lg">
-              See the platform
+              See how it works
             </Link>
           </TapButton>
         </motion.div>

@@ -11,21 +11,23 @@ export function SiteFooter() {
           <div className="mkt-footer__col">
             <AdherixLogo variant="full" invert style={{ width: 140, height: 'auto', marginBottom: 14, display: 'block' }} />
             <p className="mkt-footer__brand">
-              Retention intelligence for modern metabolic care. Built for clinics
-              that grow on recurring program revenue.
+              Behavioral retention intelligence for GLP-1 programs. Built for
+              clinics that can&apos;t afford to watch patients drift in silence.
             </p>
           </div>
           <div className="mkt-footer__col">
             <h4>Product</h4>
             <Link href="/">Overview</Link>
             <Link href="/platform">Platform</Link>
+            <Link href="/drift-correction">Drift Correction</Link>
             <Link href="/roi">ROI calculator</Link>
             <Link href="/pilot">Book a demo</Link>
           </div>
           <div className="mkt-footer__col">
-            <h4>Account</h4>
+            <h4>Company</h4>
             <Link href="/login">Sign in</Link>
             <a href="mailto:hello@adherixhealth.com">Contact us</a>
+            <a href="mailto:hello@adherixhealth.com">hello@adherixhealth.com</a>
           </div>
           <div className="mkt-footer__col">
             <h4>Legal &amp; security</h4>

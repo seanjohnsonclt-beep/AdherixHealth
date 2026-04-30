@@ -24,17 +24,17 @@ export function PlatformHero() {
     <section className="mkt-v2-section mkt-v2-plat-hero">
       <div className="mkt-container mkt-v2-section__head mkt-v2-section__head--lg">
         <motion.span className="mkt-eyebrow" {...seq(0)}>
-          The platform
+          Under the hood
         </motion.span>
         <motion.h1 className="mkt-h1 mkt-v2-plat-hero__title" {...seq(0.08)}>
-          Built for the moments
+          Six phases. Four triggers.
           <br />
-          retention is won or lost
+          Every patient, every minute.
         </motion.h1>
         <motion.p className="mkt-subhead" {...seq(0.18)}>
-          Adherix runs a six-phase behavioral engine on top of SMS. It knows where
-          every patient is, when they last replied, and what should happen next —
-          without anyone in the clinic having to think about it.
+          This is what runs. Adherix tracks where every patient is in their
+          treatment journey, what they last said, and what should happen next
+          — and executes it automatically, without coordinator involvement.
         </motion.p>
       </div>
     </section>

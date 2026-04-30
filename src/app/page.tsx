@@ -2,6 +2,7 @@ import { SiteHeader } from '@/app/(marketing)/_components/SiteHeader';
 import { SiteFooter } from '@/app/(marketing)/_components/SiteFooter';
 import { HomeHero } from '@/app/(marketing)/_components/sections/HomeHero';
 import { HomeProblem } from '@/app/(marketing)/_components/sections/HomeProblem';
+import { HomeConsequence } from '@/app/(marketing)/_components/sections/HomeConsequence';
 import { HomePillars } from '@/app/(marketing)/_components/sections/HomePillars';
 import { HomeRoi } from '@/app/(marketing)/_components/sections/HomeRoi';
 import { HomeTrustCta } from '@/app/(marketing)/_components/sections/HomeTrustCta';
@@ -19,6 +20,7 @@ export default function MarketingHome() {
       <main>
         <HomeHero />
         <HomeProblem />
+        <HomeConsequence />
         <HomePillars />
         <HomeRoi />
         <HomeTrustCta />
