@@ -170,8 +170,10 @@ export function DriftCorrectionPage() {
           <FadeRise as="span" className="mkt-eyebrow" style={{ marginBottom: 20, display: 'block' }}>
             Drift Correction
           </FadeRise>
-          <FadeRise as="h1" className="mkt-r-hero__title" delay={0.05} style={{ textAlign: 'center' }}>
-            The loop that closes itself.
+          <FadeRise delay={0.05}>
+            <h1 style={{ fontFamily: 'var(--mkt-serif)', fontSize: 'clamp(44px,7vw,80px)', fontWeight: 400, lineHeight: 1.05, letterSpacing: '-0.03em', textAlign: 'center', margin: '0 auto 24px', maxWidth: 800 }}>
+              The loop that closes itself.
+            </h1>
           </FadeRise>
           <FadeRise as="p" className="mkt-subhead" delay={0.1}
             style={{ maxWidth: 580, margin: '0 auto 40px' }}>

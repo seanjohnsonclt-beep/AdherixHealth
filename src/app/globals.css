@@ -4776,6 +4776,7 @@ h3 { font-size: 17px; line-height: 1.3; }
   grid-template-columns: repeat(2, 1fr);
   gap: 16px;
   border: none;
+  align-items: stretch;
 }
 .dc-how-card {
   padding: 28px 26px;
@@ -4787,6 +4788,10 @@ h3 { font-size: 17px; line-height: 1.3; }
   border: 1px solid var(--mkt-line);
   border-right: 1px solid var(--mkt-line);
   padding: 32px 30px;
+  min-height: 140px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 }
 .dc-how-card:last-child { border-right: none; }
 .dc-how-grid--2x2 .dc-how-card:last-child { border-right: 1px solid var(--mkt-line); }
