@@ -5159,4 +5159,6 @@ a.mkt-btn--primary:hover,
 }
 @media (max-width: 760px) {
   .mkt-v2-consequence__facts { grid-template-columns: 1fr; }
-  .mkt-v2-consequence__number { fo
+  .mkt-v2-consequence__number { font-size: clamp(52px, 14vw, 80px); }
+}
+}
