@@ -5204,4 +5204,144 @@ a.mkt-btn--primary:hover,
 .dc-res-card--amber,
 .dc-res-card--red {
   position: relative;
-  background: var(--mkt-card, #f
+  background: var(--mkt-card, #fff);
+  border-radius: 12px;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--mkt-line);
+  box-shadow: var(--mkt-shadow-md);
+  display: flex;
+  flex-direction: column;
+  transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
+}
+.dc-res-card--green:hover,
+.dc-res-card--amber:hover,
+.dc-res-card--red:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--mkt-shadow-lg);
+}
+.dc-res-card--green:hover { border-color: #86efac; }
+.dc-res-card--amber:hover { border-color: #fcd34d; }
+.dc-res-card--red:hover   { border-color: #fca5a5; }
+.dc-res-card__accent {
+  height: 4px;
+  width: 100%;
+  flex-shrink: 0;
+}
+.dc-res-card--green .dc-res-card__accent { background: #22c55e; }
+.dc-res-card--amber .dc-res-card__accent { background: #f59e0b; }
+.dc-res-card--red   .dc-res-card__accent { background: #ef4444; }
+.dc-res-card__icon-wrap { padding: 28px 28px 0; }
+.dc-res-card--green .dc-res-card__icon-wrap { color: #16a34a; }
+.dc-res-card--amber .dc-res-card__icon-wrap { color: #b45309; }
+.dc-res-card--red   .dc-res-card__icon-wrap { color: #dc2626; }
+.dc-res-card--green .dc-res-card__title,
+.dc-res-card--amber .dc-res-card__title,
+.dc-res-card--red   .dc-res-card__title {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--mkt-ink);
+  margin: 16px 28px 10px;
+  letter-spacing: -0.015em;
+}
+.dc-res-card--green .dc-res-card__body,
+.dc-res-card--amber .dc-res-card__body,
+.dc-res-card--red   .dc-res-card__body {
+  font-size: 14.5px;
+  line-height: 1.7;
+  color: var(--mkt-ink-2);
+  margin: 0 28px;
+  flex: 1;
+}
+.dc-res-card__stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 24px 28px 28px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+.dc-res-card--green .dc-res-card__stat { background: #f0fdf4; border: 1px solid #bbf7d0; }
+.dc-res-card--amber .dc-res-card__stat { background: #fffbeb; border: 1px solid #fde68a; }
+.dc-res-card--red   .dc-res-card__stat { background: #fef2f2; border: 1px solid #fecaca; }
+.dc-res-card__stat-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--mkt-graphite);
+}
+.dc-res-card__stat-val {
+  font-family: 'Geist Mono', ui-monospace, monospace;
+  font-size: 13px;
+  font-weight: 600;
+}
+.dc-res-card--green .dc-res-card__stat-val { color: #15803d; }
+.dc-res-card--amber .dc-res-card__stat-val { color: #92400e; }
+.dc-res-card--red   .dc-res-card__stat-val { color: #b91c1c; }
+@media (max-width: 900px) {
+  .dc-res-section { padding: 72px 0 88px; }
+  .dc-res-cards { grid-template-columns: 1fr; gap: 16px; }
+}
+@media (max-width: 680px) {
+  .dc-res-section { padding: 56px 0 72px; }
+  .dc-res-section__head { margin-bottom: 44px; }
+  .dc-res-title { font-size: 28px; }
+}
+
+/* ── Consequence panel ──────────────────────────────────────────────────────── */
+.mkt-v2-consequence {
+  max-width: 860px;
+  margin: 0 auto;
+  text-align: center;
+}
+.mkt-v2-consequence__number {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: clamp(64px, 10vw, 112px);
+  font-weight: 300;
+  color: #F4EFE6;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  margin-bottom: 28px;
+}
+.mkt-v2-consequence__body {
+  font-size: clamp(17px, 2vw, 20px);
+  color: rgba(244,239,230,0.72);
+  line-height: 1.65;
+  max-width: 620px;
+  margin: 0 auto 56px;
+}
+.mkt-v2-consequence__facts {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.mkt-v2-consequence__fact {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 32px 28px;
+  background: rgba(255,255,255,0.03);
+  text-align: left;
+}
+.mkt-v2-consequence__fact-n {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 40px;
+  font-weight: 300;
+  color: #F4EFE6;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.mkt-v2-consequence__fact-l {
+  font-size: 13px;
+  color: rgba(244,239,230,0.55);
+  line-height: 1.55;
+}
+@media (max-width: 760px) {
+  .mkt-v2-consequence__facts { grid-template-columns: 1fr; }
+  .mkt-v2-consequence__number { font-size: clamp(52px, 14vw, 80px); }
+}
