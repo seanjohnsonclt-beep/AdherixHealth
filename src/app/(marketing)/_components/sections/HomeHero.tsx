@@ -1,10 +1,34 @@
 'use client';
 
 import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useEffect, useState } from 'react';
-import { TapButton } from '../animation/MotionPrimitives';
-import { useReducedMotionSafe } from '../animation/useReducedMotionSafe';
+import { motion, AnimatePresence, useReducedMotion, type MotionProps } from 'framer-motion';
+import { useEffect, useState, type CSSProperties, type ReactNode } from 'react';
+
+/* Inlined to avoid dependency on deleted animation files */
+function useReducedMotionSafe(): boolean {
+  const reduced = useReducedMotion();
+  return reduced === true;
+}
+
+function TapButton({
+  children,
+  className,
+  style,
+  ...rest
+}: { children: ReactNode; className?: string; style?: CSSProperties } & MotionProps) {
+  const reduced = useReducedMotionSafe();
+  return (
+    <motion.span
+      className={className}
+      style={{ display: 'inline-flex', ...style }}
+      whileTap={reduced ? undefined : { scale: 0.98 }}
+      transition={{ duration: 0.12, ease: 'easeOut' }}
+      {...rest}
+    >
+      {children}
+    </motion.span>
+  );
+}
 
 const patients = [
   { name: 'Maria C.',  last: 'Replied this morning',  status: 'active'   },
