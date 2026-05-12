@@ -6,6 +6,7 @@ import { HomeConsequence } from '@/app/(marketing)/_components/sections/HomeCons
 import { HomePillars } from '@/app/(marketing)/_components/sections/HomePillars';
 import { HomeRoi } from '@/app/(marketing)/_components/sections/HomeRoi';
 import { HomeTrustCta } from '@/app/(marketing)/_components/sections/HomeTrustCta';
+import { HomeAdvisors } from '@/app/(marketing)/_components/sections/HomeAdvisors';
 
 export const metadata = {
   title: 'Adherix Health | Retention intelligence for modern metabolic care',
@@ -23,6 +24,7 @@ export default function MarketingHome() {
         <HomeConsequence />
         <HomePillars />
         <HomeRoi />
+        <HomeAdvisors />
         <HomeTrustCta />
       </main>
       <SiteFooter />
