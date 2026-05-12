@@ -1,0 +1,39 @@
+# Behavior triggers. The engine evaluates these every cron tick.
+# Each trigger has:
+#   - condition: a named check the engine knows how to evaluate
+#   - action: what to do when it fires
+#   - dedupe_window_hours: don't refire within this window
+#
+# Conditions are coded in src/engine/conditions.ts. To add a new one,
+# add it there and reference it here.
+
+triggers:
+
+  - key: no_response_48h
+    condition: hours_since_last_inbound_gte
+    args: { hours: 48 }
+    only_in_phases: [1, 2, 3]
+    action: send_template
+    template: trigger.no_response_48h
+    dedupe_window_hours: 72
+
+  - key: no_response_5d
+    condition: hours_since_last_inbound_gte
+    args: { hours: 120 }
+    only_in_phases: [1, 2, 3, 4]
+    action: send_template
+    template: trigger.no_response_5d
+    dedupe_window_hours: 168
+
+  - key: flag_for_clinic
+    condition: hours_since_last_inbound_gte
+    args: { hours: 144 }
+    only_in_phases: [1, 2, 3, 4]
+    action: flag_patient
+    reason: no_response_6d
+    dedupe_window_hours: 168
+
+  - key: phase_auto_advance
+    condition: phase_duration_elapsed
+    action: advance_phase
+    dedupe_window_hours: 24
