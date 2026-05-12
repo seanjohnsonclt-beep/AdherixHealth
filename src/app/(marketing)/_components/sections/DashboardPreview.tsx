@@ -114,7 +114,7 @@ function Trendline({ trend }: { trend: Trend }) {
       className={`mkt-r-dash__spark ${colorClass[trend]}`}
       aria-hidden="true"
     >
-      <path d={paths[trend]} fill="none" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+      <path d={paths[trend]} fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
