@@ -43,7 +43,7 @@ export function DashboardPreview() {
             <div className="mkt-r-dash__dots">
               <span /><span /><span />
             </div>
-            <div className="mkt-r-dash__url">app.adherixhealth.com</div>
+            <div className="mkt-r-dash__url">adherixhealth.com</div>
           </div>
 
           {/* In-app top nav */}
@@ -68,7 +68,7 @@ export function DashboardPreview() {
 
           {/* Patient table */}
           <div className="mkt-r-dash__table">
-            <div className="mkt-r-dash__thead">
+            <div className="mkt-r-dash__row mkt-r-dash__row--head">
               <span>Patient</span>
               <span>Phase</span>
               <span>Days</span>
