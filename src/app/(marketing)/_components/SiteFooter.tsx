@@ -1,4 +1,4 @@
-import Link from 'next/link';
+﻿import Link from 'next/link';
 import { AdherixLogo } from './AdherixLogo';
 
 export function SiteFooter() {
@@ -40,4 +40,9 @@ export function SiteFooter() {
         </div>
         <div className="mkt-footer__bottom">
           <span>&copy; {year} Adherix Health. All rights reserved.</span>
-          <span>HIPAA-aware infrastructure for GLP-1 retention progra
+          <span>HIPAA-aware infrastructure for GLP-1 retention programs.</span>
+        </div>
+      </div>
+    </footer>
+  );
+}
