@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og';
 
 export const runtime = 'edge';
-export const alt = 'Adherix Health — Retention intelligence for GLP-1 programs';
+export const alt = 'Adherix Health  -  Retention intelligence for GLP-1 programs';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
@@ -20,7 +20,7 @@ export default function OgImage() {
           overflow: 'hidden',
         }}
       >
-        {/* ── Main content ── */}
+        {/* -- Main content -- */}
         <div
           style={{
             display: 'flex',
@@ -60,7 +60,7 @@ export default function OgImage() {
             Keep more patients.
           </div>
 
-          {/* Headline line 2 — sage */}
+          {/* Headline line 2  -  sage */}
           <div
             style={{
               display: 'flex',
@@ -102,7 +102,7 @@ export default function OgImage() {
           </div>
         </div>
 
-        {/* ── Sage accent bar ── */}
+        {/* -- Sage accent bar -- */}
         <div style={{ display: 'flex', height: 6, background: '#3D7670' }} />
       </div>
     ),

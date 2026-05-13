@@ -86,7 +86,7 @@ export default function SecurityPage() {
           <p>
             Adherix is designed for HIPAA-aware deployments. Our infrastructure partners maintain
             HIPAA-eligible environments, and we apply the minimum necessary standard to all
-            patient data we process — collecting only what is required to deliver phase-based
+            patient data we process  -  collecting only what is required to deliver phase-based
             behavioral outreach.
           </p>
           <p>

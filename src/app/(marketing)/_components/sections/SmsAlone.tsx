@@ -3,7 +3,7 @@
 import { FadeRise, StaggerGroup } from '../animation/MotionPrimitives';
 
 /**
- * Section 3 — Why SMS alone isn't enough.
+ * Section 3  -  Why SMS alone isn't enough.
  *
  * The positioning split: generic SMS reminder app vs. behavioral SMS engine.
  * Resolves the apparent contradiction (Adherix is SMS-first) with a footer
@@ -12,7 +12,7 @@ import { FadeRise, StaggerGroup } from '../animation/MotionPrimitives';
 
 const dumbSms = [
   'Same message every day on the same schedule',
-  'No phase awareness — week 1 looks like week 12',
+  'No phase awareness  -  week 1 looks like week 12',
   'Treats every reply (or non-reply) the same',
   'No clinic routing when a human needs to step in',
   'Engagement metric is "did the message send"',
@@ -39,8 +39,8 @@ export function SmsAlone() {
           </FadeRise>
           <FadeRise as="p" className="mkt-subhead" delay={0.1}>
             Generic reminder apps blast messages on a schedule and call it a
-            retention strategy. Adherix reads what the patient does — and
-            doesn&rsquo;t — and responds accordingly.
+            retention strategy. Adherix reads what the patient does  -  and
+            doesn&rsquo;t  -  and responds accordingly.
           </FadeRise>
         </div>
 

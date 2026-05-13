@@ -6,17 +6,17 @@ const pillars = [
   {
     num: 'Detect',
     title: 'Behavioral signals',
-    body: 'Detect subtle disengagement before churn happens. Reply cadence, dose timing, silence patterns — scored every 60 seconds across your entire panel.',
+    body: 'Detect subtle disengagement before churn happens. Reply cadence, dose timing, silence patterns  -  scored every 60 seconds across your entire panel.',
   },
   {
     num: 'Correct',
     title: 'Targeted intervention',
-    body: 'When a patient drifts, the engine identifies the pattern — side effect, missed dose, withdrawal, plateau — and sends a precise, locked correction message. No generic nudges.',
+    body: 'When a patient drifts, the engine identifies the pattern  -  side effect, missed dose, withdrawal, plateau  -  and sends a precise, locked correction message. No generic nudges.',
   },
   {
     num: 'Close the loop',
     title: 'Tracked resolution',
-    body: 'Every correction is tracked. If the patient responds, it resolves automatically. If they go silent past the threshold, the clinic is alerted — one call, right patient, right moment.',
+    body: 'Every correction is tracked. If the patient responds, it resolves automatically. If they go silent past the threshold, the clinic is alerted  -  one call, right patient, right moment.',
   },
 ];
 

@@ -4,9 +4,9 @@
 // engagement_trajectory and consecutive_silences on the patients table.
 //
 // Trajectory values:
-//   responsive   — patient is actively replying (default / healthy)
-//   inconsistent — gaps growing; reply rate dropped ≥ 50% vs prior week
-//   declining    — clear drop-off; 72h+ silence with falling trend
+//   responsive    -  patient is actively replying (default / healthy)
+//   inconsistent  -  gaps growing; reply rate dropped ≥ 50% vs prior week
+//   declining     -  clear drop-off; 72h+ silence with falling trend
 //
 // These values are read by drift-correction.ts to select the correct pattern.
 
@@ -74,7 +74,7 @@ export async function updateAllTrajectories(): Promise<void> {
           and m.created_at > now() - interval '7 days'
        ) as replies_last_7d,
 
-       -- inbound replies 8–14 days ago (comparison window)
+       -- inbound replies 8-14 days ago (comparison window)
        (select count(*)::int
         from messages m
         where m.patient_id = p.id

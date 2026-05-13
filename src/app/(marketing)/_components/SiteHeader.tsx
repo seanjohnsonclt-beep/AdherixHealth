@@ -21,7 +21,7 @@ export function SiteHeader() {
             </span>
           </Link>
 
-          {/* Desktop nav — hidden on mobile via CSS */}
+          {/* Desktop nav  -  hidden on mobile via CSS */}
           <nav className="mkt-nav mkt-nav--desktop" aria-label="Primary">
             <Link href="/">Overview</Link>
             <Link href="/platform">Platform</Link>
@@ -33,7 +33,7 @@ export function SiteHeader() {
             </Link>
           </nav>
 
-          {/* Mobile nav — hamburger + slide-down, hidden on desktop via CSS */}
+          {/* Mobile nav  -  hamburger + slide-down, hidden on desktop via CSS */}
           <MobileNav />
         </div>
       </div>

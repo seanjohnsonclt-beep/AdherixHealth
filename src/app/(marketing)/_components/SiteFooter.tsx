@@ -25,6 +25,7 @@ export function SiteFooter() {
           </div>
           <div className="mkt-footer__col">
             <h4>Company</h4>
+            <Link href="/advisors">Clinical advisory board</Link>
             <Link href="/login">Sign in</Link>
             <a href="mailto:hello@adherixhealth.com">Contact us</a>
             <a href="mailto:hello@adherixhealth.com">hello@adherixhealth.com</a>
@@ -37,7 +38,7 @@ export function SiteFooter() {
           </div>
         </div>
         <div className="mkt-footer__bottom">
-          <span>© {year} Adherix Health. All rights reserved.</span>
+          <span>&copy; {year} Adherix Health. All rights reserved.</span>
           <span>HIPAA-aware infrastructure for GLP-1 retention programs.</span>
         </div>
       </div>

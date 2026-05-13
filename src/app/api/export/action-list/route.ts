@@ -1,10 +1,10 @@
-// Daily action list — patients the clinic should act on today.
+// Daily action list  -  patients the clinic should act on today.
 //
 // Returns CSV with: name, phone, phase, status, recommended action,
 // last reply (days ago), days on program.
 //
 // Filters to patients where the Recommended Action is something other
-// than "No action needed" — flagged, churned, engagement<40, recent
+// than "No action needed"  -  flagged, churned, engagement<40, recent
 // failed delivery, plateau-risk, or trending down.
 
 import { NextResponse } from 'next/server';
@@ -44,7 +44,7 @@ function recommendedAction(p: Row): string {
   if (p.status === 'flagged') return 'Send human outreach';
   if (score < 40) return 'Recover now';
   if (p.current_phase === 3 && score < 70) return 'Plateau intervention';
-  if (trend < -15) return 'Monitor — trending down';
+  if (trend < -15) return 'Monitor  -  trending down';
   return '';
 }
 

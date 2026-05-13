@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react';
 
 /**
- * Simple, transparent ROI estimator. Conservative defaults — the brief
+ * Simple, transparent ROI estimator. Conservative defaults  -  the brief
  * explicitly calls out: "no inflated startup math."
  *
  * Inputs:
@@ -40,7 +40,7 @@ export function RoiCalculator() {
 
   return (
     <div className="mkt-roi" id="roi-calc">
-      {/* ─── Inputs ────────────────────────────────────────────────────── */}
+      {/* --- Inputs ------------------------------------------------------ */}
       <div className="mkt-roi__inputs">
         <NumberField
           label="Active patients"
@@ -67,7 +67,7 @@ export function RoiCalculator() {
           max={70}
           step={1}
           suffix="%"
-          hint="Industry baseline for GLP-1 programs is 30–45%"
+          hint="Industry baseline for GLP-1 programs is 30-45%"
         />
         <SliderField
           label="Retention window per recovered patient"
@@ -87,11 +87,11 @@ export function RoiCalculator() {
           max={40}
           step={1}
           suffix="%"
-          hint="Conservative pilot range: 10–20%"
+          hint="Conservative pilot range: 10-20%"
         />
       </div>
 
-      {/* ─── Output ────────────────────────────────────────────────────── */}
+      {/* --- Output ------------------------------------------------------ */}
       <div className="mkt-roi__output">
         <div className="mkt-roi__big">Estimated revenue protected (annual)</div>
         <div className="mkt-roi__big-num">{fmt(out.protectedAnnual)}</div>
@@ -119,7 +119,7 @@ export function RoiCalculator() {
   );
 }
 
-// ─── Field primitives ──────────────────────────────────────────────────────
+// --- Field primitives ------------------------------------------------------
 
 function NumberField({
   label, value, onChange, min, step, prefix, hint,

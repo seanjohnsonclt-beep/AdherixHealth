@@ -3,14 +3,14 @@
 import { useState } from 'react';
 
 /**
- * Request a Demo form — powered by Formspree.
+ * Request a Demo form  -  powered by Formspree.
  *
  * To activate:
  *   1. Create a form at formspree.io named "Adherix - Demo Request"
  *   2. Add NEXT_PUBLIC_FORMSPREE_PILOT_ID=<your_form_id> to:
  *      - Vercel project env vars (Settings → Environment Variables)
  *      - .env.local for local dev
- *   3. Redeploy — no code changes needed.
+ *   3. Redeploy  -  no code changes needed.
  *
  * Formspree handles: email notification, spam filtering, submission history, CSV export.
  */
@@ -66,12 +66,12 @@ export function PilotForm() {
           'Work email':    email,
           'Clinic':        clinicName,
           'Role':          role,
-          'Phone':         phone || '—',
-          'Patient count': patients || '—',
-          'Notes':         notes || '—',
+          'Phone':         phone || ' - ',
+          'Patient count': patients || ' - ',
+          'Notes':         notes || ' - ',
           // Formspree magic fields
           _replyto:        email,
-          _subject:        `Demo request — ${fullName} (${clinicName})`,
+          _subject:        `Demo request  -  ${fullName} (${clinicName})`,
         }),
       });
 
@@ -92,7 +92,7 @@ export function PilotForm() {
   if (status === 'success') {
     return (
       <div className="mkt-form__success">
-        <strong>Thanks — your request is in.</strong>
+        <strong>Thanks  -  your request is in.</strong>
         <div style={{ marginTop: 6, fontSize: 14 }}>
           Someone from the Adherix team will be in touch within one business day to schedule a demo.
         </div>
@@ -168,9 +168,9 @@ export function PilotForm() {
           <select id="patients" name="patients" defaultValue="">
             <option value="" disabled>Select a range</option>
             <option value="&lt;50">Fewer than 50</option>
-            <option value="50-150">50 – 150</option>
-            <option value="150-500">150 – 500</option>
-            <option value="500-1500">500 – 1,500</option>
+            <option value="50-150">50 - 150</option>
+            <option value="150-500">150 - 500</option>
+            <option value="500-1500">500 - 1,500</option>
             <option value="1500+">1,500+</option>
           </select>
         </div>

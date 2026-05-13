@@ -1,4 +1,4 @@
-// Recovery ledger — the list of patients recovered from drift, with
+// Recovery ledger  -  the list of patients recovered from drift, with
 // modeled revenue protected per patient. This is the artifact a clinic
 // uses to justify renewing Adherix at the end of their billing cycle.
 
@@ -56,7 +56,7 @@ export async function GET() {
     [user.clinicId]
   );
 
-  // Dollar value protected per recovery — must match metrics.ts formula
+  // Dollar value protected per recovery  -  must match metrics.ts formula
   // so the sum of this column equals the homepage Revenue Protected figure.
   const perRecoveryUsd = Math.round(
     MONTHLY_PATIENT_VALUE *

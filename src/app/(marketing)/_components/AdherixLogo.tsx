@@ -43,7 +43,7 @@ export function AdherixLogo({ variant = 'full', className, style, invert = false
         aria-label="Adherix"
       >
         <CohortA originX={12} width={72} />
-        {/* Signal dot — trailing indicator of active engagement */}
+        {/* Signal dot  -  trailing indicator of active engagement */}
         <circle cx="100" cy="86" r="6" fill={SAGE_DEEP} />
       </svg>
     );
@@ -102,7 +102,7 @@ function CohortA({ originX, width }: { originX: number; width: number }) {
   const botY = 110;
   const strokeW = Math.max(10, Math.round(w * 0.14));
 
-  // Outer A strokes — two slanted rectangles meeting at apex
+  // Outer A strokes  -  two slanted rectangles meeting at apex
   const apexX = x + w / 2;
   const leftBotX = x;
   const rightBotX = x + w;
@@ -125,7 +125,7 @@ function CohortA({ originX, width }: { originX: number; width: number }) {
     `${rightBotX - strokeW},${botY}`,
   ].join(' ');
 
-  // Cohort bars — three ascending horizontal bars inside the A.
+  // Cohort bars  -  three ascending horizontal bars inside the A.
   // They sit between the legs, each a little wider and higher than the last.
   const innerLeftAt = (y: number) =>
     leftBotX + strokeW + ((apexX - apexHalf - (leftBotX + strokeW)) * (botY - y)) / (botY - topY);

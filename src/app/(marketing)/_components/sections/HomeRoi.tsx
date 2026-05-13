@@ -5,10 +5,10 @@ import { useState } from 'react';
 import { FadeRise } from '../animation/MotionPrimitives';
 
 /**
- * Homepage ROI calculator — tier-button version.
+ * Homepage ROI calculator  -  tier-button version.
  *
  * Clinic operators select their program tier from preset options.
- * No sliders — deliberate choices, no drag ambiguity. Outputs update
+ * No sliders  -  deliberate choices, no drag ambiguity. Outputs update
  * instantly. Fixed 35% / 18% assumptions so operators see their number
  * without any guesswork.
  */
@@ -58,7 +58,7 @@ export function HomeRoi() {
           </FadeRise>
           <FadeRise as="p" className="mkt-subhead" delay={0.1}>
             Select your program size. See what&rsquo;s at risk and what Adherix
-            protects — side by side.
+            protects  -  side by side.
           </FadeRise>
         </div>
 
@@ -127,7 +127,7 @@ export function HomeRoi() {
 
           <div className="mkt-v2-roi__footer">
             <p className="mkt-v2-roi__disclaimer">
-              Modeled estimates — 35% industry-baseline churn, 18% retention lift.
+              Modeled estimates  -  35% industry-baseline churn, 18% retention lift.
               Pilots validate against your actual program data.
             </p>
             <Link href="/roi" className="mkt-v2-roi__more">

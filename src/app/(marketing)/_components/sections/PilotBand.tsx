@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { FadeRise, TapButton } from '../animation/MotionPrimitives';
 
 /**
- * Section 7 — Pilot CTA band.
+ * Section 7  -  Pilot CTA band.
  *
  * Dark Ink band with a calm, declarative invitation. One primary CTA + one
  * ghost secondary. Trust strip below acknowledges where Adherix is in its

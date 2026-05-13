@@ -3,13 +3,13 @@
 import { FadeRise, ScrollDraw } from '../animation/MotionPrimitives';
 
 /**
- * Section 2 — The drift problem.
+ * Section 2  -  The drift problem.
  *
  * Headline frames retention loss as silent decay. SVG below renders a
  * two-line chart: Sage (engaged) trending down into Graphite (drifting),
  * then a Clay marker at the churn point. Both lines draw on scroll.
  *
- * No real data — illustrative. Don't put fake clinic numbers here.
+ * No real data  -  illustrative. Don't put fake clinic numbers here.
  */
 export function Drift() {
   return (
@@ -58,8 +58,8 @@ export function Drift() {
 
 function DriftChart() {
   // SVG viewBox: 800 wide, 280 tall. Chart area inset 40px.
-  // Engaged line: smooth descent from (60, 80) to (740, 200) — Sage.
-  // Drifting branch: from (~440, 150) drops to (~700, 240) — Graphite.
+  // Engaged line: smooth descent from (60, 80) to (740, 200)  -  Sage.
+  // Drifting branch: from (~440, 150) drops to (~700, 240)  -  Graphite.
   // Churn marker: Clay dot at (700, 240).
   return (
     <svg
@@ -98,7 +98,7 @@ function DriftChart() {
         <text x="0" y="244">Low</text>
       </g>
 
-      {/* Engaged line — Sage, draws first */}
+      {/* Engaged line  -  Sage, draws first */}
       <ScrollDraw
         d="M 60 90 C 180 100, 280 110, 380 130 S 580 175, 740 200"
         stroke="var(--mkt-sage-deep)"
@@ -106,7 +106,7 @@ function DriftChart() {
         duration={1.0}
       />
 
-      {/* Drifting branch — Graphite, draws second */}
+      {/* Drifting branch  -  Graphite, draws second */}
       <ScrollDraw
         d="M 440 150 C 520 170, 600 200, 700 240"
         stroke="var(--mkt-graphite)"
@@ -125,7 +125,7 @@ function DriftChart() {
         />
       </g>
 
-      {/* Churn marker — Clay dot, last */}
+      {/* Churn marker  -  Clay dot, last */}
       <circle cx="700" cy="240" r="6" fill="var(--mkt-clay-deep)">
         <animate attributeName="opacity" from="0" to="1" begin="1.4s" dur="0.4s" fill="freeze" />
       </circle>

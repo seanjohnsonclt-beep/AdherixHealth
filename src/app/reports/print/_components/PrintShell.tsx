@@ -1,6 +1,6 @@
 'use client';
 
-// PrintShell — wraps a print-optimized page and auto-fires the browser
+// PrintShell  -  wraps a print-optimized page and auto-fires the browser
 // print dialog on mount. Clinic admin clicks "Open printable PDF",
 // gets the print dialog, saves as PDF. No server-side PDF library.
 

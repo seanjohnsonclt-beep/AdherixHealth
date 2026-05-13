@@ -7,7 +7,7 @@ export default function LoginPage({
 }) {
   const { error, magic, email } = searchParams;
 
-  // Magic link sent — show confirmation
+  // Magic link sent  -  show confirmation
   if (magic === 'sent') {
     return (
       <div className="shell">
@@ -17,7 +17,7 @@ export default function LoginPage({
             We sent a sign-in link to <strong>{email}</strong>.
           </p>
           <p style={{ marginTop: 8, fontSize: 14, color: 'var(--text-muted)' }}>
-            Check your inbox and click the link — no password needed.
+            Check your inbox and click the link  -  no password needed.
             The link expires in 1 hour.
           </p>
           <div className="footer" style={{ marginTop: 32 }}>
@@ -33,7 +33,7 @@ export default function LoginPage({
       <div className="login-card">
         <h1>MyAdherix</h1>
 
-        {/* ── Magic link (primary for clinic onboarding) ── */}
+        {/* -- Magic link (primary for clinic onboarding) -- */}
         <p style={{ marginBottom: 16 }}>Enter your work email to get a sign-in link.</p>
         <form action={sendMagicLinkAction}>
           <div className="field">
@@ -53,7 +53,7 @@ export default function LoginPage({
           </button>
         </form>
 
-        {/* ── Divider ── */}
+        {/* -- Divider -- */}
         <div style={{
           display: 'flex', alignItems: 'center', gap: 12,
           margin: '24px 0', color: 'var(--text-muted)', fontSize: 13,
@@ -63,7 +63,7 @@ export default function LoginPage({
           <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
         </div>
 
-        {/* ── Password form (for existing admin accounts) ── */}
+        {/* -- Password form (for existing admin accounts) -- */}
         <form action={signInWithPasswordAction}>
           <div className="field">
             <label className="label" htmlFor="email">Email</label>
@@ -78,7 +78,7 @@ export default function LoginPage({
           </button>
         </form>
 
-        {/* ── Error states ── */}
+        {/* -- Error states -- */}
         {error === 'invalid_credentials' && (
           <p style={{ marginTop: 16, color: 'var(--accent)', fontSize: 13 }}>
             Incorrect email or password. Try again or use the magic link above.

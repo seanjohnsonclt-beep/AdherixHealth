@@ -80,9 +80,9 @@ export async function POST(req: Request) {
     ['Name', fullName],
     ['Email', email],
     ['Clinic', clinicName],
-    ['Role', role || '—'],
-    ['Phone', phone || '—'],
-    ['Active GLP-1 patients', patients || '—'],
+    ['Role', role || ' - '],
+    ['Phone', phone || ' - '],
+    ['Active GLP-1 patients', patients || ' - '],
   ];
 
   const rowsHtml = rows
@@ -107,7 +107,7 @@ export async function POST(req: Request) {
       </div>`
     : '';
 
-  const subject = `Adherix — Demo request from ${fullName} (${clinicName})`;
+  const subject = `Adherix  -  Demo request from ${fullName} (${clinicName})`;
   const html = `
     <div style="font-family:Geist,system-ui,sans-serif;max-width:640px;margin:0 auto;padding:28px 24px;background:#F4EFE6;">
       <div style="font-family:Fraunces,Georgia,serif;font-size:24px;font-weight:400;margin-bottom:18px;color:#1F2A2A;letter-spacing:-0.02em;">

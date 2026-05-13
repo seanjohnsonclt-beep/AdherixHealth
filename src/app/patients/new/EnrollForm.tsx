@@ -14,7 +14,7 @@ export function EnrollForm({ error }: { error?: string }) {
 
   return (
     <form action={enrollPatientAction}>
-      {/* ── Patient basics ──────────────────────────────────────────────── */}
+      {/* -- Patient basics ------------------------------------------------ */}
       <div style={{ marginBottom: 16 }}>
         <label className="label" htmlFor="first_name">First name</label>
         <input className="input" type="text" name="first_name" id="first_name" autoFocus />
@@ -35,7 +35,7 @@ export function EnrollForm({ error }: { error?: string }) {
         </p>
       </div>
 
-      {/* ── Medication ──────────────────────────────────────────────────── */}
+      {/* -- Medication ---------------------------------------------------- */}
       <div style={{ marginBottom: 16 }}>
         <label className="label" htmlFor="medication">Medication</label>
         <select
@@ -45,14 +45,14 @@ export function EnrollForm({ error }: { error?: string }) {
           value={selectedMed}
           onChange={e => setSelectedMed(e.target.value)}
         >
-          <option value="">— None / Other (no injection tracking) —</option>
+          <option value=""> -  None / Other (no injection tracking)  - </option>
           {MEDICATION_PROTOCOLS.map(p => (
             <option key={p.key} value={p.key}>{p.displayName}</option>
           ))}
         </select>
       </div>
 
-      {/* Starting dose — auto-populated from protocol, shown when med is selected */}
+      {/* Starting dose  -  auto-populated from protocol, shown when med is selected */}
       {protocol && (
         <div style={{ marginBottom: 16 }}>
           <label className="label" htmlFor="starting_dose">Starting dose</label>
@@ -70,12 +70,12 @@ export function EnrollForm({ error }: { error?: string }) {
         </div>
       )}
 
-      {/* ── Injection day ────────────────────────────────────────────────── */}
+      {/* -- Injection day -------------------------------------------------- */}
       {protocol && (
         <div style={{ marginBottom: 16 }}>
           <label className="label" htmlFor="next_dose_day">Injection day</label>
           <select className="input" name="next_dose_day" id="next_dose_day">
-            <option value="">— Unknown —</option>
+            <option value=""> -  Unknown  - </option>
             {DAYS.map(d => <option key={d} value={d}>{d}</option>)}
           </select>
           <p className="small faint" style={{ marginTop: 6 }}>
@@ -84,7 +84,7 @@ export function EnrollForm({ error }: { error?: string }) {
         </div>
       )}
 
-      {/* ── Supply quantity ─────────────────────────────────────────────── */}
+      {/* -- Supply quantity ----------------------------------------------- */}
       {protocol && (
         <div style={{ marginBottom: 24 }}>
           <label className="label" htmlFor="supply_quantity">
@@ -110,7 +110,7 @@ export function EnrollForm({ error }: { error?: string }) {
         <input type="hidden" name="_protocol_first_dose" value={firstDose} />
       )}
 
-      {/* ── Error ───────────────────────────────────────────────────────── */}
+      {/* -- Error --------------------------------------------------------- */}
       {error === 'invalid_phone' && (
         <p style={{ color: 'var(--accent)', fontSize: 13, marginBottom: 16 }}>
           That phone number doesn't look right.

@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { SiteHeader } from '@/app/(marketing)/_components/SiteHeader';
 import { SiteFooter } from '@/app/(marketing)/_components/SiteFooter';
 
-// ─── Shared helpers ───────────────────────────────────────────────────────────
+// --- Shared helpers -----------------------------------------------------------
 function fmt(n: number): string {
   if (n >= 1_000_000) return '$' + (n / 1_000_000).toFixed(1) + 'M';
   if (n >= 10_000)    return '$' + Math.round(n / 1000) + 'k';
@@ -37,7 +37,7 @@ function NumberInput({
   );
 }
 
-// ─── Calculator 1: Revenue at Risk ────────────────────────────────────────────
+// --- Calculator 1: Revenue at Risk --------------------------------------------
 function RevenueCalc() {
   const [patients, setPatients] = useState(100);
   const [monthly,  setMonthly]  = useState(600);
@@ -108,7 +108,7 @@ function DriftVisual({ patients, protected_, atRisk }: { patients: number; prote
       <text x={X0} y="44" fontFamily="Geist,system-ui,sans-serif" fontSize="11" fontWeight="600"
         letterSpacing="0.08em" fill="var(--mkt-graphite)">WHERE YOUR PROGRAM REVENUE GOES ANNUALLY</text>
 
-      {/* ── Row 1: Retained ── */}
+      {/* -- Row 1: Retained -- */}
       <text x={X0} y="72" fontFamily="Geist,system-ui,sans-serif" fontSize="13" fontWeight="600"
         fill="var(--mkt-sage-deep)">Patients retained (65%)</text>
       <rect x={X0} y="80" width={BAR_W} height="26" rx="6" fill="var(--mkt-line)" opacity="0.4"/>
@@ -116,7 +116,7 @@ function DriftVisual({ patients, protected_, atRisk }: { patients: number; prote
       <text x={X0 + BAR_W * 0.65 - 10} y="97" fontFamily="Geist,system-ui,sans-serif"
         fontSize="12" fontWeight="600" textAnchor="end" fill="var(--mkt-sage-deep)">on track</text>
 
-      {/* ── Row 2: At risk ── */}
+      {/* -- Row 2: At risk -- */}
       <text x={X0} y="126" fontFamily="Geist,system-ui,sans-serif" fontSize="13" fontWeight="600"
         fill="#92400E">Patients drifting without intervention (35%)</text>
       <rect x={X0} y="134" width={BAR_W} height="26" rx="6" fill="var(--mkt-line)" opacity="0.4"/>
@@ -124,7 +124,7 @@ function DriftVisual({ patients, protected_, atRisk }: { patients: number; prote
       <text x={X0 + BAR_W * 0.35 - 10} y="151" fontFamily="Geist Mono,monospace"
         fontSize="12" fontWeight="600" textAnchor="end" fill="#92400E">{fmt(atRisk)}/yr</text>
 
-      {/* ── Row 3: Recovered ── */}
+      {/* -- Row 3: Recovered -- */}
       <text x={X0} y="180" fontFamily="Geist,system-ui,sans-serif" fontSize="13" fontWeight="600"
         fill="var(--mkt-sage-deep)">Recovered with Adherix (18% of drift)</text>
       <rect x={X0} y="188" width={BAR_W} height="26" rx="6" fill="var(--mkt-line)" opacity="0.4"/>
@@ -133,7 +133,7 @@ function DriftVisual({ patients, protected_, atRisk }: { patients: number; prote
       <text x={X0 + BAR_W * 0.063 + 10} y="205" fontFamily="Geist Mono,monospace"
         fontSize="12" fontWeight="600" textAnchor="start" fill="var(--mkt-sage-deep)">{fmt(protected_)}/yr</text>
 
-      {/* ── Bottom band ── */}
+      {/* -- Bottom band -- */}
       <rect x="30" y="226" width="380" height="44" rx="12" fill="var(--mkt-ink)"/>
       <text x="220" y="245" fontFamily="Geist,system-ui,sans-serif" fontSize="11"
         textAnchor="middle" fill="rgba(244,239,230,0.55)" letterSpacing="0.05em">ANNUAL PROGRAM EXPOSURE</text>
@@ -145,7 +145,7 @@ function DriftVisual({ patients, protected_, atRisk }: { patients: number; prote
   );
 }
 
-// ─── Calculator 2: Staff Time Recovered ──────────────────────────────────────
+// --- Calculator 2: Staff Time Recovered --------------------------------------
 function StaffCalc() {
   const [coordinators, setCoordinators] = useState(3);
   const [hoursPerWeek, setHoursPerWeek] = useState(8);
@@ -273,7 +273,7 @@ function StaffVisual({ weeklyHours, annualHours, fte }: { weeklyHours: number; a
   );
 }
 
-// ─── Calculator 3: Cost of Waiting ───────────────────────────────────────────
+// --- Calculator 3: Cost of Waiting -------------------------------------------
 function WaitingCalc() {
   const [patients, setPatients] = useState(100);
   const [monthly,  setMonthly]  = useState(600);
@@ -309,7 +309,7 @@ function WaitingCalc() {
           <h2 className="mkt-h2">What it costs to catch drift late</h2>
           <p className="roi-calc__sub">
             Adherix evaluates every patient every 60 seconds. The difference between a
-            48-hour nudge and a 5-day escalation isn&rsquo;t just timing — it&rsquo;s
+            48-hour nudge and a 5-day escalation isn&rsquo;t just timing  -  it&rsquo;s
             recovery rate. Patients caught early re-engage at 85%. Patients who reach
             the flagged stage re-engage at 58%.
           </p>
@@ -364,13 +364,13 @@ function EscalationVisual({ r48h, r5day, churners }: { r48h: number; r5day: numb
       <text x={X0} y="44" fontFamily="Geist,system-ui,sans-serif" fontSize="11" fontWeight="600"
         letterSpacing="0.08em" fill="var(--mkt-graphite)">RE-ENGAGEMENT RATE BY RESPONSE TIME</text>
 
-      {/* ── Row 1: 48-hour nudge ── */}
+      {/* -- Row 1: 48-hour nudge -- */}
       <text x={X0} y="74" fontFamily="Geist,system-ui,sans-serif" fontSize="13" fontWeight="600"
         fill="var(--mkt-sage-deep)">Adherix nudge at 48 hours</text>
 
       {/* Track */}
       <rect x={X0} y="82" width={BAR_W} height="28" rx="6" fill="var(--mkt-line)" opacity="0.5"/>
-      {/* Fill — 85% */}
+      {/* Fill  -  85% */}
       <rect x={X0} y="82" width={BAR_W * 0.85} height="28" rx="6" fill="var(--mkt-sage)"/>
       {/* Percentage label inside */}
       <text x={X0 + BAR_W * 0.85 - 10} y="101" fontFamily="Geist,system-ui,sans-serif"
@@ -379,13 +379,13 @@ function EscalationVisual({ r48h, r5day, churners }: { r48h: number; r5day: numb
       <text x={X0} y="124" fontFamily="Geist,system-ui,sans-serif" fontSize="12"
         fill="var(--mkt-graphite)">of drifting patients re-engage</text>
 
-      {/* ── Row 2: Day 5 ── */}
+      {/* -- Row 2: Day 5 -- */}
       <text x={X0} y="154" fontFamily="Geist,system-ui,sans-serif" fontSize="13" fontWeight="600"
         fill="#92400E">Manual check-in at Day 5+</text>
 
       {/* Track */}
       <rect x={X0} y="162" width={BAR_W} height="28" rx="6" fill="var(--mkt-line)" opacity="0.5"/>
-      {/* Fill — 58% */}
+      {/* Fill  -  58% */}
       <rect x={X0} y="162" width={BAR_W * 0.58} height="28" rx="6" fill="#d97706"/>
       {/* Percentage label inside */}
       <text x={X0 + BAR_W * 0.58 - 10} y="181" fontFamily="Geist,system-ui,sans-serif"
@@ -400,11 +400,11 @@ function EscalationVisual({ r48h, r5day, churners }: { r48h: number; r5day: numb
       <line x1={X0 + BAR_W * 0.85} y1="82" x2={X0 + BAR_W * 0.85} y2="110"
         stroke="var(--mkt-line)" strokeWidth="1"/>
 
-      {/* ── Bottom band ── */}
+      {/* -- Bottom band -- */}
       <rect x="30" y="218" width="380" height="62" rx="12" fill="var(--mkt-ink)"/>
       <text x="220" y="240" fontFamily="Geist,system-ui,sans-serif" fontSize="11"
         textAnchor="middle" fill="rgba(244,239,230,0.55)" letterSpacing="0.05em">
-        {churners} PATIENTS DRIFT / YR — 27 POINT RECOVERY GAP
+        {churners} PATIENTS DRIFT / YR  -  27 POINT RECOVERY GAP
       </text>
       <text x="220" y="264" fontFamily="Fraunces,Georgia,serif" fontSize="21" fontWeight="500"
         textAnchor="middle" fill="white">
@@ -414,7 +414,7 @@ function EscalationVisual({ r48h, r5day, churners }: { r48h: number; r5day: numb
   );
 }
 
-// ─── Page ─────────────────────────────────────────────────────────────────────
+// --- Page ---------------------------------------------------------------------
 export default function RoiPage() {
   return (
     <div className="mkt-page">
@@ -431,7 +431,7 @@ export default function RoiPage() {
             </h1>
             <p className="mkt-subhead roi-hero__sub">
               Three calculators. Three conversations. Each one shows a different dimension
-              of what behavioral retention infrastructure returns — in revenue protected,
+              of what behavioral retention infrastructure returns  -  in revenue protected,
               staff hours recovered, and the compounding cost of catching drift too late.
             </p>
             <div className="roi-hero__nav">

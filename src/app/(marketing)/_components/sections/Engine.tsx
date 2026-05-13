@@ -6,7 +6,7 @@ const pillars = [
   {
     title: 'Phase-aware progression',
     body:
-      'Six clinical phases — Initiation, Onboarding, Activation, Momentum, Plateau, Maintenance — each with their own message cadence, voice, and reply gates.',
+      'Six clinical phases  -  Initiation, Onboarding, Activation, Momentum, Plateau, Maintenance  -  each with their own message cadence, voice, and reply gates.',
   },
   {
     title: 'Trigger-driven outreach',
@@ -16,7 +16,7 @@ const pillars = [
   {
     title: 'Closed-loop correction',
     body:
-      'When a patient drifts, the engine detects the pattern, sends a targeted correction, and tracks the response. Auto-resolves on reply. Escalates to the clinic if silence crosses the threshold — no manual monitoring required.',
+      'When a patient drifts, the engine detects the pattern, sends a targeted correction, and tracks the response. Auto-resolves on reply. Escalates to the clinic if silence crosses the threshold  -  no manual monitoring required.',
   },
 ];
 
@@ -43,7 +43,7 @@ export function Engine() {
             Six phases. Every patient, on their own clock.
           </FadeRise>
           <FadeRise as="p" className="mkt-subhead" delay={0.1}>
-            Each phase has its own message cadence, reply gates, and behavioral triggers. The engine advances patients automatically — no coordinator involvement required.
+            Each phase has its own message cadence, reply gates, and behavioral triggers. The engine advances patients automatically  -  no coordinator involvement required.
           </FadeRise>
         </div>
 

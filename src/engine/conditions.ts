@@ -2,7 +2,7 @@
 // Each receives the patient row + trigger args, returns boolean.
 //
 // To add a new condition: add a function here, reference its name from
-// the TRIGGERS array in config.ts. That's it — no other code changes.
+// the TRIGGERS array in config.ts. That's it  -  no other code changes.
 //
 // NOTE: PatientForEval is extended with injection adherence fields.
 // These are precomputed via subqueries in evaluateTriggersForAllPatients()
@@ -45,7 +45,7 @@ const DAY_MS  = 24 * HOUR_MS;
 
 export const conditions: Record<string, ConditionFn> = {
 
-  // ─── Existing conditions ────────────────────────────────────────────────────
+  // --- Existing conditions ----------------------------------------------------
 
   hours_since_last_inbound_gte: (p, args) => {
     const since = p.last_inbound_at ?? p.enrolled_at;
@@ -55,7 +55,7 @@ export const conditions: Record<string, ConditionFn> = {
 
   // Phase advancement with behavioral gate for patients with medication.
   // Gate: ≥ 50% injection confirmation rate in current phase AND < 3 consecutive misses.
-  // Legacy patients (no medication set) advance on time alone — backwards compatible.
+  // Legacy patients (no medication set) advance on time alone  -  backwards compatible.
   phase_duration_elapsed: (p) => {
     const phase = findPhase(p.current_phase);
     if (!phase) return false;
@@ -79,9 +79,9 @@ export const conditions: Record<string, ConditionFn> = {
     return true;
   },
 
-  // ─── Injection confirmation loop ────────────────────────────────────────────
+  // --- Injection confirmation loop --------------------------------------------
 
-  // Patient has a medication set — enables the confirmation loop
+  // Patient has a medication set  -  enables the confirmation loop
   medication_set: (p) => !!p.medication,
 
   // Ready to send the next weekly injection confirmation.
@@ -107,29 +107,29 @@ export const conditions: Record<string, ConditionFn> = {
   consecutive_misses_gte: (p, args) =>
     p.consecutive_missed_injections >= (args.count ?? 2),
 
-  // ─── Titration lifecycle ─────────────────────────────────────────────────────
+  // --- Titration lifecycle -----------------------------------------------------
 
-  // next_titration_date is within the next 0–3 days (prep window)
+  // next_titration_date is within the next 0-3 days (prep window)
   titration_approaching: (p) => {
     if (!p.next_titration_date) return false;
     const daysUntil = (new Date(p.next_titration_date).getTime() - Date.now()) / DAY_MS;
     return daysUntil >= 0 && daysUntil <= 3;
   },
 
-  // next_titration_date has arrived or passed — time to advance the dose
+  // next_titration_date has arrived or passed  -  time to advance the dose
   titration_due: (p) => {
     if (!p.next_titration_date) return false;
     return new Date(p.next_titration_date) <= new Date();
   },
 
-  // 3–5 days after the last titration date (side-effect check-in window)
+  // 3-5 days after the last titration date (side-effect check-in window)
   post_titration_window: (p) => {
     if (!p.last_titration_date) return false;
     const daysSince = (Date.now() - new Date(p.last_titration_date).getTime()) / DAY_MS;
     return daysSince >= 3 && daysSince < 5;
   },
 
-  // ─── Supply / refill ─────────────────────────────────────────────────────────
+  // --- Supply / refill ---------------------------------------------------------
 
   // Remaining supply at or below threshold doses
   supply_low: (p, args) => {
@@ -137,7 +137,7 @@ export const conditions: Record<string, ConditionFn> = {
     return p.supply_remaining <= (args.threshold ?? 2);
   },
 
-  // ─── Streak milestones ───────────────────────────────────────────────────────
+  // --- Streak milestones -------------------------------------------------------
 
   // confirmed_injection_streak exactly equals the target weeks (1 week = 1 injection)
   injection_streak_at: (p, args) =>

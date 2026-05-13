@@ -3,7 +3,7 @@
 import { FadeRise } from '../animation/MotionPrimitives';
 
 /**
- * Patient SMS view — iPhone mockup showing the patient-side experience.
+ * Patient SMS view  -  iPhone mockup showing the patient-side experience.
  *
  * Placed after the phase timeline on /platform to humanize the system:
  * "here's what the engine actually looks like from the patient's phone."
@@ -19,7 +19,7 @@ export function PatientSmsView() {
           <span className="mkt-eyebrow">The patient experience</span>
           <h2 className="mkt-h2">What arrives on the patient&rsquo;s phone</h2>
           <p className="mkt-subhead">
-            Short, direct, timed to their phase. Not a blast — a behavioral cue
+            Short, direct, timed to their phase. Not a blast  -  a behavioral cue
             that arrives when the patient needs it, with a simple reply gate
             before anything advances.
           </p>
@@ -86,7 +86,7 @@ function IPhoneMockup() {
           <div className="mkt-iphone__thread-date">Today 9:41 AM</div>
 
           <div className="mkt-iphone__bubble mkt-iphone__bubble--in">
-            Hi Marcus &mdash; Day 3 of your program. How did your first injection
+            Hi Marcus  -  Day 3 of your program. How did your first injection
             go? Reply <strong>YES</strong> if you&rsquo;re on track.
           </div>
 
@@ -96,7 +96,7 @@ function IPhoneMockup() {
 
           <div className="mkt-iphone__bubble mkt-iphone__bubble--in">
             Great. Your next dose window opens in 6 days. We&rsquo;ll check in
-            then &mdash; keep it up.
+            then  -  keep it up.
           </div>
 
           <div className="mkt-iphone__delivered">Delivered</div>

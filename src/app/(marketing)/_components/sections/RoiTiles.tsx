@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { CountUp, FadeRise, StaggerGroup, TapButton } from '../animation/MotionPrimitives';
 
 /**
- * Section 5 — Clinic operations & ROI.
+ * Section 5  -  Clinic operations & ROI.
  *
  * Three big stat tiles. Numbers are modeled, grounded in metrics.ts:
  *   - 18% fewer early drop-offs
@@ -70,7 +70,7 @@ export function RoiTiles() {
 
         <FadeRise className="mkt-r-roi__cta">
           <p className="mkt-r-roi__formula">
-            Run your own numbers — program price, panel size, baseline churn —
+            Run your own numbers  -  program price, panel size, baseline churn  - 
             and see the protected revenue line for yourself.
           </p>
           <TapButton>

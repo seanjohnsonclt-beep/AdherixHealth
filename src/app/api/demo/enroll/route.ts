@@ -1,4 +1,4 @@
-// Public API — no auth required.
+// Public API  -  no auth required.
 // Enrolls a prospect's phone number into a demo patient sequence.
 // Uses a shared "Adherix Demo" clinic so real clinic data is never touched.
 //
@@ -56,7 +56,7 @@ export async function POST(req: NextRequest) {
     );
 
     if (existing && existing.status !== 'churned') {
-      // Already enrolled — return their patient ID so the UI can show status
+      // Already enrolled  -  return their patient ID so the UI can show status
       return NextResponse.json({
         success: true,
         patientId: existing.id,

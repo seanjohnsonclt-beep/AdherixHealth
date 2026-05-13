@@ -1,15 +1,15 @@
 // Single tick of the engine. Called by:
-//   - workers/loop.ts (local dev — runs in a setInterval loop)
-//   - a Vercel cron job (production — hits /api/cron/tick)
+//   - workers/loop.ts (local dev  -  runs in a setInterval loop)
+//   - a Vercel cron job (production  -  hits /api/cron/tick)
 //   - manual: `npm run worker:tick`
 //
-// Tick order (each step wrapped in try/catch — one step failing must not abort the rest):
-//   1. updateAllTrajectories()          — score responsive/inconsistent/declining per patient
-//   2. evaluateTriggersForAllPatients() — fire if/then rules from config
-//   3. runDriftCorrection()             — diagnose drift pattern, queue correction messages
-//   4. runResolutionTracker()           — resolve or escalate open DC events
-//   5. sendDueMessages()                — dispatch pending SMS via Twilio
-//   6. runWeeklyDigestIfDue()           — Monday 8-10am digest email to clinic admins
+// Tick order (each step wrapped in try/catch  -  one step failing must not abort the rest):
+//   1. updateAllTrajectories()           -  score responsive/inconsistent/declining per patient
+//   2. evaluateTriggersForAllPatients()  -  fire if/then rules from config
+//   3. runDriftCorrection()              -  diagnose drift pattern, queue correction messages
+//   4. runResolutionTracker()            -  resolve or escalate open DC events
+//   5. sendDueMessages()                 -  dispatch pending SMS via Twilio
+//   6. runWeeklyDigestIfDue()            -  Monday 8-10am digest email to clinic admins
 
 import { evaluateTriggersForAllPatients } from '@/engine/triggers';
 import { sendDueMessages }                from '@/engine/sender';
@@ -28,7 +28,7 @@ export async function tick() {
     try {
       await updateAllTrajectories();
     } catch (err) {
-      // Trajectory failures are non-fatal — DC falls back to stored column values.
+      // Trajectory failures are non-fatal  -  DC falls back to stored column values.
       console.error('[tick] trajectory update failed (non-fatal):', err);
     }
 
@@ -37,7 +37,7 @@ export async function tick() {
 
     // Step 3: drift correction
     // Runs after triggers so any inbound-driven flag changes visible this tick
-    // are picked up. DC and triggers write to separate tables — no contention.
+    // are picked up. DC and triggers write to separate tables  -  no contention.
     try {
       await runDriftCorrection();
     } catch (err) {

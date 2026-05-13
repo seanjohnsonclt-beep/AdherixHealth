@@ -32,19 +32,19 @@ function TapButton({
 
 const patients = [
   { name: 'Maria C.',  last: 'Replied this morning',  status: 'active'   },
-  { name: 'James R.',  last: 'No reply — 48 hours',   status: 'warning'  },
-  { name: 'Priya S.',  last: 'Silent — 5 days',       status: 'critical' },
+  { name: 'James R.',  last: 'No reply  -  48 hours',   status: 'warning'  },
+  { name: 'Priya S.',  last: 'Silent  -  5 days',       status: 'critical' },
   { name: 'Tom W.',    last: 'Replied yesterday',      status: 'active'   },
 ];
 
 /**
- * Homepage Hero — v3
+ * Homepage Hero  -  v3
  *
  * Split layout: copy left, live patient-signal widget right.
  * The widget demonstrates the product in the hero itself:
- *   – animated status dots (green / amber / red pulsing)
- *   – an "automated nudge sent" toast slides in after ~3s
- * No stat clutter here — stats live in the Trust/CTA band.
+ *   - animated status dots (green / amber / red pulsing)
+ *   - an "automated nudge sent" toast slides in after ~3s
+ * No stat clutter here  -  stats live in the Trust/CTA band.
  */
 export function HomeHero() {
   const reduced = useReducedMotionSafe();
@@ -70,10 +70,10 @@ export function HomeHero() {
     <section className="mkt-v2-hero">
       <div className="mkt-container mkt-v2-hero__inner">
 
-        {/* ── Left: copy ── */}
+        {/* -- Left: copy -- */}
         <div className="mkt-v2-hero__copy">
           <motion.span className="mkt-eyebrow mkt-v2-hero__eyebrow" {...seq(0)}>
-            GLP-1 retention — the gap most clinics don&rsquo;t see coming
+            GLP-1 retention  -  the gap most clinics don&rsquo;t see coming
           </motion.span>
 
           <motion.h1 className="mkt-h1 mkt-v2-hero__title" {...seq(0.08)}>
@@ -84,7 +84,7 @@ export function HomeHero() {
 
           <motion.p className="mkt-subhead mkt-v2-hero__sub" {...seq(0.18)}>
             They won&rsquo;t tell you. They&rsquo;ll slow down, stop replying, miss a
-            dose — then disappear. Adherix detects the pattern in real time and
+            dose  -  then disappear. Adherix detects the pattern in real time and
             corrects it automatically, before your team ever has to get involved.
           </motion.p>
 
@@ -102,7 +102,7 @@ export function HomeHero() {
           </motion.div>
         </div>
 
-        {/* ── Right: live signal widget ── */}
+        {/* -- Right: live signal widget -- */}
         <motion.div
           className="mkt-v2-hero__widget"
           initial={reduced ? undefined : { opacity: 0, x: 28, y: 8 }}
@@ -169,7 +169,7 @@ export function HomeHero() {
             transition={{ duration: 0.6, ease, delay: 0.9 }}
           >
             <span className="mkt-signal-badge__dot" aria-hidden="true" />
-            Automated — no staff action needed
+            Automated  -  no staff action needed
           </motion.div>
         </motion.div>
       </div>

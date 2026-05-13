@@ -2,13 +2,13 @@
 // Keeping these in one place means the "Revenue Protected" number
 // on the dashboard matches the one on the boardroom reports page.
 //
-// These are MODELED numbers for a demo/pilot context — they're designed to
+// These are MODELED numbers for a demo/pilot context  -  they're designed to
 // approximate the business value a clinic would realize, based on public
 // GLP-1 program pricing and typical staff-outreach time.
 
 import { query, queryOne } from '@/lib/db';
 
-// ─── Tunable assumptions ──────────────────────────────────────────────────────
+// --- Tunable assumptions ------------------------------------------------------
 // Monthly program revenue per active patient (GLP-1 cash-pay programs
 // typically price between $299 and $799/mo; $600 is the defensible midpoint).
 export const MONTHLY_PATIENT_VALUE = 600;
@@ -23,12 +23,12 @@ export const MINUTES_PER_MANUAL_OUTREACH = 4;
 export const CHURN_PROBABILITY_WITHOUT_INTERVENTION = 0.35;
 
 // Each "recovered" patient represents forward program revenue that would
-// otherwise have been lost. We project 3.4 months of forward value — the
+// otherwise have been lost. We project 3.4 months of forward value  -  the
 // weighted-average remaining tenure for a mid-program GLP-1 patient
 // re-engaged within 7 days of drift.
 export const PROTECTED_MONTHS_PROJECTION = 3.4;
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+// --- Types --------------------------------------------------------------------
 
 export type ClinicMetrics = {
   // Roster
@@ -56,9 +56,9 @@ export type ClinicMetrics = {
   avgMonthsOnProgram: number;
 
   // Modeled financial + operational ROI
-  revenueProtected30d: number;        // $ — modeled from recoveries
+  revenueProtected30d: number;        // $  -  modeled from recoveries
   revenueProtectedIsModeled: boolean; // true if using floor (no real recoveries)
-  staffHoursSaved30d: number;         // hours — modeled from automated outreach volume
+  staffHoursSaved30d: number;         // hours  -  modeled from automated outreach volume
 
   // Retention trend (for arrow/sparkline hints on the dashboard)
   retentionRate30dAgo: number;        // retention rate 30 days ago
@@ -70,7 +70,7 @@ export type ClinicMetrics = {
   responseRatePct: number;
 };
 
-// ─── Fetch ────────────────────────────────────────────────────────────────────
+// --- Fetch --------------------------------------------------------------------
 
 export async function getClinicMetrics(clinicId: string): Promise<ClinicMetrics> {
   // One big roll-up query to keep page load quick.
@@ -166,7 +166,7 @@ export async function getClinicMetrics(clinicId: string): Promise<ClinicMetrics>
     [clinicId]
   );
 
-  // Retention 30 days ago (snapshot) — everyone enrolled >30d ago,
+  // Retention 30 days ago (snapshot)  -  everyone enrolled >30d ago,
   // minus anyone who churned and did so before 30d ago.
   const retentionPastRow = await queryOne<{ enrolled_then: string; retained_then: string }>(
     `select
@@ -181,7 +181,7 @@ export async function getClinicMetrics(clinicId: string): Promise<ClinicMetrics>
     [clinicId]
   );
 
-  // ── Parse ────────────────────────────────────────────────────────────────
+  // -- Parse ----------------------------------------------------------------
   const total = parseInt(roster?.total ?? '0');
   const active = parseInt(roster?.active ?? '0');
   const flagged = parseInt(roster?.flagged ?? '0');
@@ -216,7 +216,7 @@ export async function getClinicMetrics(clinicId: string): Promise<ClinicMetrics>
     enrolledThen > 0 ? Math.round((retainedThen / enrolledThen) * 100) : retentionRate;
   const retentionDeltaPct = retentionRate - retentionRate30dAgo;
 
-  // ── Modeled outcomes ─────────────────────────────────────────────────────
+  // -- Modeled outcomes -----------------------------------------------------
   // Revenue protected (30d):
   //   recoveries × monthly value × churn-probability-without-intervention ×
   //   projected forward months of retained revenue.

@@ -46,7 +46,7 @@ type DcEvent = {
 };
 
 function fmtTime(d: Date | null): string {
-  if (!d) return '—';
+  if (!d) return ' - ';
   return new Date(d).toLocaleString('en-US', {
     month: 'short',
     day: 'numeric',
@@ -56,7 +56,7 @@ function fmtTime(d: Date | null): string {
 }
 
 function fmtHours(h: number | null): string {
-  if (h === null) return '—';
+  if (h === null) return ' - ';
   if (h < 24) return `${Math.round(h)}h`;
   return `${(h / 24).toFixed(1)}d`;
 }
@@ -119,7 +119,7 @@ export default async function PatientPage({ params }: { params: { id: string } }
       [patient.id]
     );
   } catch {
-    // Migration not yet applied — degrade gracefully
+    // Migration not yet applied  -  degrade gracefully
   }
 
   const failedCount  = messages.filter(m => m.status === 'failed').length;
@@ -169,7 +169,7 @@ export default async function PatientPage({ params }: { params: { id: string } }
             <div>
               <div className="label">Current phase</div>
               <div style={{ fontFamily: 'var(--serif)', fontSize: 22, marginTop: 4 }}>
-                <span className="muted">{patient.current_phase}.</span> {phase?.name ?? '—'}
+                <span className="muted">{patient.current_phase}.</span> {phase?.name ?? ' - '}
               </div>
             </div>
             <div>
@@ -198,7 +198,7 @@ export default async function PatientPage({ params }: { params: { id: string } }
                   defaultValue={patient.next_dose_day ?? ''}
                   style={{ fontSize: 12, padding: '3px 6px', height: 'auto', minWidth: 120 }}
                 >
-                  <option value="">— not set —</option>
+                  <option value=""> -  not set  - </option>
                   {DAYS.map(d => <option key={d} value={d}>{d}</option>)}
                 </select>
                 <button
@@ -237,7 +237,7 @@ export default async function PatientPage({ params }: { params: { id: string } }
             <div className="failure-banner failure-banner--soft" style={{ marginBottom: 12 }}>
               <span className="failure-banner__icon">●</span>
               <span>
-                <strong>No response — call this patient today.</strong>
+                <strong>No response  -  call this patient today.</strong>
                 {' '}Did not respond to the {PATTERN_LABELS[openDcEvent.drift_pattern] ?? openDcEvent.drift_pattern} check-in.
               </span>
             </div>
@@ -320,7 +320,7 @@ export default async function PatientPage({ params }: { params: { id: string } }
                   <div className={`meta${isFailed ? ' meta--soft' : ''}`}>
                     {m.template_key ? `${m.template_key} · ` : ''}{statusLabel}
                     {isFailed && m.error && (
-                      <span className="error-detail"> — carrier held</span>
+                      <span className="error-detail">  -  carrier held</span>
                     )}
                   </div>
                 </div>

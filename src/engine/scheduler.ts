@@ -1,7 +1,7 @@
 // When a patient enters a phase, we queue every scheduled message for that phase.
 // The cron worker picks them up at scheduled_for time.
 //
-// We do NOT pre-schedule trigger messages — those fire reactively from conditions.
+// We do NOT pre-schedule trigger messages  -  those fire reactively from conditions.
 
 import { query, queryOne } from '@/lib/db';
 import { templatesForPhase, findPhase, type Template } from '@/lib/config';

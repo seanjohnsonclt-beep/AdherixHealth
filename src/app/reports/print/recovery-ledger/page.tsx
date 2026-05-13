@@ -1,4 +1,4 @@
-// Recovery Ledger — printable PDF version.
+// Recovery Ledger  -  printable PDF version.
 // Same data + dollar math as /api/export/recovery-ledger, laid out as a
 // one-page (or multi-page) board-ready document. Auto-prints on load.
 
@@ -151,7 +151,7 @@ export default async function RecoveryLedgerPrint() {
             <tbody>
               {recoveries.map((r, i) => (
                 <tr key={i}>
-                  <td>{r.first_name ?? '—'}</td>
+                  <td>{r.first_name ?? ' - '}</td>
                   <td style={{ fontFamily: 'monospace', fontSize: 11 }}>
                     {maskPhone(r.phone)}
                   </td>

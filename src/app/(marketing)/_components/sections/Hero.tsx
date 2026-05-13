@@ -6,7 +6,7 @@ import { CountUp, FadeRise, TapButton } from '../animation/MotionPrimitives';
 import { useReducedMotionSafe } from '../animation/useReducedMotionSafe';
 
 /**
- * Section 1 — Hero
+ * Section 1  -  Hero
  *
  * Headline: existing brand line, kept verbatim.
  * Subheadline: positions Adherix as retention intelligence layer.
@@ -105,7 +105,7 @@ export function Hero() {
         </p>
       </div>
 
-      {/* Decorative wash — pure CSS, no extra DOM cost */}
+      {/* Decorative wash  -  pure CSS, no extra DOM cost */}
       <div className="mkt-r-hero__wash" aria-hidden="true" />
     </section>
   );

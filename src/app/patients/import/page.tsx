@@ -2,7 +2,7 @@ import { requireUser } from '@/lib/auth';
 import { Topbar } from '@/app/_components/Topbar';
 import { ImportForm } from './ImportForm';
 
-export const metadata = { title: 'Import patients — Adherix' };
+export const metadata = { title: 'Import patients  -  Adherix' };
 
 export default async function ImportPage() {
   const user = await requireUser();

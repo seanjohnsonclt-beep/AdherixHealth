@@ -4,14 +4,14 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { FadeRise, TapButton } from '../_components/animation/MotionPrimitives';
 
-// ─── Walkthrough data ────────────────────────────────────────────────────────
+// --- Walkthrough data --------------------------------------------------------
 
 const STEPS = [
   {
     label: 'Enrollment',
-    phase: 'Initiation — Phase 0',
+    phase: 'Initiation  -  Phase 0',
     engine:
-      'Patient enrolled. Engine queues a welcome SMS within 5 minutes. No manual action from clinic — the behavioral sequence starts automatically.',
+      'Patient enrolled. Engine queues a welcome SMS within 5 minutes. No manual action from clinic  -  the behavioral sequence starts automatically.',
     sms: [
       {
         direction: 'out' as const,
@@ -22,7 +22,7 @@ const STEPS = [
   },
   {
     label: 'First reply',
-    phase: 'Initiation — Phase 0',
+    phase: 'Initiation  -  Phase 0',
     engine:
       'Patient replies YES. Reply gate opens. Confirmation message queued immediately. The engine moves to Phase 1 onboarding.',
     sms: [
@@ -36,7 +36,7 @@ const STEPS = [
   },
   {
     label: 'Day 1 directive',
-    phase: 'Onboarding — Phase 1',
+    phase: 'Onboarding  -  Phase 1',
     engine:
       'Engine enters Phase 1. First behavioral directive sent at 8:30am patient local time. Dose prep, side effect framing, habit anchoring.',
     sms: [
@@ -51,12 +51,12 @@ const STEPS = [
     label: 'Drift detected',
     phase: 'Risk Window',
     engine:
-      'No reply in 48 hours. Risk score drops. Engine fires re-engagement trigger automatically — no coordinator needed.',
+      'No reply in 48 hours. Risk score drops. Engine fires re-engagement trigger automatically  -  no coordinator needed.',
     risk: 'high' as const,
     sms: [
       {
         direction: 'out' as const,
-        body: "Haven't heard from you in 2 days. Everything ok? Reply with anything — even one word.",
+        body: "Haven't heard from you in 2 days. Everything ok? Reply with anything  -  even one word.",
         key: 'trigger.no_response_48h',
       },
     ],
@@ -71,14 +71,14 @@ const STEPS = [
       { direction: 'in' as const, body: 'back. sorry been rough week' },
       {
         direction: 'out' as const,
-        body: "Glad you're back. No judgement — let's pick up where we left off. Reply YES when you're ready.",
+        body: "Glad you're back. No judgement  -  let's pick up where we left off. Reply YES when you're ready.",
         key: 'trigger.recovery',
       },
     ],
   },
   {
     label: 'Maintenance',
-    phase: 'Maintenance — Phase 5',
+    phase: 'Maintenance  -  Phase 5',
     engine:
       'Patient completes 75 days of active phases. Auto-advanced to weekly maintenance. Light-touch check-ins. No clinic action required.',
     sms: [
@@ -93,7 +93,7 @@ const STEPS = [
 
 type Sms = { direction: 'in' | 'out'; body: string; key?: string };
 
-// ─── SMS phone frame ─────────────────────────────────────────────────────────
+// --- SMS phone frame ---------------------------------------------------------
 
 function PhoneFrame({ messages }: { messages: Sms[] }) {
   return (
@@ -117,7 +117,7 @@ function PhoneFrame({ messages }: { messages: Sms[] }) {
   );
 }
 
-// ─── Walkthrough ─────────────────────────────────────────────────────────────
+// --- Walkthrough -------------------------------------------------------------
 
 function Walkthrough() {
   const [step, setStep] = useState(0);
@@ -182,7 +182,7 @@ function Walkthrough() {
   );
 }
 
-// ─── Live enroll form ─────────────────────────────────────────────────────────
+// --- Live enroll form ---------------------------------------------------------
 
 function EnrollForm() {
   const [phone, setPhone] = useState('');
@@ -224,7 +224,7 @@ function EnrollForm() {
         <p style={{ fontSize: 16, fontWeight: 500, marginBottom: 8 }}>{message}</p>
         <p style={{ fontSize: 14, color: 'var(--mkt-muted)', lineHeight: 1.65 }}>
           The engine will send you a welcome message, then guide you through
-          the behavioral sequence automatically — just reply to the texts.
+          the behavioral sequence automatically  -  just reply to the texts.
         </p>
         <button
           onClick={() => { setState('idle'); setPhone(''); setName(''); }}
@@ -282,7 +282,7 @@ function EnrollForm() {
   );
 }
 
-// ─── Main export ─────────────────────────────────────────────────────────────
+// --- Main export -------------------------------------------------------------
 
 export function DemoInteractive() {
   return (
@@ -296,7 +296,7 @@ export function DemoInteractive() {
               Every phase. Every trigger. End to end.
             </FadeRise>
             <FadeRise as="p" className="mkt-subhead" delay={0.1}>
-              Six steps from first text to long-term maintenance — with the exact SMS your patients receive at each one.
+              Six steps from first text to long-term maintenance  -  with the exact SMS your patients receive at each one.
             </FadeRise>
           </div>
           <FadeRise delay={0.12} amount={0.15}>
@@ -316,7 +316,7 @@ export function DemoInteractive() {
               </FadeRise>
               <FadeRise as="p" className="mkt-subhead" delay={0.1}>
                 Enter your number and the engine enrolls you as a demo patient.
-                Same sequence your patients get — starting within 5 minutes.
+                Same sequence your patients get  -  starting within 5 minutes.
               </FadeRise>
               <FadeRise className="mkt-demo-enroll__features" delay={0.14}>
                 {[

@@ -5,7 +5,7 @@
 //   POST /api/demo/reseed?clinic_id=X  → reseeds a specific clinic (auth still required)
 //
 // Gated behind auth so random visitors can't trigger it on prod.
-// NOTE: In demo phase there are no real patients to protect — this is fine.
+// NOTE: In demo phase there are no real patients to protect  -  this is fine.
 
 import { NextRequest, NextResponse } from 'next/server';
 import { requireUser } from '@/lib/auth';

@@ -11,9 +11,9 @@
 
 import { query } from '@/lib/db';
 
-// ─── Keyword lists (per handoff spec §11) ─────────────────────────────────────
+// --- Keyword lists (per handoff spec §11) -------------------------------------
 // Edit these lists to expand detection coverage.
-// Changes here are picked up immediately — no migration needed.
+// Changes here are picked up immediately  -  no migration needed.
 
 const UNCERTAINTY_KEYWORDS: string[] = [
   'nauseous', 'nausea', 'queasy', 'dizzy', 'headache', 'tired', 'exhausted',
@@ -40,7 +40,7 @@ const FRICTION_KEYWORDS: string[] = [
 // These bypass the 72hr cooldown and escalate open DC events right away.
 const ESCALATION_WORDS = new Set(['call', 'help']);
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
+// --- Helpers ------------------------------------------------------------------
 
 function matchKeywords(body: string, keywords: string[]): string[] {
   const lower = body.toLowerCase();
@@ -56,7 +56,7 @@ export function isEscalationKeyword(body: string): boolean {
   return ESCALATION_WORDS.has(first);
 }
 
-// ─── Main scan ────────────────────────────────────────────────────────────────
+// --- Main scan ----------------------------------------------------------------
 
 export interface ScanResult {
   uncertaintyMatched: boolean;
@@ -97,7 +97,7 @@ export async function scanInbound(
   );
 
   if (uncertaintyMatched || frictionMatched) {
-    // Set behavioral flags — drift-correction.ts reads these next tick
+    // Set behavioral flags  -  drift-correction.ts reads these next tick
     await query(
       `update patients set
          side_effect_flag = side_effect_flag OR $2,
@@ -117,7 +117,7 @@ export async function scanInbound(
     );
 
     console.log(
-      `[DC] keyword match [${allMatches.join(', ')}] — patient ${patientId}` +
+      `[DC] keyword match [${allMatches.join(', ')}]  -  patient ${patientId}` +
       (uncertaintyMatched ? ' side_effect_flag=true' : '') +
       (frictionMatched    ? ' dose_missed_flag=true' : ''),
     );

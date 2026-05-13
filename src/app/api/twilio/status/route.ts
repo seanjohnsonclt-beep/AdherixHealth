@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
     const signature = req.headers.get('x-twilio-signature') ?? '';
     const url = `${process.env.APP_URL}/api/twilio/status`;
     if (!twilio.validateRequest(authToken, signature, url, params)) {
-      console.warn('[status] invalid Twilio signature — rejected');
+      console.warn('[status] invalid Twilio signature  -  rejected');
       return new NextResponse('Forbidden', { status: 403 });
     }
   }

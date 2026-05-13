@@ -3,7 +3,7 @@
 import { useState } from 'react';
 
 /**
- * Inline homepage lead capture — compact 3-field form.
+ * Inline homepage lead capture  -  compact 3-field form.
  * Lives in the HomeTrustCta dark band as a low-friction alternative
  * to the full /pilot form.
  *
@@ -12,7 +12,7 @@ import { useState } from 'react';
  *   2. Add NEXT_PUBLIC_FORMSPREE_CAPTURE_ID=<your_form_id> to:
  *      - Vercel project env vars (Settings → Environment Variables)
  *      - .env.local for local dev
- *   3. Redeploy — no code changes needed.
+ *   3. Redeploy  -  no code changes needed.
  */
 
 const FORMSPREE_ID = process.env.NEXT_PUBLIC_FORMSPREE_CAPTURE_ID ?? '';
@@ -46,9 +46,9 @@ export function HomeInlineCapture() {
         body: JSON.stringify({
           'Name':   name,
           'Email':  email,
-          'Clinic': clinic || '—',
+          'Clinic': clinic || ' - ',
           _replyto: email,
-          _subject: `Quick capture — ${name}${clinic ? ` (${clinic})` : ''}`,
+          _subject: `Quick capture  -  ${name}${clinic ? ` (${clinic})` : ''}`,
         }),
       });
 
@@ -107,7 +107,7 @@ export function HomeInlineCapture() {
       </div>
       {status === 'error' && (
         <p className="mkt-capture__error">
-          Something went wrong — try <a href="/pilot">the full form</a>.
+          Something went wrong  -  try <a href="/pilot">the full form</a>.
         </p>
       )}
       <p className="mkt-capture__note">

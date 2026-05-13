@@ -1,4 +1,4 @@
-// Executive Summary — printable PDF version. One-page board-deck artifact.
+// Executive Summary  -  printable PDF version. One-page board-deck artifact.
 // Auto-prints on load.
 
 import { requireUser } from '@/lib/auth';
@@ -205,7 +205,7 @@ export default async function ExecSummaryPrint() {
           <strong>About these numbers.</strong> Retention counts patients whose
           status is not <em>churned</em>. Recovery rate is the share of
           triggered drift signals that produced an inbound reply within 7 days.
-          Revenue Protected is modeled, not billed — see the Recovery Ledger
+          Revenue Protected is modeled, not billed  -  see the Recovery Ledger
           for per-patient attribution.
         </div>
       </div>

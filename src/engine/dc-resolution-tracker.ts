@@ -18,7 +18,7 @@
 //   - Queues a staff-outreach placeholder message (clinic admin sends manually)
 //
 // CALL/HELP immediate escalation is handled in the inbound webhook (route.ts),
-// not here — this tracker handles time-based escalation only.
+// not here  -  this tracker handles time-based escalation only.
 
 import { query } from '@/lib/db';
 
@@ -68,7 +68,7 @@ export async function runResolutionTracker(): Promise<void> {
     const patientReplied = lastReply > firedAt;
     const hoursSinceDc   = (Date.now() - firedAt) / HOUR_MS;
 
-    // ── Auto-resolve: patient replied after the DC message was sent ───────────
+    // -- Auto-resolve: patient replied after the DC message was sent -----------
     if (patientReplied) {
       const hoursToResolve = (lastReply - firedAt) / HOUR_MS;
 
@@ -107,7 +107,7 @@ export async function runResolutionTracker(): Promise<void> {
       continue;
     }
 
-    // ── Escalate: no response within threshold ─────────────────────────────
+    // -- Escalate: no response within threshold -----------------------------
     const threshold = ESCALATION_HOURS[event.drift_pattern] ?? 72;
 
     if (hoursSinceDc >= threshold) {
@@ -129,9 +129,9 @@ export async function runResolutionTracker(): Promise<void> {
 
       // Queue a staff-outreach placeholder. The clinic admin sees this in
       // the flagged patient list and sends it manually (or the engine sends it
-      // once the DC dashboard panel is built — §14 of handoff doc).
-      // Body is intentionally empty — the dashboard pre-populates the copy:
-      // "Hi [NAME] — just checking in from [CLINIC]. No agenda, just wanted
+      // once the DC dashboard panel is built  -  §14 of handoff doc).
+      // Body is intentionally empty  -  the dashboard pre-populates the copy:
+      // "Hi [NAME]  -  just checking in from [CLINIC]. No agenda, just wanted
       //  to make sure you're doing okay."
       await query(
         `insert into messages

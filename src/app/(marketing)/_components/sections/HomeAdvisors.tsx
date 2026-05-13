@@ -4,10 +4,10 @@ import Image from 'next/image';
 import { FadeRise } from '../animation/MotionPrimitives';
 
 /**
- * Clinical Advisory Board — homepage section.
+ * Clinical Advisory Board  -  homepage section.
  *
  * Credibility signal for clinic operators and health system contacts.
- * Keep bios tight — one sentence title, two sentences of context max.
+ * Keep bios tight  -  one sentence title, two sentences of context max.
  */
 
 type Advisor = {

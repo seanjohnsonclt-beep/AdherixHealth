@@ -20,7 +20,7 @@ import {
 import { useReducedMotionSafe } from './useReducedMotionSafe';
 
 /* =========================================================================
-   FadeRise — fades + lifts an element into place when scrolled into view.
+   FadeRise  -  fades + lifts an element into place when scrolled into view.
    Default: 12px Y offset, 500ms easeOut, fires once.
    ========================================================================= */
 
@@ -75,7 +75,7 @@ export function FadeRise({
 }
 
 /* =========================================================================
-   StaggerGroup — wraps children that should fade-rise sequentially.
+   StaggerGroup  -  wraps children that should fade-rise sequentially.
    Each direct child becomes a motion.div with a staggered delay.
    ========================================================================= */
 
@@ -157,7 +157,7 @@ export function StaggerGroup({
 }
 
 /* =========================================================================
-   CountUp — animates a number from 0 → target when in view.
+   CountUp  -  animates a number from 0 → target when in view.
    Renders inside a span. Format the value with formatter (e.g., commas, $).
    ========================================================================= */
 
@@ -217,7 +217,7 @@ export function CountUp({
     return () => unsubscribe();
   }, [display, reduced]);
 
-  // Apply duration via spring config — not directly tunable here, but kept
+  // Apply duration via spring config  -  not directly tunable here, but kept
   // as a parameter for future swap to tween-based count.
   void duration;
 
@@ -229,7 +229,7 @@ export function CountUp({
 }
 
 /* =========================================================================
-   ScrollDraw — strokes an SVG path on scroll-into-view.
+   ScrollDraw  -  strokes an SVG path on scroll-into-view.
    Pass children inside an <svg>; this wraps a single <path d=...>.
    ========================================================================= */
 
@@ -279,7 +279,7 @@ export function ScrollDraw({
 }
 
 /* =========================================================================
-   ScrollWidth — animates width 0 → 100% on a child container (for phase bars).
+   ScrollWidth  -  animates width 0 → 100% on a child container (for phase bars).
    ========================================================================= */
 
 type ScrollWidthProps = {
@@ -314,7 +314,7 @@ export function ScrollWidth({
 }
 
 /* =========================================================================
-   TapButton — a motion.div wrapper that adds 0.98 scale on tap.
+   TapButton  -  a motion.div wrapper that adds 0.98 scale on tap.
    Use as a wrapper around <Link> / <button>.
    ========================================================================= */
 

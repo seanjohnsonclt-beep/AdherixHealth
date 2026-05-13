@@ -40,7 +40,7 @@ export async function sendMagicLinkAction(formData: FormData) {
     redirect('/login?error=magic_link_failed');
   }
 
-  // Success — tell the user to check their inbox
+  // Success  -  tell the user to check their inbox
   redirect('/login?magic=sent&email=' + encodeURIComponent(email));
 }
 

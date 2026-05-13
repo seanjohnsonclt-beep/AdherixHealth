@@ -25,7 +25,7 @@ function normalisePhone(raw: string): string {
 function extractName(line: string, phonePart: string): string {
   // Remove the phone substring and any surrounding punctuation/whitespace
   const cleaned = line.replace(phonePart, '').replace(/[,|:;\t]+/g, ' ').trim();
-  // If what's left looks like a name (2–40 chars, mostly letters/spaces), keep it
+  // If what's left looks like a name (2-40 chars, mostly letters/spaces), keep it
   if (cleaned.length >= 2 && cleaned.length <= 40 && /^[a-zA-Z\s'-]+$/.test(cleaned)) {
     return cleaned;
   }
@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
       const parsed = await pdfParse(buffer);
       text = parsed.text;
     } catch {
-      // pdf-parse not installed or not a valid PDF — try treating as plain text
+      // pdf-parse not installed or not a valid PDF  -  try treating as plain text
       text = buffer.toString('utf-8');
     }
 

@@ -4,25 +4,25 @@ import { useState, useRef } from 'react';
 import { importPatientsAction, ImportRow, ImportResult } from '@/app/patients/actions';
 
 /**
- * Patient import — CSV or PDF.
+ * Patient import  -  CSV or PDF.
  *
  * Flow:
- *   1. Upload  — drop a CSV or PDF roster
- *   2. Preview — editable table of parsed rows; add/remove before confirming
- *   3. Results — enrolled / skipped / error per row with links to patient records
+ *   1. Upload   -  drop a CSV or PDF roster
+ *   2. Preview  -  editable table of parsed rows; add/remove before confirming
+ *   3. Results  -  enrolled / skipped / error per row with links to patient records
  *
  * CSV expected columns (header row required, order flexible):
  *   first_name, phone, medication*, starting_dose*, supply_quantity*
  *   (* optional)
  *
- * PDF — best-effort extraction: looks for US phone patterns and nearby names.
+ * PDF  -  best-effort extraction: looks for US phone patterns and nearby names.
  *       User can edit any row in the preview before submitting.
  */
 
 type ParsedRow = ImportRow & { _id: number };
 type Step = 'upload' | 'preview' | 'results';
 
-// ─── CSV parser ───────────────────────────────────────────────────────────────
+// --- CSV parser ---------------------------------------------------------------
 
 function parseCSV(text: string): ParsedRow[] {
   const lines = text.split(/\r?\n/).filter(l => l.trim());
@@ -50,7 +50,7 @@ function parseCSV(text: string): ParsedRow[] {
   }).filter(r => r.phone);
 }
 
-// ─── Component ────────────────────────────────────────────────────────────────
+// --- Component ----------------------------------------------------------------
 
 export function ImportForm() {
   const [step, setStep] = useState<Step>('upload');
@@ -61,7 +61,7 @@ export function ImportForm() {
   const fileRef = useRef<HTMLInputElement>(null);
   let nextId = useRef(0);
 
-  // ── File handling ──────────────────────────────────────────────────────────
+  // -- File handling ----------------------------------------------------------
 
   async function handleFile(file: File) {
     setError('');
@@ -75,7 +75,7 @@ export function ImportForm() {
         setRows(parsed.map(r => ({ ...r, _id: nextId.current++ })));
         setStep('preview');
       } else {
-        // PDF — send to server for extraction
+        // PDF  -  send to server for extraction
         const form = new FormData();
         form.append('file', file);
         const res = await fetch('/api/patients/parse-import', { method: 'POST', body: form });
@@ -104,7 +104,7 @@ export function ImportForm() {
     if (file) handleFile(file);
   }
 
-  // ── Row editing ────────────────────────────────────────────────────────────
+  // -- Row editing ------------------------------------------------------------
 
   function updateRow(id: number, field: keyof ImportRow, value: string) {
     setRows(prev => prev.map(r => r._id === id ? { ...r, [field]: value } : r));
@@ -118,7 +118,7 @@ export function ImportForm() {
     setRows(prev => [...prev, { _id: nextId.current++, first_name: '', phone: '', medication: '', starting_dose: '' }]);
   }
 
-  // ── Confirm import ─────────────────────────────────────────────────────────
+  // -- Confirm import ---------------------------------------------------------
 
   async function confirm() {
     setLoading(true);
@@ -140,7 +140,7 @@ export function ImportForm() {
     }
   }
 
-  // ── Download template ──────────────────────────────────────────────────────
+  // -- Download template ------------------------------------------------------
 
   function downloadTemplate() {
     const csv = 'first_name,phone,medication,starting_dose,supply_quantity\nJane Smith,5551234567,semaglutide,0.25mg,4\nJohn Doe,5559876543,,,\n';
@@ -150,7 +150,7 @@ export function ImportForm() {
     a.click();
   }
 
-  // ─── Render ───────────────────────────────────────────────────────────────
+  // --- Render ---------------------------------------------------------------
 
   if (step === 'upload') {
     return (
@@ -308,7 +308,7 @@ export function ImportForm() {
           <tbody>
             {results.map((r, i) => (
               <tr key={i} className={`import-result-row import-result-row--${r.status}`}>
-                <td>{r.row.first_name || '—'}</td>
+                <td>{r.row.first_name || ' - '}</td>
                 <td>{r.row.phone}</td>
                 <td>
                   <span className={`import-badge import-badge--${r.status}`}>

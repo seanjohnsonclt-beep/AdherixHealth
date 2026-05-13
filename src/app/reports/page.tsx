@@ -5,7 +5,7 @@ import { Topbar } from '@/app/_components/Topbar';
 import { FilterBar } from './_components/FilterBar';
 import { getClinicMetrics, fmtMoney } from '@/lib/metrics';
 
-// ─── Phase metadata ────────────────────────────────────────────────────────────
+// --- Phase metadata ------------------------------------------------------------
 
 const PHASE_NAMES: Record<number, string> = {
   0: 'Initiation',
@@ -16,7 +16,7 @@ const PHASE_NAMES: Record<number, string> = {
   5: 'Maintenance',
 };
 
-// ─── Filter builder ────────────────────────────────────────────────────────────
+// --- Filter builder ------------------------------------------------------------
 
 type Filters = {
   phase: string;
@@ -68,7 +68,7 @@ function buildPatientWhere(
   return { clause: conditions.join(' AND '), extraParams, nextIdx: idx };
 }
 
-// ─── Chart helpers ─────────────────────────────────────────────────────────────
+// --- Chart helpers -------------------------------------------------------------
 
 function pct(value: number, max: number): string {
   if (!max) return '0%';
@@ -361,11 +361,11 @@ function relTime(d: Date | string | null): string {
 }
 
 function fmtDate(d: Date | string | null): string {
-  if (!d) return '—';
+  if (!d) return ' - ';
   return new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: '2-digit' });
 }
 
-// ─── Types ─────────────────────────────────────────────────────────────────────
+// --- Types ---------------------------------------------------------------------
 
 type SummaryRow = {
   total: string;
@@ -407,7 +407,7 @@ type PatientRow = {
   messages_received: string;
 };
 
-// ─── Page ──────────────────────────────────────────────────────────────────────
+// --- Page ----------------------------------------------------------------------
 
 export default async function ReportsPage({
   searchParams,
@@ -428,7 +428,7 @@ export default async function ReportsPage({
   const { clause, extraParams, nextIdx: _nIdx } = buildPatientWhere('p', 1, filters);
   const allParams = [user.clinicId, ...extraParams];
 
-  // ── 1. Summary ───────────────────────────────────────────────────────────────
+  // -- 1. Summary ---------------------------------------------------------------
   const summaryRow = await queryOne<SummaryRow>(
     `SELECT
        COUNT(*)::text                                                    AS total,
@@ -468,7 +468,7 @@ export default async function ReportsPage({
   // Derived outcome metrics
   const retentionRate = total > 0 ? Math.round(((active + flagged) / total) * 100) : 0;
 
-  // ── 1b. Recovered patients ────────────────────────────────────────────────────
+  // -- 1b. Recovered patients ----------------------------------------------------
   const recoveredRow = await queryOne<{ recovered: string }>(
     `SELECT COUNT(DISTINCT p.id)::text AS recovered
      FROM patients p
@@ -485,7 +485,7 @@ export default async function ReportsPage({
   );
   const recovered = parseInt(recoveredRow?.recovered ?? '0');
 
-  // ── 1c. Risk distribution ─────────────────────────────────────────────────────
+  // -- 1c. Risk distribution -----------------------------------------------------
   const riskRow = await queryOne<{ high: string; medium: string; low_ok: string }>(
     `SELECT
        COUNT(*) FILTER (WHERE p.status != 'churned' AND (
@@ -508,7 +508,7 @@ export default async function ReportsPage({
   const riskMedium = parseInt(riskRow?.medium ?? '0');
   const riskLowOk = parseInt(riskRow?.low_ok ?? '0');
 
-  // ── 2. Phase distribution ────────────────────────────────────────────────────
+  // -- 2. Phase distribution ----------------------------------------------------
   const phaseRows = await query<PhaseRow>(
     `SELECT
        p.current_phase,
@@ -533,7 +533,7 @@ export default async function ReportsPage({
 
   const maxPhasePatients = Math.max(...phaseRows.map((r) => parseInt(r.patients)), 1);
 
-  // ── 3. Weekly enrollments (clinic-wide) ──────────────────────────────────────
+  // -- 3. Weekly enrollments (clinic-wide) --------------------------------------
   const enrollRows = await query<WeeklyEnrollRow>(
     `SELECT
        TO_CHAR(DATE_TRUNC('week', enrolled_at), 'MM/DD') AS week,
@@ -545,7 +545,7 @@ export default async function ReportsPage({
     [user.clinicId]
   );
 
-  // ── 4. Weekly message volume (clinic-wide) ───────────────────────────────────
+  // -- 4. Weekly message volume (clinic-wide) -----------------------------------
   const msgRows = await query<WeeklyMsgRow>(
     `SELECT
        TO_CHAR(DATE_TRUNC('week', m.created_at), 'MM/DD') AS week,
@@ -559,7 +559,7 @@ export default async function ReportsPage({
     [user.clinicId]
   );
 
-  // ── 5. Template performance (clinic-wide) ────────────────────────────────────
+  // -- 5. Template performance (clinic-wide) ------------------------------------
   const templateRows = await query<TemplateRow>(
     `SELECT
        m_out.template_key,
@@ -588,7 +588,7 @@ export default async function ReportsPage({
     [user.clinicId]
   );
 
-  // ── 5b. Churn risk by phase ──────────────────────────────────────────────────
+  // -- 5b. Churn risk by phase --------------------------------------------------
   const churnByPhase = await query<{ current_phase: number; at_risk: string; total: string }>(
     `select
        p.current_phase,
@@ -604,7 +604,7 @@ export default async function ReportsPage({
     [user.clinicId]
   );
 
-  // ── 5c. Retention trend (last 12 weeks) ──────────────────────────────────────
+  // -- 5c. Retention trend (last 12 weeks) --------------------------------------
   const retentionTrend = await query<{ week: string; enrolled: string; retained: string }>(
     `with weeks as (
        select generate_series(
@@ -627,7 +627,7 @@ export default async function ReportsPage({
     [user.clinicId]
   );
 
-  // ── 5d. Recovery success rate over time ──────────────────────────────────────
+  // -- 5d. Recovery success rate over time --------------------------------------
   const recoverySuccess = await query<{ week: string; fired: string; recovered: string }>(
     `with weeks as (
        select generate_series(
@@ -659,7 +659,7 @@ export default async function ReportsPage({
     [user.clinicId]
   );
 
-  // ── 6. Filtered patient list ─────────────────────────────────────────────────
+  // -- 6. Filtered patient list -------------------------------------------------
   const patients = await query<PatientRow>(
     `SELECT
        p.id, p.first_name, p.phone, p.current_phase, p.status,
@@ -681,7 +681,7 @@ export default async function ReportsPage({
     allParams
   );
 
-  // ── Chart data ───────────────────────────────────────────────────────────────
+  // -- Chart data ---------------------------------------------------------------
   const enrollLabels = enrollRows.map((r) => r.week);
   const enrollValues = enrollRows.map((r) => parseInt(r.count));
 
@@ -744,7 +744,7 @@ export default async function ReportsPage({
               rel="noopener"
               className="btn ghost"
               style={{ fontSize: 13, padding: '6px 12px' }}
-              title="Print-ready board deck PDF — opens in a new tab, auto-triggers print dialog"
+              title="Print-ready board deck PDF  -  opens in a new tab, auto-triggers print dialog"
             >
               PDF
             </a>
@@ -764,7 +764,7 @@ export default async function ReportsPage({
               rel="noopener"
               className="btn ghost"
               style={{ fontSize: 13, padding: '6px 12px' }}
-              title="Print-ready recovery ledger PDF — the renewal-justification artifact"
+              title="Print-ready recovery ledger PDF  -  the renewal-justification artifact"
             >
               PDF
             </a>
@@ -776,10 +776,10 @@ export default async function ReportsPage({
       {/* Filter bar */}
       <FilterBar current={filters} />
 
-      {/* ── Executive strip (4 primary boardroom metrics) ── */}
+      {/* -- Executive strip (4 primary boardroom metrics) -- */}
       <div className="label" style={{ marginBottom: 12 }}>Executive summary · last 30 days</div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 16 }}>
-        {/* Revenue Protected — primary/navy emphasis */}
+        {/* Revenue Protected  -  primary/navy emphasis */}
         <div className="exec-metric exec-metric--primary">
           <div className="exec-metric__label">Revenue protected</div>
           <div className="exec-metric__num exec-metric__num--navy">
@@ -847,7 +847,7 @@ export default async function ReportsPage({
         </div>
       </div>
 
-      {/* Secondary strip — engagement & staff efficiency */}
+      {/* Secondary strip  -  engagement & staff efficiency */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 32 }}>
         <div className="exec-metric">
           <div className="exec-metric__label">Response rate</div>
@@ -896,13 +896,13 @@ export default async function ReportsPage({
         </div>
       </div>
 
-      {/* ── Layered analytics section ── */}
+      {/* -- Layered analytics section -- */}
       <div style={{ marginTop: 24 }}>
         <div className="analytics-section__title">Analytics</div>
         <div className="analytics-section__sub">Deeper engagement, recovery and program detail</div>
       </div>
 
-      {/* ── Retention Trend ── */}
+      {/* -- Retention Trend -- */}
       <SectionBox title="Retention trend" sub="last 12 weeks · % of enrolled still active">
         <LineChart
           series={[{ label: 'Retention %', values: retentionPctValues, color: '#14532d' }]}
@@ -912,7 +912,7 @@ export default async function ReportsPage({
       </SectionBox>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 24 }}>
-        {/* ── Recovery success ── */}
+        {/* -- Recovery success -- */}
         <SectionBox title="Recovery success rate" sub="% drifting patients re-engaged within 7d">
           <LineChart
             series={[{ label: 'Recovery %', values: recoveryRateValues, color: 'var(--fg)' }]}
@@ -921,7 +921,7 @@ export default async function ReportsPage({
           />
         </SectionBox>
 
-        {/* ── Churn risk by phase ── */}
+        {/* -- Churn risk by phase -- */}
         <SectionBox title="Churn risk by program phase" sub="at-risk ÷ total, by phase">
           {churnByPhase.length === 0 ? (
             <p className="small muted">No patients yet.</p>
@@ -932,7 +932,7 @@ export default async function ReportsPage({
               return (
                 <HBar
                   key={r.current_phase}
-                  label={`${r.current_phase}. ${PHASE_NAMES[r.current_phase] ?? '—'}`}
+                  label={`${r.current_phase}. ${PHASE_NAMES[r.current_phase] ?? ' - '}`}
                   value={atRisk}
                   max={maxChurn}
                   subLabel={total > 0 ? `/ ${total}` : ''}
@@ -944,7 +944,7 @@ export default async function ReportsPage({
         </SectionBox>
       </div>
 
-      {/* ── Summary cards ── */}
+      {/* -- Summary cards -- */}
       <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 24 }}>
         <StatCard label="Total Enrolled" value={total} />
         <StatCard
@@ -980,7 +980,7 @@ export default async function ReportsPage({
         />
       </div>
 
-      {/* ── Phase distribution + Reply rate by phase ── */}
+      {/* -- Phase distribution + Reply rate by phase -- */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 24 }}>
         <SectionBox title="Phase Distribution" sub={activeFilters ? 'filtered' : 'all patients'}>
           {phaseRows.length === 0 ? (
@@ -989,7 +989,7 @@ export default async function ReportsPage({
             phaseRows.map((r) => (
               <HBar
                 key={r.current_phase}
-                label={`${r.current_phase}. ${PHASE_NAMES[r.current_phase] ?? '—'}`}
+                label={`${r.current_phase}. ${PHASE_NAMES[r.current_phase] ?? ' - '}`}
                 value={parseInt(r.patients)}
                 max={maxPhasePatients}
               />
@@ -1004,7 +1004,7 @@ export default async function ReportsPage({
             phaseRows.map((r) => (
               <HBar
                 key={r.current_phase}
-                label={`${r.current_phase}. ${PHASE_NAMES[r.current_phase] ?? '—'}`}
+                label={`${r.current_phase}. ${PHASE_NAMES[r.current_phase] ?? ' - '}`}
                 value={parseInt(r.reply_rate_pct)}
                 max={100}
                 subLabel="%"
@@ -1021,7 +1021,7 @@ export default async function ReportsPage({
         </SectionBox>
       </div>
 
-      {/* ── Enrollments over time ── */}
+      {/* -- Enrollments over time -- */}
       <SectionBox title="Enrollments Over Time" sub="last 16 weeks · clinic-wide">
         <LineChart
           series={[{ label: 'Enrollments', values: enrollValues, color: 'var(--fg)' }]}
@@ -1030,7 +1030,7 @@ export default async function ReportsPage({
         <ChartLegend items={[{ label: 'New enrollments', color: 'var(--fg)' }]} />
       </SectionBox>
 
-      {/* ── Message volume ── */}
+      {/* -- Message volume -- */}
       <SectionBox title="Message Volume" sub="last 16 weeks · clinic-wide">
         <LineChart
           series={[
@@ -1047,7 +1047,7 @@ export default async function ReportsPage({
         />
       </SectionBox>
 
-      {/* ── Template performance ── */}
+      {/* -- Template performance -- */}
       <SectionBox title="Template Performance" sub="clinic-wide · excludes trigger messages">
         {templateRows.length === 0 ? (
           <p className="small muted">No messages sent yet.</p>
@@ -1093,7 +1093,7 @@ export default async function ReportsPage({
         )}
       </SectionBox>
 
-      {/* ── Patient table ── */}
+      {/* -- Patient table -- */}
       <SectionBox
         title="Patients"
         sub={`${patients.length}${patients.length === 500 ? '+' : ''} shown`}
@@ -1125,12 +1125,12 @@ export default async function ReportsPage({
                 return (
                   <tr key={p.id}>
                     <td className="name">
-                      <a href={`/patients/${p.id}`}>{p.first_name || '—'}</a>
+                      <a href={`/patients/${p.id}`}>{p.first_name || ' - '}</a>
                     </td>
                     <td className="mono">{maskPhone(p.phone)}</td>
                     <td>
                       <span className="muted">{p.current_phase}.</span>{' '}
-                      {PHASE_NAMES[p.current_phase] ?? '—'}
+                      {PHASE_NAMES[p.current_phase] ?? ' - '}
                     </td>
                     <td>
                       <span className={`pill ${p.status === 'flagged' ? 'flagged' : 'active'}`}>

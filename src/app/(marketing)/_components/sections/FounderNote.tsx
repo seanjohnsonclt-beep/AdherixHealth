@@ -3,7 +3,7 @@
 import { FadeRise } from '../animation/MotionPrimitives';
 
 /**
- * Section 8 — Founder credibility note.
+ * Section 8  -  Founder credibility note.
  *
  * Soft Paper section. Single column, generous whitespace. Avatar is a
  * neutral SVG silhouette placeholder until a real photo is added.
@@ -30,11 +30,11 @@ export function FounderNote() {
               Adherence is a behavior problem, not a content problem. Most
               metabolic programs lose patients between months two and four
               because no one is paying attention to the signals that matter
-              — and the signals that matter aren&rsquo;t in a chart.
+               -  and the signals that matter aren&rsquo;t in a chart.
             </p>
             <p>
               Adherix is the smallest possible intervention layer that uses
-              what patients already do — replies, silences, dose timing — to
+              what patients already do  -  replies, silences, dose timing  -  to
               keep them on treatment longer. Built deliberately small, so
               clinics can run it without adding a single workflow.
             </p>

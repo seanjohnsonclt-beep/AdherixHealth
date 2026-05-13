@@ -31,7 +31,7 @@ const CLINICAL_STAGES: Record<number, string> = {
 };
 
 // Risk tier from engagement score + status.
-// Green (healthy) should dominate — red is reserved for truly urgent.
+// Green (healthy) should dominate  -  red is reserved for truly urgent.
 function riskTier(score: number, status: string): 'healthy' | 'monitor' | 'urgent' {
   if (status === 'churned') return 'urgent';
   if (status === 'paused') return 'monitor';
@@ -58,7 +58,7 @@ function recommendedAction(p: PatientRow): { label: string; tone: 'none' | 'soft
   if (p.engagement_score < 40) return { label: 'Recover now', tone: 'strong' };
   if (p.current_phase === 3 && p.engagement_score < 70)
     return { label: 'Plateau intervention suggested', tone: 'soft' };
-  if (p.engagement_trend < -15) return { label: 'Monitor — trending down', tone: 'soft' };
+  if (p.engagement_trend < -15) return { label: 'Monitor  -  trending down', tone: 'soft' };
   return { label: 'No action needed', tone: 'none' };
 }
 
@@ -144,7 +144,7 @@ export default async function HomePage() {
     <div className="shell">
       <Topbar clinicName={user.clinicName} email={user.email} />
 
-      {/* ─── Hero: today at {Clinic} ─── */}
+      {/* --- Hero: today at {Clinic} --- */}
       <div className="hero-card">
         <div className="hero-card__head">
           <div>
@@ -192,12 +192,12 @@ export default async function HomePage() {
             <div className="hero-stat__num" style={{ color: metrics.needStaffOutreach > 0 ? '#b45309' : 'var(--fg)' }}>
               {metrics.needStaffOutreach}
             </div>
-            <div className="hero-stat__lbl">Flagged — call today</div>
+            <div className="hero-stat__lbl">Flagged  -  call today</div>
           </div>
         </div>
       </div>
 
-      {/* ─── Executive KPI row ─── */}
+      {/* --- Executive KPI row --- */}
       <div className="kpi-row">
         <KpiCard
           label="Active patients"
@@ -237,7 +237,7 @@ export default async function HomePage() {
         />
       </div>
 
-      {/* ─── Patient table ─── */}
+      {/* --- Patient table --- */}
       <div className="section">
         <div className="section-head">
           <h2>Patients</h2>
@@ -293,13 +293,13 @@ export default async function HomePage() {
                 const stageName =
                   CLINICAL_STAGES[p.current_phase] ??
                   findPhase(p.current_phase)?.name ??
-                  '—';
+                  ' - ';
                 const action = recommendedAction(p);
 
                 return (
                   <tr key={p.id}>
                     <td className="name">
-                      <Link href={`/patients/${p.id}`}>{p.first_name || '—'}</Link>
+                      <Link href={`/patients/${p.id}`}>{p.first_name || ' - '}</Link>
                       <div className="small faint mono" style={{ marginTop: 2 }}>
                         {maskPhone(p.phone)}
                       </div>
@@ -366,7 +366,7 @@ export default async function HomePage() {
   );
 }
 
-// ─── KPI card ────────────────────────────────────────────────────────────────
+// --- KPI card ----------------------------------------------------------------
 
 type KpiTone = 'neutral' | 'good' | 'warn' | 'accent';
 

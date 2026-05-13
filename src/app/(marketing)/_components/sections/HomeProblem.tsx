@@ -3,10 +3,10 @@
 import { FadeRise, ScrollDraw } from '../animation/MotionPrimitives';
 
 /**
- * Homepage Problem — v2
+ * Homepage Problem  -  v2
  *
  * Two-column layout on desktop: copy + pull stat left, drift chart right.
- * The chart is illustrative — no fake clinic data, just the pattern.
+ * The chart is illustrative  -  no fake clinic data, just the pattern.
  */
 export function HomeProblem() {
   return (
@@ -74,7 +74,7 @@ function DriftChart() {
         <text x="0" y="224">Low</text>
       </g>
 
-      {/* Engaged line — Sage deep, draws on scroll */}
+      {/* Engaged line  -  Sage deep, draws on scroll */}
       <ScrollDraw
         d="M 40 72 C 150 82, 250 102, 350 128 S 445 162, 470 175"
         stroke="var(--mkt-sage-deep)"
@@ -82,7 +82,7 @@ function DriftChart() {
         duration={1.1}
       />
 
-      {/* Drift branch — Graphite, delayed */}
+      {/* Drift branch  -  Graphite, delayed */}
       <ScrollDraw
         d="M 290 118 C 350 140, 405 178, 455 218"
         stroke="var(--mkt-graphite)"
@@ -103,7 +103,7 @@ function DriftChart() {
         />
       </circle>
 
-      {/* Labels — appear after their lines */}
+      {/* Labels  -  appear after their lines */}
       <text
         x="44"
         y="65"

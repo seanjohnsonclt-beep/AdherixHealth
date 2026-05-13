@@ -1,5 +1,5 @@
 // Medication protocol definitions for GLP-1 titration tracking.
-// Same pattern as phases.ts / templates.ts — TypeScript config, type-checked, no drift.
+// Same pattern as phases.ts / templates.ts  -  TypeScript config, type-checked, no drift.
 //
 // Clinic selects medication + starting dose at enrollment; the full titration
 // schedule is auto-calculated and stored in patients.titration_schedule (JSONB).

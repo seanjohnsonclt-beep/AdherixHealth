@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { FadeRise } from '../animation/MotionPrimitives';
 
 /**
- * Founder credibility section — homepage.
+ * Founder credibility section  -  homepage.
  *
  * Human signal before the conversion CTA. One voice, one story.
  */
@@ -34,7 +34,7 @@ export function HomeFounder() {
               repeat across program after program.
             </p>
             <p>
-              Organizations spent aggressively to acquire patients — intake
+              Organizations spent aggressively to acquire patients  -  intake
               workflows, coordinators, sign-up tracking. Then treatment began,
               and the visibility disappeared. Nobody was watching the signals
               that predict churn: replies slowing, doses spacing out, engagement

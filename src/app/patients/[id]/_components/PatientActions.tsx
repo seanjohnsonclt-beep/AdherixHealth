@@ -56,7 +56,7 @@ export function PatientActions({ patientId, firstName, phone, status, currentPha
             <button type="submit" className={`btn ${isFlagged ? '' : 'danger'}`}
               title={isFlagged
                 ? 'Remove the flag and return this patient to active status'
-                : 'Flag for manual clinic follow-up — pauses automated messages'}>
+                : 'Flag for manual clinic follow-up  -  pauses automated messages'}>
               {isFlagged ? 'Un-flag' : 'Flag'}
             </button>
           </form>
@@ -66,7 +66,7 @@ export function PatientActions({ patientId, firstName, phone, status, currentPha
           <form action={pausePatientAction}>
             <input type="hidden" name="patient_id" value={patientId} />
             <button type="submit" className="btn ghost"
-              title="Temporarily stop outbound messages — scheduled messages wait until you resume. Use for vacation or mid-care gaps.">
+              title="Temporarily stop outbound messages  -  scheduled messages wait until you resume. Use for vacation or mid-care gaps.">
               Pause
             </button>
           </form>
@@ -76,7 +76,7 @@ export function PatientActions({ patientId, firstName, phone, status, currentPha
           <form action={resumePatientAction}>
             <input type="hidden" name="patient_id" value={patientId} />
             <button type="submit" className="btn"
-              title="Resume sending — scheduled messages will begin firing again on the next engine tick.">
+              title="Resume sending  -  scheduled messages will begin firing again on the next engine tick.">
               Resume
             </button>
           </form>
@@ -96,7 +96,7 @@ export function PatientActions({ patientId, firstName, phone, status, currentPha
           <form action={dischargePatientAction}>
             <input type="hidden" name="patient_id" value={patientId} />
             <button type="submit" className="btn ghost"
-              title="Mark as discharged — stops all future messages but keeps their history in Reports for retention analytics">
+              title="Mark as discharged  -  stops all future messages but keeps their history in Reports for retention analytics">
               Discharge
             </button>
           </form>

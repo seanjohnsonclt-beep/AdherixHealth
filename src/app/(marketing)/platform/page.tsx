@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import { PlatformHero } from '../_components/sections/PlatformHero';
 import { Engine } from '../_components/sections/Engine';
 import { PatientSmsView } from '../_components/sections/PatientSmsView';
 import { TriggerLogic } from '../_components/sections/TriggerLogic';
@@ -33,7 +32,6 @@ export const metadata: Metadata = {
 export default function PlatformPage() {
   return (
     <>
-      <PlatformHero />
       <Engine />
       <PatientSmsView />
       <TriggerLogic />

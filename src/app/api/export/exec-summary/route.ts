@@ -1,4 +1,4 @@
-// Executive summary — one CSV with the top-line metrics followed by
+// Executive summary  -  one CSV with the top-line metrics followed by
 // 12 weeks of retention + recovery trend rows.
 //
 // Layout:
@@ -79,7 +79,7 @@ export async function GET() {
 
   // Build the CSV manually so we can have two sub-tables in one file
   const lines: string[] = [];
-  lines.push('Clinic summary — generated ' + new Date().toISOString());
+  lines.push('Clinic summary  -  generated ' + new Date().toISOString());
   lines.push('Clinic,' + JSON.stringify(user.clinicName));
   lines.push('');
   lines.push('section,metric,value');

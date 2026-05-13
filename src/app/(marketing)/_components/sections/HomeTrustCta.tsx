@@ -5,7 +5,7 @@ import { FadeRise, TapButton } from '../animation/MotionPrimitives';
 import { HomeInlineCapture } from '../HomeInlineCapture';
 
 /**
- * Homepage Trust + CTA band — v2
+ * Homepage Trust + CTA band  -  v2
  *
  * Dark Ink band. Headline → subhead → inline capture form (Formspree) → stats → trust strip.
  * When NEXT_PUBLIC_FORMSPREE_CAPTURE_ID is not set, HomeInlineCapture renders null
@@ -15,7 +15,7 @@ import { HomeInlineCapture } from '../HomeInlineCapture';
 const stats = [
   { n: '60 sec', label: 'Engine checks every patient, every minute' },
   { n: '5 phases', label: 'Structured from first dose through maintenance' },
-  { n: 'SMS-first', label: 'Patients respond to texts — not apps' },
+  { n: 'SMS-first', label: 'Patients respond to texts  -  not apps' },
 ];
 
 export function HomeTrustCta() {
@@ -30,16 +30,16 @@ export function HomeTrustCta() {
 
         <FadeRise as="p" className="mkt-subhead mkt-v2-trust__sub" delay={0.08}>
           Run a three-month behavioral pilot in your clinic. Bring your existing
-          patient panel — we instrument retention, surface drift, and report on
+          patient panel  -  we instrument retention, surface drift, and report on
           what changed. No commitment beyond the pilot window.
         </FadeRise>
 
-        {/* Inline capture form — renders when FORMSPREE_CAPTURE_ID is set */}
+        {/* Inline capture form  -  renders when FORMSPREE_CAPTURE_ID is set */}
         <FadeRise delay={0.13}>
           <HomeInlineCapture />
         </FadeRise>
 
-        {/* Secondary nav link — visible below the form */}
+        {/* Secondary nav link  -  visible below the form */}
         <FadeRise className="mkt-v2-trust__secondary-cta" delay={0.15}>
           <TapButton>
             <Link

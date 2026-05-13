@@ -1,5 +1,5 @@
 /**
- * Adherix dry-run demo — fully self-contained.
+ * Adherix dry-run demo  -  fully self-contained.
  *
  * Uses pg-mem (in-process Postgres) so no external DB or internet is needed.
  * Runs migrate → seed (Alex, phase 0) → tick (dry-run sender) → state dump.
@@ -15,7 +15,7 @@ import { addMinutes, addHours, addDays, set } from 'date-fns';
 import { fromZonedTime, toZonedTime } from 'date-fns-tz';
 import { randomUUID } from 'crypto';
 
-// ─── pg-mem setup ─────────────────────────────────────────────────────────────
+// --- pg-mem setup -------------------------------------------------------------
 
 const mem = newDb();
 
@@ -23,7 +23,7 @@ const mem = newDb();
 mem.public.registerFunction({
   name: 'gen_random_uuid',
   returns: DataType.uuid,
-  impure: true,           // must not cache — each call returns a new UUID
+  impure: true,           // must not cache  -  each call returns a new UUID
   implementation: () => randomUUID(),
 });
 
@@ -46,10 +46,10 @@ async function q1<T = any>(sql: string, params: any[] = []): Promise<T | null> {
   return (await q<T>(sql, params))[0] ?? null;
 }
 
-// ─── 1. Migrate ───────────────────────────────────────────────────────────────
+// --- 1. Migrate ---------------------------------------------------------------
 
 async function migrate() {
-  console.log('\n━━━ MIGRATE ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+  console.log('\n--- MIGRATE ----------------------------------');
   const dir = join(process.cwd(), 'db');
   const files = readdirSync(dir).filter((f) => f.endsWith('.sql')).sort();
   for (const file of files) {
@@ -63,7 +63,7 @@ async function migrate() {
   console.log('[migrate] done');
 }
 
-// ─── Config helpers (inline, no module import) ────────────────────────────────
+// --- Config helpers (inline, no module import) --------------------------------
 
 type Template = {
   key: string;
@@ -112,10 +112,10 @@ function renderBody(body: string, firstName: string): string {
   return body.trim().replace(/\{first_name\}/g, firstName || 'there');
 }
 
-// ─── 2. Seed ──────────────────────────────────────────────────────────────────
+// --- 2. Seed ------------------------------------------------------------------
 
 async function seed() {
-  console.log('\n━━━ SEED ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+  console.log('\n--- SEED -------------------------------------');
 
   // Clinic
   let clinic = await q1<{ id: string }>(`select id from clinics where name = 'Demo Clinic'`);
@@ -179,17 +179,17 @@ async function seed() {
   console.log(`[seed] ✓ ${scheduled} message(s) fast-forwarded to due`);
 }
 
-// ─── 3. Tick (dry-run) ────────────────────────────────────────────────────────
+// --- 3. Tick (dry-run) --------------------------------------------------------
 
 async function tick() {
-  console.log('\n━━━ TICK ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+  console.log('\n--- TICK -------------------------------------');
 
-  // Trigger evaluation (simplified — just log that we checked, no triggers fire
+  // Trigger evaluation (simplified  -  just log that we checked, no triggers fire
   // on a brand-new patient with no inbound messages)
   const patients = await q<{ id: string; current_phase: number; last_inbound_at: Date | null }>(
     `select id, current_phase, last_inbound_at from patients where status in ('active', 'flagged')`
   );
-  console.log(`[tick] evaluating triggers for ${patients.length} patient(s) — none due on day 0`);
+  console.log(`[tick] evaluating triggers for ${patients.length} patient(s)  -  none due on day 0`);
 
   // Dry-run sender
   const due = await q<{ id: string; patient_id: string; body: string; phone: string }>(
@@ -221,10 +221,10 @@ async function tick() {
   }
 }
 
-// ─── 4. State dump ────────────────────────────────────────────────────────────
+// --- 4. State dump ------------------------------------------------------------
 
 async function dump() {
-  console.log('\n━━━ FINAL STATE ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+  console.log('\n--- FINAL STATE ------------------------------');
 
   const patients = await q(`select first_name, phone, status, current_phase from patients`);
   const messages = await q(
@@ -246,7 +246,7 @@ async function dump() {
   events.forEach((e) => console.log(`  ${e.kind}  ${JSON.stringify(e.payload)}`));
 }
 
-// ─── Main ─────────────────────────────────────────────────────────────────────
+// --- Main ---------------------------------------------------------------------
 
 (async () => {
   try {

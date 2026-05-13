@@ -6,7 +6,7 @@ import { DemoInteractive } from './DemoInteractive';
 export const metadata: Metadata = {
   title: 'Demo | Adherix Health',
   description:
-    'See the Adherix retention engine in action. Walk through every phase, trigger, and patient interaction — then try it on your own phone.',
+    'See the Adherix retention engine in action. Walk through every phase, trigger, and patient interaction  -  then try it on your own phone.',
 };
 
 export default function DemoPage() {
@@ -22,7 +22,7 @@ export default function DemoPage() {
             See exactly what your patients experience.
           </FadeRise>
           <FadeRise as="p" className="mkt-subhead" delay={0.12}>
-            Walk through every phase and trigger the engine handles automatically —
+            Walk through every phase and trigger the engine handles automatically  - 
             then enroll your own number and feel it firsthand.
           </FadeRise>
           <FadeRise

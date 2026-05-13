@@ -19,7 +19,7 @@ type DueMessage = {
 
 export async function sendDueMessages() {
   if (DRY_RUN) {
-    console.log('[sender] DRY_RUN mode — no Twilio credentials, marking due messages as sent');
+    console.log('[sender] DRY_RUN mode  -  no Twilio credentials, marking due messages as sent');
   }
 
   const due = await query<DueMessage>(

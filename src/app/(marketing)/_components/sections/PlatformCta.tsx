@@ -5,7 +5,7 @@ import { FadeRise, TapButton } from '../animation/MotionPrimitives';
 
 /**
  * Platform page closing CTA.
- * Brief — the user has already read the depth. Now give them the next step.
+ * Brief  -  the user has already read the depth. Now give them the next step.
  */
 export function PlatformCta() {
   return (

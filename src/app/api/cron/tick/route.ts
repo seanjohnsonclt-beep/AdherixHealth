@@ -20,7 +20,7 @@ export async function GET(req: NextRequest) {
   if (secret) {
     const auth = req.headers.get('authorization') ?? '';
     if (auth !== `Bearer ${secret}`) {
-      console.warn('[cron/tick] unauthorized request — wrong or missing CRON_SECRET');
+      console.warn('[cron/tick] unauthorized request  -  wrong or missing CRON_SECRET');
       return NextResponse.json({ ok: false, error: 'unauthorized' }, { status: 401 });
     }
   }

@@ -2,15 +2,15 @@
 //
 // Called from every tick(). Checks "is it roughly 8am on Monday in the
 // digest timezone, and have we NOT already sent this week's digest to this
-// clinic?" — if both true, builds the digest and sends it to every admin
+// clinic?"  -  if both true, builds the digest and sends it to every admin
 // for that clinic.
 //
 // Dedupe: the clinic_digests table has a unique index on
-// (clinic_id, week_start, kind). We insert optimistically — if the insert
+// (clinic_id, week_start, kind). We insert optimistically  -  if the insert
 // succeeds the clinic is ours to send; if it fails on unique-violation the
 // digest already went out this week and we move on.
 //
-// Safe to call on every 60s cron tick — it does ~1 query to find eligible
+// Safe to call on every 60s cron tick  -  it does ~1 query to find eligible
 // clinics, and most ticks will find zero.
 
 import { query, queryOne } from '@/lib/db';
@@ -20,7 +20,7 @@ import { getClinicMetrics } from '@/lib/metrics';
 const DIGEST_TIMEZONE = process.env.DEFAULT_TIMEZONE || 'America/New_York';
 const DIGEST_DOW = 1;      // Monday (0 = Sunday)
 const DIGEST_HOUR = 8;     // 8am local
-const DIGEST_WINDOW_HRS = 2; // 8am–10am window so we don't miss it if cron hiccups
+const DIGEST_WINDOW_HRS = 2; // 8am-10am window so we don't miss it if cron hiccups
 
 type ClinicRow = { id: string; name: string };
 type AdminRow = { email: string };
@@ -55,7 +55,7 @@ function digestTimingForTz(tz: string): { weekStart: string; shouldSendNow: bool
     hour >= DIGEST_HOUR &&
     hour < DIGEST_HOUR + DIGEST_WINDOW_HRS;
 
-  // Compute the Monday date we're covering — always today if dow=1,
+  // Compute the Monday date we're covering  -  always today if dow=1,
   // otherwise the Monday immediately before now.
   const todayISO = `${parts.year}-${parts.month}-${parts.day}`;
   const todayDate = new Date(`${todayISO}T00:00:00Z`);
@@ -102,13 +102,13 @@ export async function runWeeklyDigestIfDue() {
         [clinic.id]
       );
       if (admins.length === 0) {
-        console.log(`[digest] no admins for ${clinic.name} (${clinic.id}) — skipping`);
+        console.log(`[digest] no admins for ${clinic.name} (${clinic.id})  -  skipping`);
         continue;
       }
 
       const metrics = await getClinicMetrics(clinic.id);
 
-      // Per-week message counts — just from the covered Monday → now
+      // Per-week message counts  -  just from the covered Monday → now
       const msgCounts = await queryOne<{ out: string; inb: string }>(
         `select
            count(*) filter (where m.direction = 'outbound' and m.status = 'sent')::text as out,
@@ -147,7 +147,7 @@ export async function runWeeklyDigestIfDue() {
       console.log(`[digest] sent weekly to ${clinic.name}: ${recipients.length} recipient(s)`);
     } catch (err) {
       console.error(`[digest] failed for clinic ${clinic.id}:`, err);
-      // Continue with the next clinic — one failure doesn't cancel the batch.
+      // Continue with the next clinic  -  one failure doesn't cancel the batch.
     }
   }
 }

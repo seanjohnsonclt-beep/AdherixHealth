@@ -23,7 +23,7 @@ export async function enrollPatientAction(formData: FormData) {
     redirect('/patients/new?error=invalid_phone');
   }
 
-  // Adherence fields — optional
+  // Adherence fields  -  optional
   const medication     = String(formData.get('medication') || '').trim() || undefined;
   const startingDose   = String(formData.get('starting_dose') || '').trim() || undefined;
   const supplyRaw      = String(formData.get('supply_quantity') || '').trim();
@@ -117,7 +117,7 @@ export async function updatePatientAction(formData: FormData) {
   redirect(`/patients/${id}`);
 }
 
-// Update injection day — used from patient detail page.
+// Update injection day  -  used from patient detail page.
 export async function setNextDoseDayAction(formData: FormData) {
   const user = await requireUser();
   const id          = String(formData.get('patient_id') || '');
@@ -133,7 +133,7 @@ export async function setNextDoseDayAction(formData: FormData) {
   revalidatePath(`/patients/${id}`);
 }
 
-// Pause: temporary stop — scheduled messages wait, triggers don't evaluate,
+// Pause: temporary stop  -  scheduled messages wait, triggers don't evaluate,
 // but nothing is deleted. Use for patients on vacation or mid-gap in care.
 export async function pausePatientAction(formData: FormData) {
   const user = await requireUser();
@@ -151,7 +151,7 @@ export async function pausePatientAction(formData: FormData) {
 }
 
 // Resume: paused → active. Any pending messages whose scheduled_for is in the
-// past will fire on the next tick (intentional — we kept them warm on purpose).
+// past will fire on the next tick (intentional  -  we kept them warm on purpose).
 export async function resumePatientAction(formData: FormData) {
   const user = await requireUser();
   const id = String(formData.get('patient_id') || '');
@@ -184,7 +184,7 @@ export async function reactivatePatientAction(formData: FormData) {
   revalidatePath('/');
 }
 
-// ─── Bulk import ─────────────────────────────────────────────────────────────
+// --- Bulk import -------------------------------------------------------------
 
 export type ImportRow = {
   first_name: string;

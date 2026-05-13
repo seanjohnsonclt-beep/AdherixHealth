@@ -1,4 +1,4 @@
-// Tiny CSV utility — RFC 4180-ish. No external deps.
+// Tiny CSV utility  -  RFC 4180-ish. No external deps.
 //
 // Policy:
 // - Values are coerced to strings; null / undefined → empty.

@@ -4,7 +4,7 @@ import { conditions, type PatientForEval } from './conditions';
 import { advancePhase } from './scheduler';
 import { findProtocol, computeTitrationSchedule, getNextTitrationDate } from './medications';
 
-// ─── Dedup helpers ────────────────────────────────────────────────────────────
+// --- Dedup helpers ------------------------------------------------------------
 
 function dedupeKey(triggerKey: string): string {
   const today = new Date().toISOString().slice(0, 10);
@@ -34,7 +34,7 @@ async function recordFiring(patientId: string, triggerKey: string) {
   );
 }
 
-// ─── Action helpers ───────────────────────────────────────────────────────────
+// --- Action helpers -----------------------------------------------------------
 
 async function queueTemplateNow(patientId: string, templateKey: string) {
   const tpl = findTemplate(templateKey);
@@ -69,7 +69,7 @@ async function flagPatient(patientId: string, reason: string) {
  * Injection confirmation action.
  * Creates an injection_events row (pending = 'no_response') and queues
  * the weekly "did you take your dose?" SMS.
- * HIPAA: template body uses generic language only — no medication/dose names.
+ * HIPAA: template body uses generic language only  -  no medication/dose names.
  */
 async function createInjectionConfirmation(patientId: string) {
   // Create the pending injection event
@@ -185,7 +185,7 @@ async function markOverdueConfirmationsAsMissed(patientId: string) {
   );
 }
 
-// ─── Main evaluation loop ─────────────────────────────────────────────────────
+// --- Main evaluation loop -----------------------------------------------------
 
 export async function evaluateTriggersForAllPatients() {
   let patients: PatientForEval[];
@@ -238,8 +238,8 @@ export async function evaluateTriggersForAllPatients() {
        where p.status in ('active', 'flagged')`
     );
   } catch {
-    // 0005 migration not yet applied — fall back to simple query
-    console.warn('[triggers] injection_events table not found — using legacy query');
+    // 0005 migration not yet applied  -  fall back to simple query
+    console.warn('[triggers] injection_events table not found  -  using legacy query');
     const legacy = await query<Omit<PatientForEval,
       'medication' | 'next_titration_date' | 'last_titration_date' | 'supply_quantity' |
       'last_confirmed_injection_at' | 'confirmed_injection_streak' |

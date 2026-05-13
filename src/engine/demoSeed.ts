@@ -3,7 +3,7 @@
 // hit the executive-demo targets the clinic owner sees on the homepage:
 //
 //   - 87 patients total
-//   - 12 drifting (active, last reply 3–5 days ago)
+//   - 12 drifting (active, last reply 3-5 days ago)
 //   - 7 recovered THIS WEEK (trigger fired, then inbound within 7d)
 //   - 20 recovered THIS MONTH (trigger fired, then inbound within 30d)
 //   - ~$14,250 revenue protected (computed downstream from the 20 recoveries)
@@ -14,11 +14,11 @@
 // trigger firings before recovery replies, phase advancement events).
 //
 // All messages are inserted with status='sent' (or 'failed' in ~1.5% of
-// cases) — no Twilio calls are made. scheduled_for is always in the past.
+// cases)  -  no Twilio calls are made. scheduled_for is always in the past.
 
 import { query, queryOne } from '@/lib/db';
 
-// ─── Names (synthetic, diverse) ────────────────────────────────────────────────
+// --- Names (synthetic, diverse) ------------------------------------------------
 const FIRST_NAMES = [
   'Alex','Jordan','Taylor','Morgan','Casey','Riley','Avery','Quinn','Parker','Rowan',
   'Emma','Olivia','Ava','Isabella','Sophia','Mia','Amelia','Harper','Evelyn','Abigail',
@@ -34,7 +34,7 @@ const FIRST_NAMES = [
   'Hana','Minji','Seojun','Jiwon','Doyun','Hyejin','Yuna','Taeyang','Somin','Chanwoo',
 ];
 
-// ─── Bucket plan ───────────────────────────────────────────────────────────────
+// --- Bucket plan ---------------------------------------------------------------
 type Bucket =
   | 'healthy'           // active, replied <2d ago, no trigger history
   | 'light'             // active, replied 2-4d ago, no trigger history
@@ -71,7 +71,7 @@ const PHASE_WEIGHTS_BY_BUCKET: Record<Bucket, Array<[number, number]>> = {
   churned:         [[1,30],[2,34],[3,24],[4,10],[5,2]],
 };
 
-// ─── Helpers ───────────────────────────────────────────────────────────────────
+// --- Helpers -------------------------------------------------------------------
 
 function pickWeighted<T>(weights: Array<[T, number]>): T {
   const total = weights.reduce((s, [, w]) => s + w, 0);
@@ -138,7 +138,7 @@ function buildBucketPlan(target: number): Bucket[] {
   return shuffle(plan);
 }
 
-// ─── Template catalog (phase-keyed, short & directive) ─────────────────────────
+// --- Template catalog (phase-keyed, short & directive) -------------------------
 const OUTBOUND: Record<string, string[]> = {
   'phase0.welcome':       ['Hi {name}, welcome to your program. One short text a day. Reply YES to start.'],
   'phase0.confirmed':     ['Locked in. First goal tomorrow morning: 16oz of water before anything else.'],
@@ -148,7 +148,7 @@ const OUTBOUND: Record<string, string[]> = {
   'phase2.day1.habit':    ['Week 2. Pick one protein-forward meal today. Reply DONE when it\'s in.'],
   'phase2.day4.log':      ['Quick log: what did you eat today that had protein? Reply in 5 words.'],
   'phase2.day7.review':   ['You\'re 2 weeks in. Reply Y if protein is sticking, N if slipping.'],
-  'phase3.day3.mov':      ['Add 10 mins of movement today — walk counts. Reply DONE.'],
+  'phase3.day3.mov':      ['Add 10 mins of movement today  -  walk counts. Reply DONE.'],
   'phase3.day10.streak':  ['Streak check: how many days this week hit your protein goal? Reply 0-7.'],
   'phase3.day20.plateau': ['Scale can stall around now. Normal. Keep protein + water dialed. Reply OK.'],
   'phase4.day5.taper':    ['Moving to steady-state. Same rules, lighter cadence. Reply Y to confirm.'],
@@ -175,7 +175,7 @@ function pickOutboundKey(phase: number): string {
   return keys.length ? pick(keys) : 'phase0.welcome';
 }
 
-// ─── Main reseed ───────────────────────────────────────────────────────────────
+// --- Main reseed ---------------------------------------------------------------
 
 export type ReseedOptions = {
   clinicId: string;
@@ -238,7 +238,7 @@ export async function reseedDemo(opts: ReseedOptions): Promise<ReseedResult> {
     );
     const phaseStartedAt = new Date(now - phaseStartedDaysAgo * 86400 * 1000);
 
-    // Status + last_inbound — tuned per bucket to hit exact metric targets.
+    // Status + last_inbound  -  tuned per bucket to hit exact metric targets.
     let status: 'active' | 'flagged' | 'paused' | 'churned' = 'active';
     let lastInboundDaysAgo: number | null;
 
@@ -262,7 +262,7 @@ export async function reseedDemo(opts: ReseedOptions): Promise<ReseedResult> {
         lastInboundDaysAgo = randInt(8, 28);
         break;
       case 'drifting':
-        // Critical for the "12 drifting" homepage number — keep 3-5d window
+        // Critical for the "12 drifting" homepage number  -  keep 3-5d window
         status = 'active';
         lastInboundDaysAgo = randInt(3, 4);
         break;
@@ -302,7 +302,7 @@ export async function reseedDemo(opts: ReseedOptions): Promise<ReseedResult> {
       [patientId, JSON.stringify({ phone_last4: phone.slice(-4) }), enrolledAt]
     );
 
-    // Outbound message history — roughly one every 2-3 days since enrollment.
+    // Outbound message history  -  roughly one every 2-3 days since enrollment.
     const totalOutbound = Math.max(
       1,
       Math.min(60, Math.floor(enrolledDaysAgo / randInt(2, 3)) + randInt(0, 2))
@@ -366,7 +366,7 @@ export async function reseedDemo(opts: ReseedOptions): Promise<ReseedResult> {
       }
     }
 
-    // ── Trigger firings + events per bucket ──────────────────────────────────
+    // -- Trigger firings + events per bucket ----------------------------------
     if ((bucket === 'recovered_fresh' || bucket === 'recovered_older') && lastInboundAt) {
       // Trigger fired 1-3 days BEFORE the recent reply → counts as a recovery.
       const firedAt = new Date(lastInboundAt.getTime() - randInt(1, 3) * 86400 * 1000);

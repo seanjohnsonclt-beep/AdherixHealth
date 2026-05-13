@@ -4356,7 +4356,7 @@ a.mkt-btn--primary:hover,
 /* ── Hero ───────────────────────────────────────────────────────────────── */
 .roi-hero {
   background: var(--mkt-paper);
-  padding: 112px 0 88px;
+  padding: 112px 0 56px;
   text-align: center;
 }
 .roi-hero__inner {
@@ -4398,7 +4398,7 @@ a.mkt-btn--primary:hover,
 
 /* ── Section scaffold ───────────────────────────────────────────────────── */
 .roi-section {
-  padding: 100px 0;
+  padding: 72px 0;
   background: var(--mkt-paper);
 }
 .roi-section--alt {
@@ -4647,10 +4647,10 @@ a.mkt-btn--primary:hover,
   }
 }
 @media (max-width: 640px) {
-  .roi-hero { padding: 72px 0 56px; }
+  .roi-hero { padding: 64px 0 40px; }
   .roi-hero__title { font-size: 36px; }
   .roi-hero__nav { gap: 8px; }
-  .roi-section { padding: 72px 0; }
+  .roi-section { padding: 56px 0; }
   .roi-calc__outputs { grid-template-columns: 1fr; }
   .roi-calc__outputs--three { grid-template-columns: 1fr; }
   .roi-output__num { font-size: 24px; }
@@ -5345,6 +5345,151 @@ a.mkt-btn--primary:hover,
   .mkt-v2-consequence__facts { grid-template-columns: 1fr; }
   .mkt-v2-consequence__number { font-size: clamp(52px, 14vw, 80px); }
 }
+
+/* ─── Drift Correction — clinical editorial hero ────────────────────── */
+.dc-hero {
+  background: var(--mkt-paper);
+  padding: 100px 0 80px;
+  border-bottom: 1px solid var(--mkt-line);
+}
+.dc-hero__inner {
+  max-width: 800px;
+}
+.dc-hero__eyebrow {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--mkt-sage);
+  margin-bottom: 24px;
+}
+.dc-hero__title {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: clamp(38px, 5.5vw, 62px);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -0.028em;
+  color: var(--mkt-ink);
+  margin: 0 0 28px;
+}
+.dc-hero__sub {
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--mkt-graphite);
+  max-width: 620px;
+  margin: 0 0 48px;
+}
+.dc-hero__stats {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 44px;
+  padding: 28px 32px;
+  background: var(--mkt-paper-soft, #FAF6ED);
+  border: 1px solid var(--mkt-line);
+  border-radius: 12px;
+}
+.dc-hero__stat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.dc-hero__stat-n {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 32px;
+  font-weight: 400;
+  color: var(--mkt-ink);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.dc-hero__stat-l {
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--mkt-graphite);
+  max-width: 160px;
+}
+.dc-hero__stat-div {
+  width: 1px;
+  height: 48px;
+  background: var(--mkt-line);
+  margin: 0 32px;
+  flex-shrink: 0;
+}
+.dc-hero__ctas {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* ─── Engine Tick Widget ────────────────────────────────────────────── */
+.dc-tick-widget {
+  background: var(--mkt-card);
+  border: 1px solid var(--mkt-line);
+  border-radius: 14px;
+  padding: 18px 20px 14px;
+  margin: 24px 0 28px;
+  box-shadow: 0 2px 8px rgba(31,42,42,0.05), 0 6px 24px rgba(31,42,42,0.07);
+}
+.dc-tick-widget__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--mkt-graphite);
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--mkt-line);
+}
+.dc-tick-widget__timer {
+  margin-left: auto;
+  font-weight: 500;
+  font-size: 11px;
+  color: var(--mkt-sage);
+  letter-spacing: 0.02em;
+  text-transform: none;
+  font-family: 'Geist Mono', monospace;
+}
+.dc-tick-widget__rows {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.dc-tick-row {
+  display: grid;
+  grid-template-columns: 10px 1fr 1fr auto;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--mkt-graphite);
+  transition: background 0.3s, color 0.3s;
+}
+.dc-tick-row--active {
+  background: var(--mkt-sage-mist);
+  color: var(--mkt-ink);
+}
+.dc-tick-row__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.dc-tick-row__dot--resolved { background: #4caf6e; }
+.dc-tick-row__dot--sent {
+  background: var(--mkt-sage);
+  animation: hero-live-pulse 2s ease-in-out infinite;
+}
+.dc-tick-row__name   { font-weight: 600; font-size: 13px; }
+.dc-tick-row__pattern { font-size: 12px; opacity: 0.7; }
+.dc-tick-row__status { font-size: 11px; font-weight: 600; white-space: nowrap; }
+.dc-tick-row__status--resolved { color: #4caf6e; }
+.dc-tick-row__status--sent     { color: var(--mkt-sage); }
 
 /* ─── Advisory Board Section ───────────────────────────────────────── */
 .mkt-v2-advisor__grid {

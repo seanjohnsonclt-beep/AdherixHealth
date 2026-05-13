@@ -6,7 +6,7 @@ import { useState } from 'react';
  * One-click demo data refresh. Calls /api/demo/reseed (GET, auth-gated),
  * then reloads the page so the dashboard reflects the new distribution.
  *
- * Only shown in demo mode — hide or remove before real clinic onboarding.
+ * Only shown in demo mode  -  hide or remove before real clinic onboarding.
  */
 export function ReseedButton() {
   const [state, setState] = useState<'idle' | 'loading' | 'done' | 'error'>('idle');
@@ -28,7 +28,7 @@ export function ReseedButton() {
   const label =
     state === 'loading' ? 'Refreshing…' :
     state === 'done'    ? 'Done ✓' :
-    state === 'error'   ? 'Failed — retry' :
+    state === 'error'   ? 'Failed  -  retry' :
     'Refresh demo data';
 
   return (

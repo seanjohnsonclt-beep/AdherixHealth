@@ -10,7 +10,7 @@ export type EnrollArgs = {
   clinicId: string;
   phone: string;          // E.164
   firstName?: string;
-  // Adherence fields (optional — legacy enrollment without medication is still valid)
+  // Adherence fields (optional  -  legacy enrollment without medication is still valid)
   medication?: string;    // MEDICATION_PROTOCOLS key
   startingDose?: string;  // override first titration step dose (rare)
   supplyQuantity?: number; // number of doses in current pen/pack

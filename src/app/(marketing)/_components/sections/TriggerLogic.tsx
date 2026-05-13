@@ -16,7 +16,7 @@ const triggers = [
     label: 'Escalation',
     timing: '5 days without reply',
     action:
-      'Flag the patient and alert the clinic by email. One summary per clinic per tick — not a flood of individual alerts.',
+      'Flag the patient and alert the clinic by email. One summary per clinic per tick  -  not a flood of individual alerts.',
   },
   {
     key: 'phase_auto_advance',
@@ -71,11 +71,11 @@ export function TriggerLogic() {
                 Drift Correction
               </span>
               <h3 className="mkt-h3" style={{ margin: '0 0 10px' }}>
-                Beyond triggers — the loop that closes itself.
+                Beyond triggers  -  the loop that closes itself.
               </h3>
               <p style={{ margin: '0 0 24px', color: 'var(--mkt-ink-2)', fontSize: 15, lineHeight: 1.65 }}>
                 When a patient drifts, the engine identifies the specific behavioral
-                pattern — side effect, missed dose, withdrawal, plateau — sends a
+                pattern  -  side effect, missed dose, withdrawal, plateau  -  sends a
                 targeted correction, and tracks whether they come back. Auto-resolves
                 on reply. Escalates to the clinic if they don&rsquo;t.
               </p>

@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { useReducedMotionSafe } from '../animation/useReducedMotionSafe';
 
 /**
- * Platform page hero — sets up the depth that follows.
+ * Platform page hero  -  sets up the depth that follows.
  * Centered, tight, leads straight into the phase engine.
  */
 export function PlatformHero() {
@@ -34,7 +34,7 @@ export function PlatformHero() {
         <motion.p className="mkt-subhead" {...seq(0.18)}>
           This is what runs. Adherix tracks where every patient is in their
           treatment journey, what they last said, and what should happen next
-          — and executes it automatically, without coordinator involvement.
+           -  and executes it automatically, without coordinator involvement.
         </motion.p>
       </div>
     </section>

@@ -1,5 +1,5 @@
 // Lightweight alert email via Resend REST API.
-// No npm package — just fetch.
+// No npm package  -  just fetch.
 //
 // Setup:
 //   1. Sign up at resend.com (free tier: 100 emails/day)
@@ -22,7 +22,7 @@ type Email = {
 export async function sendEmail({ to, subject, html }: Email): Promise<void> {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
-    console.log(`[email] no RESEND_API_KEY — skipping alert to ${to}: ${subject}`);
+    console.log(`[email] no RESEND_API_KEY  -  skipping alert to ${to}: ${subject}`);
     return;
   }
 
@@ -47,7 +47,7 @@ export async function sendEmail({ to, subject, html }: Email): Promise<void> {
   }
 }
 
-// ─── Alert templates ──────────────────────────────────────────────────────────
+// --- Alert templates ----------------------------------------------------------
 
 export type FailureRecord = {
   messageId: string;
@@ -67,7 +67,7 @@ export async function sendDeliveryFailureAlert({
   failures: FailureRecord[];
 }): Promise<void> {
   const count = failures.length;
-  const subject = `Adherix — ${count} message delivery failure${count > 1 ? 's' : ''} for ${clinicName}`;
+  const subject = `Adherix  -  ${count} message delivery failure${count > 1 ? 's' : ''} for ${clinicName}`;
 
   const rows = failures
     .map(
@@ -77,7 +77,7 @@ export async function sendDeliveryFailureAlert({
           ${f.firstName || 'Unknown'}
         </td>
         <td style="padding:8px 12px;border-bottom:1px solid #e6e5df;font-size:13px;font-family:monospace;color:#6b6b66;">
-          ${f.templateKey || '—'}
+          ${f.templateKey || ' - '}
         </td>
         <td style="padding:8px 12px;border-bottom:1px solid #e6e5df;font-size:13px;color:#c8341c;">
           ${f.error}
@@ -132,7 +132,7 @@ export async function sendDeliveryFailureAlert({
   await sendEmail({ to, subject, html });
 }
 
-// ─── Weekly clinic digest ────────────────────────────────────────────────────
+// --- Weekly clinic digest ----------------------------------------------------
 
 export type WeeklyDigestData = {
   clinicName: string;
@@ -154,7 +154,7 @@ export async function sendWeeklyDigest({
   to: string;
   data: WeeklyDigestData;
 }): Promise<void> {
-  const subject = `${data.clinicName} · Weekly retention summary — ${data.weekStart}–${data.weekEnd}`;
+  const subject = `${data.clinicName} · Weekly retention summary  -  ${data.weekStart}-${data.weekEnd}`;
 
   const revenueSub = data.revenueProtectedIsModeled ? 'projected · last 30 days' : 'modeled · last 30 days';
   const outreachLine =
@@ -168,7 +168,7 @@ export async function sendWeeklyDigest({
         MyAdherix · Weekly summary
       </div>
       <div style="font-size:13px;color:#6B7878;margin-bottom:28px;">
-        ${data.clinicName} · ${data.weekStart}–${data.weekEnd}
+        ${data.clinicName} · ${data.weekStart}-${data.weekEnd}
       </div>
 
       <table style="width:100%;border-collapse:collapse;margin-bottom:24px;">
