@@ -3,17 +3,11 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 
-/**
- * Mobile navigation -- hamburger toggle + full-width slide-down menu.
- * Hidden on desktop (CSS), shown on mobile (< 680px).
- */
 export function MobileNav() {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    function onResize() {
-      if (window.innerWidth >= 680) setOpen(false);
-    }
+    function onResize() { if (window.innerWidth >= 680) setOpen(false); }
     window.addEventListener('resize', onResize);
     return () => window.removeEventListener('resize', onResize);
   }, []);
@@ -36,13 +30,8 @@ export function MobileNav() {
       >
         <span className={`mkt-mobile-toggle__bar ${open ? 'is-open' : ''}`} />
       </button>
-
       {open && (
-        <nav
-          id="mkt-mobile-menu"
-          className="mkt-mobile-menu"
-          aria-label="Mobile navigation"
-        >
+        <nav id="mkt-mobile-menu" className="mkt-mobile-menu" aria-label="Mobile navigation">
           <div className="mkt-mobile-menu__inner">
             <Link href="/"         className="mkt-mobile-menu__link" onClick={close}>Overview</Link>
             <Link href="/platform" className="mkt-mobile-menu__link" onClick={close}>Platform</Link>
@@ -51,4 +40,11 @@ export function MobileNav() {
             <Link href="/about"    className="mkt-mobile-menu__link" onClick={close}>About</Link>
             <Link href="/login"    className="mkt-mobile-menu__link mkt-mobile-menu__link--muted" onClick={close}>Sign in</Link>
             <Link href="/pilot"    className="mkt-btn mkt-btn--primary mkt-mobile-menu__cta" onClick={close}>
-   
+              Book a demo
+            </Link>
+          </div>
+        </nav>
+      )}
+    </>
+  );
+}

@@ -1,9 +1,8 @@
-﻿import Link from 'next/link';
+import Link from 'next/link';
 import { AdherixLogo } from './AdherixLogo';
 
 export function SiteFooter() {
   const year = new Date().getFullYear();
-
   return (
     <footer className="mkt-footer">
       <div className="mkt-container">
