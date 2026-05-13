@@ -27,6 +27,7 @@ export function SiteHeader() {
             <Link href="/platform">Platform</Link>
             <Link href="/drift-correction">Drift Correction</Link>
             <Link href="/roi">ROI calculator</Link>
+            <Link href="/about">About</Link>
             <Link href="/login">Sign in</Link>
             <Link href="/pilot" className="mkt-btn mkt-btn--primary mkt-btn--sm mkt-nav__cta">
               Book a demo
@@ -35,8 +36,4 @@ export function SiteHeader() {
 
           {/* Mobile nav  -  hamburger + slide-down, hidden on desktop via CSS */}
           <MobileNav />
-        </div>
-      </div>
-    </header>
-  );
-}
+    
