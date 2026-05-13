@@ -10,6 +10,16 @@ const nextConfig = {
   outputFileTracingIncludes: {
     '**': ['./config/**'],
   },
+  async redirects() {
+    return [
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'adherix-health.vercel.app' }],
+        destination: 'https://adherixhealth.com/:path*',
+        permanent: true,
+      },
+    ]
+  },
 };
 
 module.exports = nextConfig;
