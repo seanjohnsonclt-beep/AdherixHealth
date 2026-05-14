@@ -89,14 +89,14 @@ export function HomeAdvisors() {
       <div className="mkt-container">
         <div className="mkt-v2-section__head">
           <FadeRise as="span" className="mkt-eyebrow">
-            Clinical Advisory Board
+            Strategic Advisory Board
           </FadeRise>
           <FadeRise as="h2" className="mkt-h2" delay={0.05}>
-            Built with people who live inside clinical operations
+            Guided by people who have done this before
           </FadeRise>
           <FadeRise as="p" className="mkt-subhead" delay={0.1}>
-            Adherix is shaped by advisors who have run service lines, managed
-            patient panels, and felt the cost of disengagement firsthand.
+            Advisors spanning operations, compliance, privacy, and health system
+            leadership — helping Adherix move fast and build right.
           </FadeRise>
         </div>
 
