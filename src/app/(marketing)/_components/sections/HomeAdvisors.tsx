@@ -37,12 +37,12 @@ const advisors: Advisor[] = [
     initials: 'CS',
   },
   {
-    name: 'Coming Soon',
-    title: 'Clinical Advisor',
-    org: '',
-    bio: 'We are actively building our advisory board with operators and clinicians who have lived the retention problem firsthand. Announcement coming soon.',
-    image: '',
-    initials: '?',
+    name: 'Tara Renee Jackson, MBA, CHCO',
+    title: 'HIPAA Compliance & Governance',
+    org: 'Duke University Health System',
+    bio: 'A Certified HIPAA Compliance Officer with over 30 years of healthcare experience, Tara leads privacy compliance, EHR auditing, and incident investigation at DUHS. She brings deep expertise in information governance and regulatory compliance to ensure Adherix meets the highest standards for patient data integrity.',
+    image: '/advisor-tara.jpeg',
+    initials: 'TJ',
   },
 ];
 
