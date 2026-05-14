@@ -96,7 +96,7 @@ export function HomeAdvisors() {
           </FadeRise>
           <FadeRise as="p" className="mkt-subhead" delay={0.1}>
             Advisors spanning operations, compliance, privacy, and health system
-            leadership — so Adherix is built to earn trust from day one.
+            leadership - so Adherix is built to earn trust from day one.
           </FadeRise>
         </div>
 
