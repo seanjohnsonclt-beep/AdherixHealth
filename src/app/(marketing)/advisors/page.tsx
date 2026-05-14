@@ -3,7 +3,7 @@ import { HomeAdvisors } from '@/app/(marketing)/_components/sections/HomeAdvisor
 export const metadata = {
   title: 'Strategic Advisory Board',
   description:
-    'Advisors spanning operations, compliance, privacy, and health system leadership — helping Adherix move fast and build right.',
+    'Advisors spanning operations, compliance, privacy, and health system leadership — so Adherix is built to earn trust from day one.',
 };
 
 export default function AdvisorsPage() {
