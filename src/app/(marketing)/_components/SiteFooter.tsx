@@ -35,6 +35,7 @@ export function SiteFooter() {
             <Link href="/privacy">Privacy policy</Link>
             <Link href="/terms">Terms of service</Link>
             <Link href="/security">Security</Link>
+            <Link href="/press">Press</Link>
           </div>
         </div>
         <div className="mkt-footer__bottom">
