@@ -19,14 +19,9 @@ export function SiteHeader() {
             <Link href="/platform">Platform</Link>
             <Link href="/drift-correction">Drift Correction</Link>
             <Link href="/roi">ROI calculator</Link>
+            <Link href="/audit" className="mkt-nav__audit-link">Free audit</Link>
             <Link href="/login">Sign in</Link>
             <Link href="/pilot" className="mkt-btn mkt-btn--primary mkt-btn--sm mkt-nav__cta">
               Book a demo
             </Link>
-          </nav>
-          <MobileNav />
-        </div>
-      </div>
-    </header>
-  );
-}
+        

@@ -20,6 +20,7 @@ export function SiteFooter() {
             <Link href="/platform">Platform</Link>
             <Link href="/drift-correction">Drift Correction</Link>
             <Link href="/roi">ROI calculator</Link>
+            <Link href="/audit">Free cohort audit</Link>
             <Link href="/pilot">Book a demo</Link>
           </div>
           <div className="mkt-footer__col">
@@ -40,9 +41,4 @@ export function SiteFooter() {
         </div>
         <div className="mkt-footer__bottom">
           <span>&copy; {year} Adherix Health. All rights reserved.</span>
-          <span>HIPAA-aware infrastructure for GLP-1 retention programs.</span>
-        </div>
-      </div>
-    </footer>
-  );
-}
+          <span>HIPAA-aware infrastructure for GLP-1 retention programs.
