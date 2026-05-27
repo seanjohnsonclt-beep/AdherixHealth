@@ -24,4 +24,10 @@ export function SiteHeader() {
             <Link href="/pilot" className="mkt-btn mkt-btn--primary mkt-btn--sm mkt-nav__cta">
               Book a demo
             </Link>
-        
+          </nav>
+          <MobileNav />
+        </div>
+      </div>
+    </header>
+  );
+}
