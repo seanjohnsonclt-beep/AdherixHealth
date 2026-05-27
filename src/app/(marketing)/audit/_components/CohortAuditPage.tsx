@@ -619,12 +619,11 @@ export function CohortAuditPage() {
         <div className="mkt-container">
           <p className="audit-eyebrow">Free cohort audit</p>
           <h1 className="audit-hero__title">
-            Know your real<br />
-            <span className="audit-hero__accent">retention rate.</span>
+            Where are your GLP-1 patients <span className="audit-hero__accent">dropping off?</span>
           </h1>
           <p className="audit-hero__sub">
-            Upload a de-identified patient list. In seconds you&apos;ll see where your cohort is losing
-            patients, your 90-day retention rate, and your estimated annual revenue leakage.
+            Upload a patient list - no names or PHI needed. Get your real 90-day retention rate,
+            a phase-by-phase breakdown of where patients go silent, and your estimated annual revenue leakage.
           </p>
           <p className="audit-privacy-note">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ verticalAlign: 'middle', marginRight: 5 }}>
