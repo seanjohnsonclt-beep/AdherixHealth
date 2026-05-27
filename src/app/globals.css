@@ -5772,7 +5772,7 @@ a.mkt-btn--primary:hover,
   color: var(--mkt-sage);
   margin: 0 0 16px;
 }
-.audit-hero__title {
+.audit-hero .audit-hero__title {
   font-family: var(--mkt-serif, 'Fraunces', serif);
   font-size: clamp(40px, 6vw, 68px);
   font-weight: 400;
