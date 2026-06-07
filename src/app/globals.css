@@ -6519,3 +6519,258 @@ a.mkt-btn--primary:hover,
     grid-column: 1;
   }
 }
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   Medicare Resources page  -  .med-* namespace
+   Additive only. No existing classes modified.
+───────────────────────────────────────────────────────────────────────────── */
+
+/* Hero */
+.med-hero {
+  background: var(--mkt-paper);
+  padding: 96px 0 80px;
+  border-bottom: 1px solid var(--mkt-sage-mist);
+}
+.med-hero__inner { max-width: 720px; }
+.med-hero__title { margin: 12px 0 20px; }
+.med-hero__sub { max-width: 600px; margin-bottom: 12px; }
+.med-hero__sub2 {
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 16px;
+  color: var(--mkt-sage-deep);
+  font-weight: 500;
+  margin-bottom: 36px;
+}
+.med-hero__ctas { display: flex; gap: 12px; flex-wrap: wrap; }
+
+/* Shared section spacing */
+.med-section__title { margin: 10px 0 14px; }
+.med-section__sub   { max-width: 600px; margin-bottom: 48px; }
+
+/* Requirements grid */
+.med-req-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1px;
+  background: var(--mkt-sage-mist);
+  border: 1px solid var(--mkt-sage-mist);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.med-req-card {
+  background: #fff;
+  padding: 32px 28px;
+}
+.med-req-card__icon {
+  color: var(--mkt-sage-deep);
+  margin-bottom: 14px;
+}
+.med-req-card h3 {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--mkt-ink);
+  margin: 0 0 10px;
+}
+.med-req-card p {
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--mkt-ink-2);
+  margin: 0;
+}
+
+/* Bridge support list */
+.med-support-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 32px 48px;
+}
+.med-support-item {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+.med-support-item__num {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 28px;
+  font-weight: 300;
+  color: var(--mkt-sage);
+  line-height: 1;
+  min-width: 36px;
+  padding-top: 2px;
+}
+.med-support-item h3 {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--mkt-ink);
+  margin: 0 0 8px;
+}
+.med-support-item p {
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--mkt-ink-2);
+  margin: 0;
+}
+
+/* Keep section */
+.med-keep-section { background: var(--mkt-paper-soft); }
+.med-keep-inner {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 64px;
+  align-items: start;
+}
+.med-keep-copy h2 { margin: 10px 0 16px; }
+.med-keep-copy .mkt-subhead { margin-bottom: 28px; }
+.med-keep-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 32px;
+}
+.med-keep-list li {
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 15px;
+  color: var(--mkt-ink-2);
+  padding: 8px 0 8px 24px;
+  border-bottom: 1px solid var(--mkt-sage-mist);
+  position: relative;
+}
+.med-keep-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--mkt-sage);
+}
+.med-keep-stat-panel {
+  background: var(--mkt-ink);
+  border-radius: 14px;
+  padding: 32px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+.med-keep-stat__num {
+  display: block;
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 40px;
+  font-weight: 400;
+  color: var(--mkt-sage-soft);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.med-keep-stat__label {
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 13px;
+  color: #C8BFAD;
+  line-height: 1.5;
+}
+.med-keep-stat-disc {
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 11px;
+  color: #6B7878;
+  margin: 0;
+  line-height: 1.5;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  padding-top: 16px;
+}
+
+/* Resources grid */
+.med-resource-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.med-resource-card {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  background: #fff;
+  border: 1px solid var(--mkt-sage-mist);
+  border-radius: 12px;
+  padding: 24px 20px;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.18s, box-shadow 0.18s;
+  position: relative;
+}
+.med-resource-card:hover {
+  border-color: var(--mkt-sage);
+  box-shadow: 0 4px 16px rgba(91,155,148,0.12);
+}
+.med-resource-card--adherix {
+  background: var(--mkt-paper-soft);
+  border-color: var(--mkt-sage-mist);
+}
+.med-resource-card__icon {
+  color: var(--mkt-sage-deep);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.med-resource-card h3 {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--mkt-ink);
+  margin: 6px 0 8px;
+}
+.med-resource-card p {
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--mkt-ink-2);
+  margin: 0;
+}
+.med-resource-card__tag {
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #6B7878;
+  display: block;
+}
+.med-resource-card__tag--adherix { color: var(--mkt-sage-deep); }
+.med-resource-card__arrow {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 16px;
+  color: var(--mkt-sage);
+}
+.med-resource-note {
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 13px;
+  color: #6B7878;
+  line-height: 1.6;
+}
+.med-resource-note a { color: var(--mkt-sage-deep); }
+
+/* CTA */
+.med-cta-section { text-align: center; }
+.med-cta-inner { max-width: 640px; margin: 0 auto; }
+.med-cta-inner h2 { margin-bottom: 16px; }
+.med-cta-inner .mkt-subhead { margin-bottom: 36px; }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .med-req-grid    { grid-template-columns: 1fr; }
+  .med-support-grid { grid-template-columns: 1fr; }
+  .med-keep-inner  { grid-template-columns: 1fr; gap: 40px; }
+  .med-keep-stat-panel { order: -1; }
+  .med-resource-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .med-hero { padding: 64px 0 56px; }
+  .med-hero__ctas { flex-direction: column; }
+  .med-keep-stat__num { font-size: 32px; }
+}

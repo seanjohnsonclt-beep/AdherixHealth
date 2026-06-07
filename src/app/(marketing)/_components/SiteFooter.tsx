@@ -25,6 +25,7 @@ export function SiteFooter() {
           </div>
           <div className="mkt-footer__col">
             <h4>Company</h4>
+            <Link href="/medicare-resources">Medicare resources</Link>
             <Link href="/about">About Adherix Health</Link>
             <Link href="/advisors">Clinical advisory board</Link>
             <Link href="/login">Sign in</Link>

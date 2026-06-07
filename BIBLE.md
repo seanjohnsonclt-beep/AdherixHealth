@@ -204,6 +204,7 @@ Supabase SSR cookies are wrapped in try/catch inside `src/lib/supabase.ts` becau
 - `RESEND_API_KEY`
 - `DEFAULT_TIMEZONE` = `America/New_York`
 - `CRON_SECRET` — currently unused (auth removed from cron route)
+- `ADMIN_SECRET` — gates `/admin` operator dashboard. Check `?secret=<value>` against this. Generate with `secrets.token_urlsafe(32)`. Bookmark URL: `https://adherixhealth.com/admin?secret=<value>`.
 
 ### Cron mechanics (how it works today)
 
@@ -216,6 +217,13 @@ Supabase SSR cookies are wrapped in try/catch inside `src/lib/supabase.ts` becau
 ---
 
 ## 13. Recent Changes
+
+### 2026-06-05 - Admin ops dashboard at /admin
+1. **`src/app/admin/page.tsx`** - Server Component. Auth via `?secret=ADMIN_SECRET` query param - wrong/missing secret redirects to `/`. Runs 10 DB queries in parallel via `Promise.all`. Corrected all column names to actual schema (`events.kind`, `patients.current_phase`, `patients.last_inbound_at`, `drift_correction_events.resolution_status`).
+2. **`src/app/admin/AdminDashboard.tsx`** - `'use client'` 8-tab UI. Dark Ink theme, Sage accents, Fraunces + Geist Mono typography. Tabs: Engine / Cohorts / Signals / Drift / Delivery / Alerts / Revenue / Infra.
+3. **`src/app/api/admin/metrics/route.ts`** - GET endpoint returning queue + delivery + signal counts as JSON, auth'd via `x-admin-secret` header or `?secret` param.
+4. **`ADMIN_SECRET`** - add to Vercel env vars before use. This page is NOT linked from any nav - access by bookmarking the URL with secret.
+5. **Commit** - `d503307` on `main`. Run `PUSH_ADMIN.bat` from PowerShell to push, then add `ADMIN_SECRET` in Vercel env vars.
 
 ### 2026-05-11 — Marketing site UI polish (font size, spacing, contrast)
 1. **Font size** — `.mkt-page` base bumped from `15px → 16px`, line-height `1.55 → 1.6`. Pillar body and pull-quote text also bumped to `16px`. Applies globally across all marketing pages.
