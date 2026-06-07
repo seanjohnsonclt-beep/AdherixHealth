@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import DownloadGate from './DownloadGate';
 
 export const metadata: Metadata = {
   title: 'Medicare GLP-1 Bridge Resources | Adherix Health',
@@ -256,35 +257,39 @@ export default function MedicareResourcesPage() {
             </a>
           </div>
 
-          {/* Adherix templates - direct PDF downloads */}
+          {/* Adherix templates - gated PDF downloads */}
           <p className="med-resource-group-label med-resource-group-label--adherix">Adherix templates</p>
           <div className="med-resource-grid">
-            <a className="med-resource-card med-resource-card--adherix" href="/adherix-bridge-checklist.pdf" download>
-              <div className="med-resource-card__icon" aria-hidden="true">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                  <path d="M4 10l4 4 8-8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
+            <DownloadGate resourceKey="checklist">
+              <div className="med-resource-card med-resource-card--adherix">
+                <div className="med-resource-card__icon" aria-hidden="true">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M4 10l4 4 8-8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </div>
+                <div>
+                  <span className="med-resource-card__tag med-resource-card__tag--adherix">Free download</span>
+                  <h3>Clinic Bridge readiness checklist</h3>
+                  <p>PA submission, patient identification, staff training, and post-enrollment follow-up - all in one pre-launch checklist.</p>
+                </div>
+                <span className="med-resource-card__arrow" aria-hidden="true">&#8595;</span>
               </div>
-              <div>
-                <span className="med-resource-card__tag med-resource-card__tag--adherix">Free download</span>
-                <h3>Clinic Bridge readiness checklist</h3>
-                <p>PA submission, patient identification, staff training, and post-enrollment follow-up - all in one pre-launch checklist.</p>
+            </DownloadGate>
+            <DownloadGate resourceKey="workflow">
+              <div className="med-resource-card med-resource-card--adherix">
+                <div className="med-resource-card__icon" aria-hidden="true">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M3 5h14M3 10h10M3 15h6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                  </svg>
+                </div>
+                <div>
+                  <span className="med-resource-card__tag med-resource-card__tag--adherix">Free download</span>
+                  <h3>Bridge patient onboarding workflow</h3>
+                  <p>Step-by-step from eligibility screening to first prescription - mapped for front desk and clinical staff.</p>
+                </div>
+                <span className="med-resource-card__arrow" aria-hidden="true">&#8595;</span>
               </div>
-              <span className="med-resource-card__arrow" aria-hidden="true">&#8595;</span>
-            </a>
-            <a className="med-resource-card med-resource-card--adherix" href="/adherix-bridge-workflow.pdf" download>
-              <div className="med-resource-card__icon" aria-hidden="true">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                  <path d="M3 5h14M3 10h10M3 15h6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                </svg>
-              </div>
-              <div>
-                <span className="med-resource-card__tag med-resource-card__tag--adherix">Free download</span>
-                <h3>Bridge patient onboarding workflow</h3>
-                <p>Step-by-step from eligibility screening to first prescription - mapped for front desk and clinical staff.</p>
-              </div>
-              <span className="med-resource-card__arrow" aria-hidden="true">&#8595;</span>
-            </a>
+            </DownloadGate>
           </div>
         </div>
       </section>

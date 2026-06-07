@@ -6849,3 +6849,124 @@ a.mkt-btn--primary:hover,
   color: var(--mkt-sage);
   flex-shrink: 0;
 }
+
+/* ── Download Gate ─────────────────────────────────────────────── */
+.dl-gate-trigger {
+  display: contents;
+  cursor: pointer;
+}
+.dl-gate-trigger .med-resource-card {
+  cursor: pointer;
+}
+
+/* Modal (native <dialog>) */
+.dl-modal {
+  border: none;
+  border-radius: 16px;
+  padding: 0;
+  max-width: 440px;
+  width: calc(100% - 32px);
+  box-shadow: 0 24px 64px rgba(31,42,42,0.18);
+  background: var(--mkt-paper, #F4EFE6);
+}
+.dl-modal::backdrop {
+  background: rgba(31,42,42,0.55);
+  backdrop-filter: blur(3px);
+}
+.dl-modal__inner {
+  padding: 40px 36px 32px;
+  position: relative;
+}
+.dl-modal__close {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 22px;
+  color: var(--mkt-ink);
+  opacity: 0.4;
+  cursor: pointer;
+  line-height: 1;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: opacity 0.15s;
+}
+.dl-modal__close:hover {
+  opacity: 0.8;
+}
+.dl-modal__eyebrow {
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--mkt-sage);
+  margin: 0 0 10px;
+}
+.dl-modal__title {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--mkt-ink);
+  margin: 0 0 10px;
+  line-height: 1.25;
+}
+.dl-modal__sub {
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 14px;
+  color: #4A5A5A;
+  margin: 0 0 24px;
+  line-height: 1.5;
+}
+.dl-modal__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+.dl-modal__field label {
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--mkt-ink);
+}
+.dl-modal__optional {
+  font-weight: 400;
+  color: #6B7878;
+}
+.dl-modal__field input {
+  border: 1.5px solid #C8D8D6;
+  border-radius: 8px;
+  padding: 10px 13px;
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 14px;
+  color: var(--mkt-ink);
+  background: #fff;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.dl-modal__field input:focus {
+  border-color: var(--mkt-sage);
+}
+.dl-modal__field input::placeholder {
+  color: #9AACAC;
+}
+.dl-modal__error {
+  font-size: 13px;
+  color: #b94040;
+  margin: -8px 0 12px;
+}
+.dl-modal__submit {
+  width: 100%;
+  margin-top: 8px;
+  justify-content: center;
+}
+.dl-modal__privacy {
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 11.5px;
+  color: #7A8E8E;
+  text-align: center;
+  margin: 14px 0 0;
+  line-height: 1.4;
+}
