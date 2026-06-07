@@ -32,7 +32,7 @@ export default function MedicareResourcesPage() {
               Book a workflow review
             </Link>
             <a
-              href="https://www.cms.gov/medicare/coverage/prescription-drug-coverage/medicare-glp-1-bridge/information-providers"
+              href="https://www.cms.gov/glp-1-bridge.pdf"
               className="mkt-btn mkt-btn--ghost mkt-btn--lg"
               target="_blank"
               rel="noopener noreferrer"
@@ -238,14 +238,14 @@ export default function MedicareResourcesPage() {
               </div>
               <div>
                 <span className="med-resource-card__tag">CMS official</span>
-                <h3>Medicare GLP-1 Bridge - Provider information</h3>
-                <p>PA submission process, eligibility criteria, and central processor details direct from CMS.</p>
+                <h3>Medicare GLP-1 Bridge - Prior authorization form</h3>
+                <p>The official CMS PA request form. Submit electronically via CoverMyMeds or by fax. Accepted starting July 1, 2026.</p>
               </div>
               <span className="med-resource-card__arrow" aria-hidden="true">&#8599;</span>
             </a>
             <a
               className="med-resource-card"
-              href="https://www.cms.gov/medicare/coverage/prescription-drug-coverage/medicare-glp-1-bridge/information-medicare-beneficiaries"
+              href="https://www.cms.gov/files/document/glp-1-prescribers-c-1.pdf"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -296,9 +296,8 @@ export default function MedicareResourcesPage() {
             </a>
           </div>
           <p className="med-resource-note">
-            The official CMS prior authorization fax form is expected June 2026.
-            We will link it here as soon as it is published.{' '}
-            <a href="mailto:hello@adherixhealth.com">Contact us</a> to be notified when it is available.
+            The CMS prior authorization form and prescriber guide are now live. Submissions open July 1, 2026.
+            Questions? <a href="mailto:hello@adherixhealth.com">Contact us</a>.
           </p>
         </div>
       </section>
