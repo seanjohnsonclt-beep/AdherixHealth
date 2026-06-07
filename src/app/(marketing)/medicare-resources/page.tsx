@@ -223,82 +223,69 @@ export default function MedicareResourcesPage() {
           <p className="mkt-subhead med-section__sub">
             Official CMS materials and Adherix support documents for Bridge-eligible clinics.
           </p>
+          {/* CMS official - plain rows */}
+          <p className="med-resource-group-label">Official CMS documents</p>
+          <div className="med-resource-list">
+            <a className="med-resource-row" href="https://www.cms.gov/glp-1-bridge.pdf" target="_blank" rel="noopener noreferrer">
+              <div className="med-resource-row__icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                  <rect x="2.5" y="1.5" width="13" height="15" rx="2" stroke="currentColor" strokeWidth="1.4"/>
+                  <path d="M5.5 6.5h7M5.5 9.5h5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
+                </svg>
+              </div>
+              <div className="med-resource-row__copy">
+                <span className="med-resource-row__title">Prior authorization request form</span>
+                <span className="med-resource-row__sub">cms.gov/glp-1-bridge.pdf - Electronic or fax. Accepted from July 1.</span>
+              </div>
+              <span className="med-resource-row__badge">CMS official</span>
+              <span className="med-resource-row__arrow">&#8599;</span>
+            </a>
+            <a className="med-resource-row" href="https://www.cms.gov/files/document/glp-1-prescribers-c-1.pdf" target="_blank" rel="noopener noreferrer">
+              <div className="med-resource-row__icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                  <circle cx="9" cy="6.5" r="3" stroke="currentColor" strokeWidth="1.4"/>
+                  <path d="M3 16.5c0-2.761 2.686-5 6-5s6 2.239 6 5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
+                </svg>
+              </div>
+              <div className="med-resource-row__copy">
+                <span className="med-resource-row__title">Prescriber information sheet</span>
+                <span className="med-resource-row__sub">cms.gov - Eligibility criteria, attestation requirements, submission workflow.</span>
+              </div>
+              <span className="med-resource-row__badge">CMS official</span>
+              <span className="med-resource-row__arrow">&#8599;</span>
+            </a>
+          </div>
+
+          {/* Adherix templates - direct PDF downloads */}
+          <p className="med-resource-group-label med-resource-group-label--adherix">Adherix templates</p>
           <div className="med-resource-grid">
-            <a
-              className="med-resource-card"
-              href="https://www.cms.gov/medicare/coverage/prescription-drug-coverage/medicare-glp-1-bridge/information-providers"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <div className="med-resource-card__icon" aria-hidden="true">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                  <rect x="3" y="2" width="14" height="16" rx="2" stroke="currentColor" strokeWidth="1.5"/>
-                  <path d="M6.5 7h7M6.5 10.5h5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                </svg>
-              </div>
-              <div>
-                <span className="med-resource-card__tag">CMS official</span>
-                <h3>Medicare GLP-1 Bridge - Prior authorization form</h3>
-                <p>The official CMS PA request form. Submit electronically via CoverMyMeds or by fax. Accepted starting July 1, 2026.</p>
-              </div>
-              <span className="med-resource-card__arrow" aria-hidden="true">&#8599;</span>
-            </a>
-            <a
-              className="med-resource-card"
-              href="https://www.cms.gov/files/document/glp-1-prescribers-c-1.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <div className="med-resource-card__icon" aria-hidden="true">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                  <circle cx="10" cy="7" r="3.5" stroke="currentColor" strokeWidth="1.5"/>
-                  <path d="M3.5 18c0-3.038 2.91-5.5 6.5-5.5s6.5 2.462 6.5 5.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                </svg>
-              </div>
-              <div>
-                <span className="med-resource-card__tag">CMS official</span>
-                <h3>Medicare GLP-1 Bridge - Beneficiary eligibility</h3>
-                <p>Qualifying conditions, BMI thresholds, and enrollment requirements to share with patients.</p>
-              </div>
-              <span className="med-resource-card__arrow" aria-hidden="true">&#8599;</span>
-            </a>
-            <a
-              className="med-resource-card med-resource-card--adherix"
-              href="mailto:hello@adherixhealth.com?subject=Bridge%20Support%20Checklist%20Request"
-            >
+            <a className="med-resource-card med-resource-card--adherix" href="/adherix-bridge-checklist.pdf" download>
               <div className="med-resource-card__icon" aria-hidden="true">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                   <path d="M4 10l4 4 8-8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </div>
               <div>
-                <span className="med-resource-card__tag med-resource-card__tag--adherix">Adherix template</span>
+                <span className="med-resource-card__tag med-resource-card__tag--adherix">Free download</span>
                 <h3>Clinic Bridge readiness checklist</h3>
-                <p>A practical pre-launch checklist covering PA submission, staff training, and patient communication. Request your copy.</p>
+                <p>PA submission, patient identification, staff training, and post-enrollment follow-up - all in one pre-launch checklist.</p>
               </div>
-              <span className="med-resource-card__arrow" aria-hidden="true">&#8594;</span>
+              <span className="med-resource-card__arrow" aria-hidden="true">&#8595;</span>
             </a>
-            <a
-              className="med-resource-card med-resource-card--adherix"
-              href="mailto:hello@adherixhealth.com?subject=Patient%20Onboarding%20Workflow%20Request"
-            >
+            <a className="med-resource-card med-resource-card--adherix" href="/adherix-bridge-workflow.pdf" download>
               <div className="med-resource-card__icon" aria-hidden="true">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                   <path d="M3 5h14M3 10h10M3 15h6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
                 </svg>
               </div>
               <div>
-                <span className="med-resource-card__tag med-resource-card__tag--adherix">Adherix template</span>
+                <span className="med-resource-card__tag med-resource-card__tag--adherix">Free download</span>
                 <h3>Bridge patient onboarding workflow</h3>
-                <p>Step-by-step workflow from eligibility screening to first prescription - mapped for front desk and clinical staff.</p>
+                <p>Step-by-step from eligibility screening to first prescription - mapped for front desk and clinical staff.</p>
               </div>
-              <span className="med-resource-card__arrow" aria-hidden="true">&#8594;</span>
+              <span className="med-resource-card__arrow" aria-hidden="true">&#8595;</span>
             </a>
           </div>
-          <p className="med-resource-note">
-            The CMS prior authorization form and prescriber guide are now live. Submissions open July 1, 2026.
-            Questions? <a href="mailto:hello@adherixhealth.com">Contact us</a>.
-          </p>
         </div>
       </section>
 
