@@ -101,16 +101,35 @@ export default function PressPage() {
           </div>
         </section>
 
+        {/* Press releases */}
+        <section>
+          <h2>Press releases</h2>
+          <div className="press-release-list">
+            <div className="press-release-item">
+              <span className="press-release-item__date">June 9, 2026</span>
+              <div className="press-release-item__body">
+                <h3 className="press-release-item__title">
+                  Adherix Health Releases Free Medicare GLP-1 Bridge Preparation Resources as July 1 Coverage Launch Approaches
+                </h3>
+                <p className="press-release-item__sub">
+                  New CMS program extends $50/month GLP-1 coverage to eligible Medicare beneficiaries - most clinics are not yet operationally ready for the new prior authorization process.
+                </p>
+                <a
+                  className="press-release-item__link"
+                  href="/medicare-resources"
+                >
+                  Read more &rarr;
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Coverage & mentions */}
         <section>
           <h2>Coverage &amp; mentions</h2>
           <div className="press-coverage-grid">
-            <div className="press-coverage-card">
-              <span className="press-coverage-card__label">
-                Coverage will appear here as it&rsquo;s published.
-              </span>
-            </div>
-            <div className="press-coverage-card">
+            <div className="press-coverage-card press-coverage-card--empty">
               <span className="press-coverage-card__label">
                 Coverage will appear here as it&rsquo;s published.
               </span>

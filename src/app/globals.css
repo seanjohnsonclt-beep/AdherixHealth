@@ -6970,3 +6970,59 @@ a.mkt-btn--primary:hover,
   margin: 14px 0 0;
   line-height: 1.4;
 }
+
+/* ── Press releases list ───────────────────────────────────────── */
+.press-release-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border-top: 1.5px solid #E0E8E6;
+}
+.press-release-item {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 24px;
+  padding: 28px 0;
+  border-bottom: 1.5px solid #E0E8E6;
+  align-items: start;
+}
+.press-release-item__date {
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--mkt-sage, #5B9B94);
+  padding-top: 4px;
+}
+.press-release-item__title {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--mkt-ink, #1F2A2A);
+  margin: 0 0 8px;
+  line-height: 1.3;
+}
+.press-release-item__sub {
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 14px;
+  color: #4A5A5A;
+  margin: 0 0 14px;
+  line-height: 1.55;
+}
+.press-release-item__link {
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--mkt-sage, #5B9B94);
+  text-decoration: none;
+}
+.press-release-item__link:hover {
+  text-decoration: underline;
+}
+@media (max-width: 600px) {
+  .press-release-item {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+}
