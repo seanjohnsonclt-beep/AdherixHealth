@@ -116,7 +116,7 @@ export default function PressPage() {
                 </p>
                 <a
                   className="press-release-item__link"
-                  href="/medicare-resources"
+                  href="/press/medicare-glp1-bridge"
                 >
                   Read more &rarr;
                 </a>
