@@ -34,6 +34,7 @@ type ReplyRow = {
   created_at: Date;
   triggered_event: string | null;
   keyword_flagged: boolean;
+  prev_outbound: string | null;
 };
 
 function relTime(d: Date | string): string {
@@ -124,7 +125,17 @@ export default async function RepliesPage() {
              and kq.message_body = m.body
              and kq.created_at  between m.created_at - interval '30 seconds'
                                      and m.created_at + interval '60 seconds'
-         ) as keyword_flagged
+         ) as keyword_flagged,
+         (
+           select body
+           from messages
+           where patient_id = m.patient_id
+             and direction   = 'outbound'
+             and status      = 'sent'
+             and coalesce(sent_at, scheduled_for, created_at) < m.created_at
+           order by coalesce(sent_at, scheduled_for, created_at) desc
+           limit 1
+         ) as prev_outbound
        from messages m
        join patients p on p.id = m.patient_id and p.clinic_id = $1
        where m.direction = 'inbound'
@@ -140,7 +151,8 @@ export default async function RepliesPage() {
            m.id, m.patient_id, p.first_name, p.current_phase,
            p.status as patient_status, m.body, m.created_at,
            null::text as triggered_event,
-           false      as keyword_flagged
+           false      as keyword_flagged,
+           null::text as prev_outbound
          from messages m
          join patients p on p.id = m.patient_id and p.clinic_id = $1
          where m.direction = 'inbound'
@@ -288,6 +300,19 @@ export default async function RepliesPage() {
                       <span style={{ fontStyle: 'italic', color: 'var(--fg-muted)' }}>
                         &ldquo;{r.body}&rdquo;
                       </span>
+                      {r.prev_outbound && (
+                        <div
+                          className="small faint"
+                          style={{
+                            marginTop: 5,
+                            paddingLeft: 8,
+                            borderLeft: '2px solid var(--line-strong)',
+                            lineHeight: 1.4,
+                          }}
+                        >
+                          {r.prev_outbound}
+                        </div>
+                      )}
                     </td>
                     <td className="small mono muted">{relTime(r.created_at)}</td>
                     <td>
