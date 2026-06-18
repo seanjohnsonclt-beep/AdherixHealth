@@ -16,6 +16,7 @@ import { query } from '@/lib/db';
 // Changes here are picked up immediately  -  no migration needed.
 
 const UNCERTAINTY_KEYWORDS: string[] = [
+  // Physical side effects
   'nauseous', 'nausea', 'queasy', 'dizzy', 'headache', 'tired', 'exhausted',
   'fatigue', 'vomit', 'throwing up', 'sick', 'feel weird', 'feeling weird',
   'off', 'feel off', 'feeling off', "don't feel like myself", 'not myself',
@@ -28,6 +29,13 @@ const UNCERTAINTY_KEYWORDS: string[] = [
   'worried', 'concerned', 'scared', 'not sure if', 'taking a break',
   'need a break', 'stopping', 'stopped', 'pausing', 'thinking about stopping',
   'not sure i should continue', 'not working for me', "doesn't seem to be working",
+  // Psychiatric / mood / sleep side effects (2025-2026 Reddit study: 13% of users)
+  'anxious', 'anxiety', 'depressed', 'depression', 'mood', 'mood swings',
+  "can't sleep", 'not sleeping', 'insomnia', 'waking up', 'sleep is off',
+  'sleep has been off', 'emotional', 'irritable', 'irritability',
+  'brain fog', 'foggy', 'foggy brain', 'hard to think', 'trouble focusing',
+  'feeling low', 'feeling down', 'off emotionally', 'mentally off',
+  'not feeling like myself', 'feel like myself', 'not okay', "i'm not okay",
 ];
 
 const FRICTION_KEYWORDS: string[] = [

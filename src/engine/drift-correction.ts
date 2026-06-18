@@ -52,13 +52,12 @@ function buildBody(
 
     case 'uncertainty':
       return (
-        `What you're feeling at this stage is a recognized part of the ` +
-        `adjustment period  -  most patients experience some version of it ` +
-        `between weeks 3 and 6, particularly around dose changes. It doesn't ` +
-        `mean the medication isn't working. If your symptoms are manageable, ` +
-        `your next dose is ${nextDoseDay}. If anything feels severe or is ` +
-        `getting worse, reply CALL and someone from the clinic will reach out ` +
-        `to you today.`
+        `What you're feeling right now is a recognized part of the adjustment ` +
+        `period  -  most patients go through some version of it, and it can show ` +
+        `up physically or as shifts in mood, sleep, or energy. It doesn't mean ` +
+        `the medication isn't working. If it's manageable, your next dose is ` +
+        `${nextDoseDay}. If anything feels severe or is getting worse, reply CALL ` +
+        `and someone from the clinic will reach out to you today.`
       );
 
     case 'friction':

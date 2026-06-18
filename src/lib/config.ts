@@ -75,6 +75,10 @@ const TEMPLATES: Template[] = [
     body: "You've built the base. Now we drop to every other day. Same rules: protein first, water always." },
   { key: 'phase2.checkin',           phase: 2, after: { days: 2 },  send_at_local: '10:00', repeat_every_days: 2,
     body: 'Quick one: protein at breakfast yesterday? Y or N.' },
+
+  // Gap 1 fix: frame protein as muscle protection, not just appetite/habit
+  { key: 'phase2.day7.muscle_protect', phase: 2, after: { days: 7 }, send_at_local: '09:00',
+    body: "The protein habit has a second job right now: protecting your muscle. The medication changes your appetite - you have to keep the protein coming deliberately. 30g at breakfast, still going? Reply Y or N." },
   { key: 'phase2.day14.momentum',    phase: 2, after: { days: 14 }, send_at_local: '09:30',
     body: "Two weeks of this. That's real. What's one thing that's gotten easier? Reply with anything." },
   { key: 'phase2.day28.transition_prep', phase: 2, after: { days: 28 }, send_at_local: '10:00',
@@ -99,6 +103,10 @@ const TEMPLATES: Template[] = [
     body: "This phase is about you, not the medication. The habits you have now are what protects the progress. Reply READY." },
   { key: 'phase4.day3.mindset',      phase: 4, after: { days: 3 },  send_at_local: '08:30',
     body: "Reminder: the results you've gotten came from behavior, not just the prescription. Are you keeping that in mind? Y or N." },
+  // Gap 1 fix: movement signal for muscle preservation during taper
+  { key: 'phase4.day5.movement', phase: 4, after: { days: 5 }, send_at_local: '09:00',
+    body: "One thing matters extra in this phase: keep moving. Short walks, stairs, anything that gets you up. It protects the results you've already built. Reply DONE when you move today." },
+
   { key: 'phase4.day7.hunger_check', phase: 4, after: { days: 7 },  send_at_local: '10:00',
     body: 'Check-in: has your appetite felt different this week? Reply MORE, SAME, or LESS.' },
   { key: 'phase4.day10.protein_reset', phase: 4, after: { days: 10 }, send_at_local: '09:00',
