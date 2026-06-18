@@ -1,5 +1,6 @@
 import { query } from '@/lib/db';
 import { triggers, findTemplate } from '@/lib/config';
+import { getConfig } from '@/lib/bariatric-config';
 import { conditions, type PatientForEval } from './conditions';
 import { advancePhase } from './scheduler';
 import { findProtocol, computeTitrationSchedule, getNextTitrationDate } from './medications';
@@ -37,7 +38,7 @@ async function recordFiring(patientId: string, triggerKey: string) {
 // --- Action helpers -----------------------------------------------------------
 
 async function queueTemplateNow(patientId: string, templateKey: string) {
-  const tpl = findTemplate(templateKey);
+  const tpl = findTemplate(templateKey) ?? getConfig('bariatric').findTemplate(templateKey);
   if (!tpl) {
     console.warn(`[trigger] unknown template: ${templateKey}`);
     return;
@@ -234,6 +235,7 @@ export async function evaluateTriggersForAllPatients() {
          coalesce((select count(*)::int from injection_events ie
                    where ie.patient_id = p.id
                      and ie.expected_at >= p.phase_started_at), 0) as phase_total_count
+         coalesce(p.modality, 'glp1') as modality
        from patients p
        where p.status in ('active', 'flagged')`
     );
@@ -251,6 +253,7 @@ export async function evaluateTriggersForAllPatients() {
     );
     patients = legacy.map(p => ({
       ...p,
+      modality: 'glp1',
       medication: null,
       next_titration_date: null,
       last_titration_date: null,
@@ -268,7 +271,7 @@ export async function evaluateTriggersForAllPatients() {
   }
 
   for (const patient of patients) {
-    for (const trigger of triggers()) {
+    for (const trigger of getConfig((p as any).modality ?? 'glp1').triggers) {
       // Phase filter
       if (trigger.only_in_phases && !trigger.only_in_phases.includes(patient.current_phase)) {
         continue;

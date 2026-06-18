@@ -5,6 +5,7 @@
 
 import { query, queryOne } from '@/lib/db';
 import { templatesForPhase, findPhase, type Template } from '@/lib/config';
+import { getConfig } from '@/lib/bariatric-config';
 import { addMinutes, addHours, addDays, set, parseISO } from 'date-fns';
 import { fromZonedTime, toZonedTime } from 'date-fns-tz';
 
@@ -35,16 +36,18 @@ function renderBody(body: string, vars: Record<string, string>): string {
 }
 
 export async function schedulePhaseMessages(patientId: string, phaseId: number) {
-  const phase = findPhase(phaseId);
-  if (!phase) throw new Error(`Unknown phase: ${phaseId}`);
-
-  const patient = await queryOne<{ id: string; first_name: string; phase_started_at: Date }>(
-    'select id, first_name, phase_started_at from patients where id = $1',
+  const patientRow = await queryOne<{ id: string; first_name: string; phase_started_at: Date; modality: string }>(
+    `select id, first_name, phase_started_at, coalesce(modality, 'glp1') as modality from patients where id = $1`,
     [patientId]
   );
-  if (!patient) throw new Error(`Patient not found: ${patientId}`);
+  if (!patientRow) throw new Error(`Patient not found: ${patientId}`);
+  const patient = patientRow;
 
-  const tpls = templatesForPhase(phaseId).filter((t) => !t.internal && !t.requires_reply_to);
+  const cfg = getConfig(patient.modality);
+  const phase = cfg.findPhase(phaseId);
+  if (!phase) throw new Error(`Unknown phase: ${phaseId}`);
+
+  const tpls = cfg.templatesForPhase(phaseId).filter((t) => !t.internal && !t.requires_reply_to);
   console.log(`[scheduler] phase ${phaseId} → ${tpls.length} templates to schedule for patient ${patientId}`);
   const base = new Date(patient.phase_started_at);
 
