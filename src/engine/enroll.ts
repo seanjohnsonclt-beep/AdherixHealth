@@ -45,7 +45,7 @@ export async function enrollPatient({
 
   // Compute titration schedule from protocol if medication is set
   const now = new Date();
-  let titrationSchedule: Array<{ weekOffset: number; dose: string; scheduledDate: string }> | null = null;
+  let titrationSchedule: Array<{ daysOffset: number; dose: string; scheduledDate: string }> | null = null;
   let currentDose: string | null = null;
   let nextTitrationDate: string | null = null;
 
@@ -74,7 +74,7 @@ export async function enrollPatient({
       medication ?? null,
       startingDose ?? currentDose,
       currentDose,
-      medication ? 'weekly' : null,
+      protocol?.frequency ?? null,
       titrationSchedule ? JSON.stringify(titrationSchedule) : null,
       nextTitrationDate,
       supplyQuantity ?? null,

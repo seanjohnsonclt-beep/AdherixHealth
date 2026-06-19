@@ -98,7 +98,7 @@ async function createInjectionConfirmation(patientId: string) {
 async function advanceTitration(patientId: string) {
   const rows = await query<{
     medication: string;
-    titration_schedule: Array<{ weekOffset: number; dose: string; scheduledDate: string }>;
+    titration_schedule: Array<{ daysOffset: number; dose: string; scheduledDate: string }>;
     next_titration_date: string;
     enrolled_at: string;
   }>(
@@ -271,7 +271,7 @@ export async function evaluateTriggersForAllPatients() {
   }
 
   for (const patient of patients) {
-    for (const trigger of getConfig((p as any).modality ?? 'glp1').triggers) {
+    for (const trigger of getConfig((patient as any).modality ?? 'glp1').triggers) {
       // Phase filter
       if (trigger.only_in_phases && !trigger.only_in_phases.includes(patient.current_phase)) {
         continue;

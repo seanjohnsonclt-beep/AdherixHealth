@@ -47,7 +47,7 @@ export async function schedulePhaseMessages(patientId: string, phaseId: number) 
   const phase = cfg.findPhase(phaseId);
   if (!phase) throw new Error(`Unknown phase: ${phaseId}`);
 
-  const tpls = cfg.templatesForPhase(phaseId).filter((t) => !t.internal && !t.requires_reply_to);
+  const tpls = cfg.templatesForPhase(phaseId).filter((t: any) => !t.internal && !t.requires_reply_to);
   console.log(`[scheduler] phase ${phaseId} → ${tpls.length} templates to schedule for patient ${patientId}`);
   const base = new Date(patient.phase_started_at);
 

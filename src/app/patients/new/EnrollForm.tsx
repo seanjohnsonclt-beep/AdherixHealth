@@ -7,20 +7,40 @@ import { enrollPatientAction } from '@/app/patients/actions';
 const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
 
 export const PRODUCT_TYPES = [
-  { value: 'glp1',                label: 'GLP-1 (Adherix Keep)',              available: true  },
-  { value: 'bariatric',           label: 'Bariatric Surgery (Adherix Bridge)', available: true  },
-  { value: 'pharmacotherapy',     label: 'Pharmacotherapy (Adherix Rx)',       available: true  },
-  { value: 'behavioral_therapy',  label: 'Behavioral Therapy (Adherix IBT)',   available: true  },
-  { value: 'metabolic_health',    label: 'Metabolic Health (Adherix Metabolic)', available: true },
+  { value: 'glp1',                label: 'GLP-1 (Adherix Keep)',                available: true  },
+  { value: 'bariatric',           label: 'Bariatric Surgery (Adherix Bridge)',   available: true  },
+  { value: 'pharmacotherapy',     label: 'Pharmacotherapy (Adherix Rx)',         available: true  },
+  { value: 'behavioral_therapy',  label: 'Behavioral Therapy (Adherix IBT)',     available: true  },
+  { value: 'metabolic_health',    label: 'Metabolic Health (Adherix Metabolic)', available: true  },
 ] as const;
 
 export function EnrollForm({ error, defaultModality = 'glp1' }: { error?: string; defaultModality?: string }) {
   const [selectedMed, setSelectedMed] = useState('');
   const [modality, setModality] = useState(defaultModality);
 
-  const protocol = MEDICATION_PROTOCOLS.find(p => p.key === selectedMed);
-  const firstDose = protocol?.titrationSteps[0]?.dose ?? '';
+  // Protocols available for the selected modality
+  const modalityProtocols = MEDICATION_PROTOCOLS.filter(p => p.modality === modality);
+
+  // IBT is behavioral-only - auto-assign the placeholder, no picker needed
+  const isIbt = modality === 'behavioral_therapy';
+
+  // For GLP-1: weekly injections have an injection day concept
   const isGlp1 = modality === 'glp1';
+
+  // The active protocol (selected or first if IBT)
+  const protocol = isIbt
+    ? modalityProtocols[0]
+    : MEDICATION_PROTOCOLS.find(p => p.key === selectedMed);
+
+  const firstDose = protocol?.titrationSteps[0]?.dose ?? '';
+
+  // Show supply quantity field for controlled substances and GLP-1 pens
+  const showSupply = protocol && protocol.supplyDays > 0 && protocol.supplyDays <= 30;
+
+  function handleModalityChange(val: string) {
+    setModality(val);
+    setSelectedMed('');
+  }
 
   return (
     <form action={enrollPatientAction}>
@@ -53,15 +73,11 @@ export function EnrollForm({ error, defaultModality = 'glp1' }: { error?: string
           name="modality"
           id="modality"
           value={modality}
-          onChange={e => {
-            setModality(e.target.value);
-            // Clear medication fields when switching away from GLP-1
-            if (e.target.value !== 'glp1') setSelectedMed('');
-          }}
+          onChange={e => handleModalityChange(e.target.value)}
         >
           {PRODUCT_TYPES.map(pt => (
             <option key={pt.value} value={pt.value} disabled={!pt.available}>
-              {pt.label}{!pt.available ? ' — coming soon' : ''}
+              {pt.label}{!pt.available ? ' - coming soon' : ''}
             </option>
           ))}
         </select>
@@ -70,10 +86,18 @@ export function EnrollForm({ error, defaultModality = 'glp1' }: { error?: string
         </p>
       </div>
 
-      {/* -- Medication (GLP-1 only) --------------------------------------- */}
-      {isGlp1 && (
+      {/* -- Medication / supplement --------------------------------------- */}
+      {/* IBT: auto-assigned, no picker */}
+      {isIbt && (
+        <input type="hidden" name="medication" value="ibt_no_medication" />
+      )}
+
+      {/* All other modalities: show filtered picker */}
+      {!isIbt && modalityProtocols.length > 0 && (
         <div style={{ marginBottom: 16 }}>
-          <label className="label" htmlFor="medication">Medication</label>
+          <label className="label" htmlFor="medication">
+            {modality === 'bariatric' ? 'Supplement protocol' : 'Medication'}
+          </label>
           <select
             className="input"
             name="medication"
@@ -81,23 +105,27 @@ export function EnrollForm({ error, defaultModality = 'glp1' }: { error?: string
             value={selectedMed}
             onChange={e => setSelectedMed(e.target.value)}
           >
-            <option value=""> - None / Other (no injection tracking) - </option>
-            {MEDICATION_PROTOCOLS.map(p => (
+            <option value="">- None / skip tracking -</option>
+            {modalityProtocols.map(p => (
               <option key={p.key} value={p.key}>{p.displayName}</option>
             ))}
           </select>
+          {protocol?.isControlled && (
+            <p className="small faint" style={{ marginTop: 6, color: 'var(--accent)' }}>
+              Controlled substance - 30-day supply. Monthly refill reminder will fire at day 23.
+            </p>
+          )}
         </div>
       )}
 
-      {/* Starting dose */}
-      {isGlp1 && protocol && (
+      {/* -- Starting dose (only when protocol has titration) -------------- */}
+      {protocol?.hasTitration && (
         <div style={{ marginBottom: 16 }}>
           <label className="label" htmlFor="starting_dose">Starting dose</label>
           <select className="input" name="starting_dose" id="starting_dose">
-            {protocol.titrationSteps.map(step => (
+            {protocol.titrationSteps.map((step, i) => (
               <option key={step.dose} value={step.dose}>
-                {step.dose}
-                {step === protocol.titrationSteps[0] ? ' (standard start)' : ''}
+                {step.dose}{i === 0 ? ' (standard start)' : ''}
               </option>
             ))}
           </select>
@@ -107,12 +135,12 @@ export function EnrollForm({ error, defaultModality = 'glp1' }: { error?: string
         </div>
       )}
 
-      {/* Injection day */}
+      {/* -- Injection day (GLP-1 weekly only) ----------------------------- */}
       {isGlp1 && protocol && (
         <div style={{ marginBottom: 16 }}>
           <label className="label" htmlFor="next_dose_day">Injection day</label>
           <select className="input" name="next_dose_day" id="next_dose_day">
-            <option value=""> - Unknown - </option>
+            <option value="">- Unknown -</option>
             {DAYS.map(d => <option key={d} value={d}>{d}</option>)}
           </select>
           <p className="small faint" style={{ marginTop: 6 }}>
@@ -121,11 +149,11 @@ export function EnrollForm({ error, defaultModality = 'glp1' }: { error?: string
         </div>
       )}
 
-      {/* Supply quantity */}
-      {isGlp1 && protocol && (
+      {/* -- Supply quantity (controlled substances + GLP-1 pens) ---------- */}
+      {showSupply && (
         <div style={{ marginBottom: 24 }}>
           <label className="label" htmlFor="supply_quantity">
-            Supply quantity (doses in current pen/pack)
+            {protocol?.isControlled ? 'Days in current supply (1-30)' : 'Doses in current pen/pack'}
           </label>
           <input
             className="input"
@@ -133,8 +161,8 @@ export function EnrollForm({ error, defaultModality = 'glp1' }: { error?: string
             name="supply_quantity"
             id="supply_quantity"
             min="1"
-            max="52"
-            placeholder="e.g. 4"
+            max={protocol?.isControlled ? 30 : 52}
+            placeholder={protocol?.isControlled ? 'e.g. 30' : 'e.g. 4'}
           />
           <p className="small faint" style={{ marginTop: 6 }}>
             Used to trigger refill reminders. Leave blank to skip.
@@ -142,7 +170,7 @@ export function EnrollForm({ error, defaultModality = 'glp1' }: { error?: string
         </div>
       )}
 
-      {isGlp1 && protocol && (
+      {protocol?.hasTitration && (
         <input type="hidden" name="_protocol_first_dose" value={firstDose} />
       )}
 
