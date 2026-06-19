@@ -21,6 +21,7 @@ export type PatientForEval = {
 
   // Medication / adherence (null for legacy patients enrolled before 0005 migration)
   medication: string | null;
+  injection_frequency: string | null;  // 'weekly' | 'daily' | 'twice-daily' | 'three-daily' | null
   next_titration_date: Date | null;
   last_titration_date: Date | null;
   supply_quantity: number | null;
@@ -89,6 +90,8 @@ export const conditions: Record<string, ConditionFn> = {
   // Subsequent: 6+ days after the last confirmation was sent (buffer against tick timing).
   injection_confirmation_due: (p) => {
     if (!p.medication) return false;
+    // Daily-frequency meds use daily_med_confirmation_due instead
+    if (p.injection_frequency === 'daily') return false;
 
     if (!p.last_confirmation_at) {
       // First confirmation: patient must be at least 7 days in
@@ -142,4 +145,30 @@ export const conditions: Record<string, ConditionFn> = {
   // confirmed_injection_streak exactly equals the target weeks (1 week = 1 injection)
   injection_streak_at: (p, args) =>
     p.confirmed_injection_streak === (args.weeks ?? 4),
+  // --- Daily medication confirmation (liraglutide, Rybelsus) -------------------
+  //
+  // Cadence tightens early when habit formation is critical, then backs off.
+  //   Week 1  (days 1-7):   every 2 days  -  catch side effects and habit gaps early
+  //   Weeks 2-4 (days 8-28): every 3 days  -  reinforce without fatigue
+  //   Month 2+ (day 29+):    every 5 days  -  light-touch maintenance
+  //
+  daily_med_confirmation_due: (p) => {
+    if (!p.medication) return false;
+    if (p.injection_frequency !== 'daily') return false;
+
+    const daysSinceEnrolled = (Date.now() - new Date(p.enrolled_at).getTime()) / DAY_MS;
+
+    if (!p.last_confirmation_at) {
+      // First check: wait 2 days before asking (give patient time to start)
+      return daysSinceEnrolled >= 2;
+    }
+
+    const daysSinceLast = (Date.now() - new Date(p.last_confirmation_at).getTime()) / DAY_MS;
+
+    if (daysSinceEnrolled <= 7)  return daysSinceLast >= 2;  // week 1: every 2 days
+    if (daysSinceEnrolled <= 28) return daysSinceLast >= 3;  // weeks 2-4: every 3 days
+    return daysSinceLast >= 5;                                // month 2+: every 5 days
+  },
+
+
 };

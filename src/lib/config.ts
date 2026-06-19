@@ -176,6 +176,23 @@ const TEMPLATES: Template[] = [
 
   { key: 'trigger.streak_12wk',
     body: '12 weeks of confirmed injections. That\'s rare. You\'ve made this a real habit now. Keep it going.' },
+  // --- Daily medication confirmation (liraglutide / Rybelsus) -----------------
+  // Generic language covers both daily injection and daily pill patients.
+  // HIPAA: no medication names or doses in SMS bodies.
+
+  { key: 'trigger.daily_med_confirmation',
+    body: 'Hi {first_name} - staying consistent with your medication this week? Reply YES or NO.' },
+
+  { key: 'trigger.daily_med_missed_followup',
+    body: "Missed dose noted. Getting back on it tomorrow matters more than yesterday. Same time, same routine. Reply if anything's getting in the way." },
+
+  { key: 'trigger.daily_med_escalation',
+    body: "Checking in - you've missed a few doses recently. Still going? Reply YES to stay on track or NO if you need support." },
+
+  // Rybelsus-specific: oral semaglutide requires empty stomach + 30 min wait.
+  { key: 'trigger.rybelsus_routine_reminder',
+    body: 'Quick reminder: your medication works best on an empty stomach with a small glass of water, 30 minutes before eating. Already doing this? Reply YES or NO.' },
+
 ];
 
 // --- Triggers -----------------------------------------------------------------
@@ -205,6 +222,21 @@ const TRIGGERS: Trigger[] = [
   // No reply to confirmation after 48h → mark as missed, send followup
   { key: 'missed_injection_noresponse', condition: 'has_overdue_confirmation',
     action: 'send_template', template: 'trigger.missed_injection_followup', dedupe_window_hours: 144 },
+
+  // --- Daily medication confirmation loop (liraglutide, Rybelsus) --------------
+  // Fires on tightening cadence: every 2d (week 1), every 3d (weeks 2-4), every 5d (month 2+).
+  // Uses the same injection_confirm action + injection_events table as weekly loop.
+  // Dedupe: 47h (just under 2 days) - condition handles actual spacing.
+  { key: 'daily_med_confirmation', condition: 'daily_med_confirmation_due',
+    action: 'injection_confirm', dedupe_window_hours: 47 },
+
+  // No reply to daily med confirmation after 48h → missed followup
+  { key: 'daily_med_noresponse', condition: 'has_overdue_confirmation',
+    action: 'send_template', template: 'trigger.daily_med_missed_followup', dedupe_window_hours: 47 },
+
+  // 3+ consecutive missed daily doses → escalate
+  { key: 'daily_med_escalation', condition: 'consecutive_misses_gte', args: { count: 3 },
+    action: 'send_template', template: 'trigger.daily_med_escalation', dedupe_window_hours: 72 },
 
   // 2+ consecutive missed injections → escalate
   { key: 'missed_injection_escalation', condition: 'consecutive_misses_gte', args: { count: 2 },

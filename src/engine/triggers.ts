@@ -206,6 +206,7 @@ export async function evaluateTriggersForAllPatients() {
          p.next_titration_date,
          p.last_titration_date,
          p.supply_quantity,
+         p.injection_frequency,
          p.last_confirmed_injection_at,
          COALESCE(p.confirmed_injection_streak,    0) as confirmed_injection_streak,
          COALESCE(p.consecutive_missed_injections, 0) as consecutive_missed_injections,
@@ -243,7 +244,7 @@ export async function evaluateTriggersForAllPatients() {
     // 0005 migration not yet applied  -  fall back to simple query
     console.warn('[triggers] injection_events table not found  -  using legacy query');
     const legacy = await query<Omit<PatientForEval,
-      'medication' | 'next_titration_date' | 'last_titration_date' | 'supply_quantity' |
+      'medication' | 'injection_frequency' | 'next_titration_date' | 'last_titration_date' | 'supply_quantity' |
       'last_confirmed_injection_at' | 'confirmed_injection_streak' |
       'consecutive_missed_injections' | 'missed_injection_count' |
       'pending_overdue_injection_id' | 'last_confirmation_at' | 'supply_remaining' |
@@ -255,6 +256,7 @@ export async function evaluateTriggersForAllPatients() {
       ...p,
       modality: 'glp1',
       medication: null,
+      injection_frequency: null,
       next_titration_date: null,
       last_titration_date: null,
       supply_quantity: null,
