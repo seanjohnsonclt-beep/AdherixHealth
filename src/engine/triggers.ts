@@ -234,7 +234,7 @@ export async function evaluateTriggersForAllPatients() {
                      and ie.response = 'confirmed'), 0) as phase_confirmed_count,
          coalesce((select count(*)::int from injection_events ie
                    where ie.patient_id = p.id
-                     and ie.expected_at >= p.phase_started_at), 0) as phase_total_count
+                     and ie.expected_at >= p.phase_started_at), 0) as phase_total_count,
          coalesce(p.modality, 'glp1') as modality
        from patients p
        where p.status in ('active', 'flagged')`

@@ -31,9 +31,22 @@ export type MedicationProtocol = {
 export const MEDICATION_PROTOCOLS: MedicationProtocol[] = [
 
   // ─── GLP-1 — Adherix Keep ────────────────────────────────────────────────
+  //
+  // Ozempic and Wegovy are the same molecule (semaglutide) — different indication
+  // and titration endpoint. Mounjaro and Zepbound are the same molecule (tirzepatide).
+  // Liraglutide (Saxenda/Victoza) is a daily injection — note frequency: 'daily'.
+  // Rybelsus is oral semaglutide — daily pill, not an injection.
+  // Compounded versions follow branded titration schedules but are clinic-dosed.
+  //
+  // Legacy keys ('semaglutide', 'tirzepatide') kept for backward compat with
+  // existing patient records — do not remove.
+
+  // -- Semaglutide ----------------------------------------------------------
+
   {
+    // Legacy key — kept for backward compat. Equivalent to semaglutide_wegovy.
     key: 'semaglutide',
-    displayName: 'Semaglutide (Ozempic / Wegovy)',
+    displayName: 'Semaglutide (Ozempic / Wegovy) — legacy',
     modality: 'glp1',
     category: 'injection',
     frequency: 'weekly',
@@ -47,10 +60,84 @@ export const MEDICATION_PROTOCOLS: MedicationProtocol[] = [
       { daysOffset: 84,  dose: '1.7mg'  },
       { daysOffset: 112, dose: '2.4mg'  },
     ],
+    notes: 'Legacy key. Use semaglutide_wegovy or semaglutide_ozempic for new enrollments.',
   },
   {
+    key: 'semaglutide_wegovy',
+    displayName: 'Semaglutide — Wegovy (obesity)',
+    modality: 'glp1',
+    category: 'injection',
+    frequency: 'weekly',
+    isControlled: false,
+    supplyDays: 28,
+    hasTitration: true,
+    titrationSteps: [
+      { daysOffset: 0,   dose: '0.25mg' },
+      { daysOffset: 28,  dose: '0.5mg'  },
+      { daysOffset: 56,  dose: '1.0mg'  },
+      { daysOffset: 84,  dose: '1.7mg'  },
+      { daysOffset: 112, dose: '2.4mg'  },
+    ],
+    notes: 'FDA-approved for chronic weight management. 4 doses/pen. Titrates to 2.4mg maintenance.',
+  },
+  {
+    key: 'semaglutide_ozempic',
+    displayName: 'Semaglutide — Ozempic (type 2 diabetes)',
+    modality: 'glp1',
+    category: 'injection',
+    frequency: 'weekly',
+    isControlled: false,
+    supplyDays: 28,
+    hasTitration: true,
+    titrationSteps: [
+      { daysOffset: 0,   dose: '0.25mg' },
+      { daysOffset: 28,  dose: '0.5mg'  },
+      { daysOffset: 56,  dose: '1.0mg'  },
+      { daysOffset: 84,  dose: '2.0mg'  },
+    ],
+    notes: 'Diabetes indication. Same molecule as Wegovy but caps at 2.0mg. Often prescribed off-label for weight loss.',
+  },
+  {
+    key: 'semaglutide_oral',
+    displayName: 'Semaglutide oral — Rybelsus (type 2 diabetes)',
+    modality: 'glp1',
+    category: 'pill',
+    frequency: 'daily',
+    isControlled: false,
+    supplyDays: 30,
+    hasTitration: true,
+    titrationSteps: [
+      { daysOffset: 0,  dose: '3mg'  },
+      { daysOffset: 30, dose: '7mg'  },
+      { daysOffset: 60, dose: '14mg' },
+    ],
+    notes: 'Oral formulation — take on empty stomach with 4oz water, wait 30 min before eating. Significantly lower bioavailability than injection. Diabetes indication only.',
+  },
+  {
+    key: 'compounded_semaglutide',
+    displayName: 'Compounded semaglutide (clinic-dosed)',
+    modality: 'glp1',
+    category: 'injection',
+    frequency: 'weekly',
+    isControlled: false,
+    supplyDays: 28,
+    hasTitration: true,
+    titrationSteps: [
+      { daysOffset: 0,   dose: '0.25mg' },
+      { daysOffset: 28,  dose: '0.5mg'  },
+      { daysOffset: 56,  dose: '1.0mg'  },
+      { daysOffset: 84,  dose: '1.7mg'  },
+      { daysOffset: 112, dose: '2.4mg'  },
+    ],
+    notes: 'Compounded base follows standard semaglutide titration. Actual doses are clinic-prescribed and may differ. FDA removed semaglutide shortage designation in 2025 — verify compounding pharmacy compliance.',
+  },
+
+  // -- Tirzepatide ----------------------------------------------------------
+
+  {
+    // Legacy key — kept for backward compat. Equivalent to tirzepatide_zepbound.
     key: 'tirzepatide',
-    displayName: 'Tirzepatide (Mounjaro / Zepbound)',
+    displayName: 'Tirzepatide (Mounjaro / Zepbound) — legacy',
     modality: 'glp1',
     category: 'injection',
     frequency: 'weekly',
@@ -65,6 +152,136 @@ export const MEDICATION_PROTOCOLS: MedicationProtocol[] = [
       { daysOffset: 112, dose: '12.5mg' },
       { daysOffset: 140, dose: '15mg'   },
     ],
+    notes: 'Legacy key. Use tirzepatide_zepbound or tirzepatide_mounjaro for new enrollments.',
+  },
+  {
+    key: 'tirzepatide_zepbound',
+    displayName: 'Tirzepatide — Zepbound (obesity)',
+    modality: 'glp1',
+    category: 'injection',
+    frequency: 'weekly',
+    isControlled: false,
+    supplyDays: 28,
+    hasTitration: true,
+    titrationSteps: [
+      { daysOffset: 0,   dose: '2.5mg'  },
+      { daysOffset: 28,  dose: '5mg'    },
+      { daysOffset: 56,  dose: '7.5mg'  },
+      { daysOffset: 84,  dose: '10mg'   },
+      { daysOffset: 112, dose: '12.5mg' },
+      { daysOffset: 140, dose: '15mg'   },
+    ],
+    notes: 'GIP/GLP-1 dual agonist. FDA-approved for obesity. 4 single-dose pens/box. Titration same as Mounjaro.',
+  },
+  {
+    key: 'tirzepatide_mounjaro',
+    displayName: 'Tirzepatide — Mounjaro (type 2 diabetes)',
+    modality: 'glp1',
+    category: 'injection',
+    frequency: 'weekly',
+    isControlled: false,
+    supplyDays: 28,
+    hasTitration: true,
+    titrationSteps: [
+      { daysOffset: 0,   dose: '2.5mg'  },
+      { daysOffset: 28,  dose: '5mg'    },
+      { daysOffset: 56,  dose: '7.5mg'  },
+      { daysOffset: 84,  dose: '10mg'   },
+      { daysOffset: 112, dose: '12.5mg' },
+      { daysOffset: 140, dose: '15mg'   },
+    ],
+    notes: 'Same molecule as Zepbound — diabetes indication. Often prescribed off-label for weight loss.',
+  },
+  {
+    key: 'compounded_tirzepatide',
+    displayName: 'Compounded tirzepatide (clinic-dosed)',
+    modality: 'glp1',
+    category: 'injection',
+    frequency: 'weekly',
+    isControlled: false,
+    supplyDays: 28,
+    hasTitration: true,
+    titrationSteps: [
+      { daysOffset: 0,   dose: '2.5mg'  },
+      { daysOffset: 28,  dose: '5mg'    },
+      { daysOffset: 56,  dose: '7.5mg'  },
+      { daysOffset: 84,  dose: '10mg'   },
+      { daysOffset: 112, dose: '12.5mg' },
+      { daysOffset: 140, dose: '15mg'   },
+    ],
+    notes: 'Compounded base follows standard tirzepatide titration. Actual doses are clinic-prescribed and may differ.',
+  },
+
+  // -- Liraglutide ----------------------------------------------------------
+
+  {
+    key: 'liraglutide_saxenda',
+    displayName: 'Liraglutide — Saxenda (obesity)',
+    modality: 'glp1',
+    category: 'injection',
+    frequency: 'daily',
+    isControlled: false,
+    supplyDays: 30,
+    hasTitration: true,
+    titrationSteps: [
+      { daysOffset: 0,  dose: '0.6mg' },
+      { daysOffset: 7,  dose: '1.2mg' },
+      { daysOffset: 14, dose: '1.8mg' },
+      { daysOffset: 21, dose: '2.4mg' },
+      { daysOffset: 28, dose: '3.0mg' },
+    ],
+    notes: 'Daily subcutaneous injection. Older GLP-1 — largely replaced by semaglutide and tirzepatide in weight management. 5mg/mL prefilled pen (18mg total). Weekly dose escalation.',
+  },
+  {
+    key: 'liraglutide_victoza',
+    displayName: 'Liraglutide — Victoza (type 2 diabetes)',
+    modality: 'glp1',
+    category: 'injection',
+    frequency: 'daily',
+    isControlled: false,
+    supplyDays: 30,
+    hasTitration: true,
+    titrationSteps: [
+      { daysOffset: 0,  dose: '0.6mg' },
+      { daysOffset: 7,  dose: '1.2mg' },
+      { daysOffset: 14, dose: '1.8mg' },
+    ],
+    notes: 'Daily subcutaneous injection. Diabetes indication. Caps at 1.8mg (vs 3.0mg for Saxenda). Same molecule.',
+  },
+
+  // -- Dulaglutide ----------------------------------------------------------
+
+  {
+    key: 'dulaglutide',
+    displayName: 'Dulaglutide — Trulicity (type 2 diabetes)',
+    modality: 'glp1',
+    category: 'injection',
+    frequency: 'weekly',
+    isControlled: false,
+    supplyDays: 28,
+    hasTitration: true,
+    titrationSteps: [
+      { daysOffset: 0,  dose: '0.75mg' },
+      { daysOffset: 28, dose: '1.5mg'  },
+      { daysOffset: 56, dose: '3.0mg'  },
+      { daysOffset: 84, dose: '4.5mg'  },
+    ],
+    notes: 'Weekly single-dose auto-injector pen. Diabetes indication. Used off-label for weight loss. Each box = 4 pens.',
+  },
+
+  // -- Exenatide ------------------------------------------------------------
+
+  {
+    key: 'exenatide_er',
+    displayName: 'Exenatide ER — Bydureon BCise (type 2 diabetes)',
+    modality: 'glp1',
+    category: 'injection',
+    frequency: 'weekly',
+    isControlled: false,
+    supplyDays: 28,
+    hasTitration: false,
+    titrationSteps: [],
+    notes: 'Extended-release. Fixed dose 2mg weekly — no titration required. Autoinjector. Less commonly prescribed since newer agents launched. Shake well before use.',
   },
 
   // ─── Pharmacotherapy — Adherix Rx ────────────────────────────────────────
