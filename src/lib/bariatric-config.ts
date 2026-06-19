@@ -1,4 +1,5 @@
 // Adherix Bridge — Bariatric configuration
+// getConfig() is the central modality router for all Adherix modules.
 //
 // Parallel to src/lib/config.ts (GLP-1 / Adherix Keep).
 // Used when clinic.modality = 'bariatric'.
@@ -220,14 +221,60 @@ export function bariTemplatesForPhase(phaseId: number) { return BARI_TEMPLATES.f
 export function getConfig(modality: string) {
   if (modality === 'bariatric') {
     return {
-      phases:   bariPhases(),
-      templates: bariTemplates(),
-      triggers:  bariTriggers(),
-      findTemplate: bariFindTemplate,
-      findPhase:    bariFindPhase,
+      phases:            bariPhases(),
+      templates:         bariTemplates(),
+      triggers:          bariTriggers(),
+      findTemplate:      bariFindTemplate,
+      findPhase:         bariFindPhase,
       templatesForPhase: bariTemplatesForPhase,
     };
   }
+
+  if (modality === 'pharmacotherapy') {
+    const {
+      rxPhases, rxTemplates, rxTriggers,
+      rxFindTemplate, rxFindPhase, rxTemplatesForPhase,
+    } = require('./pharmacotherapy-config');
+    return {
+      phases:            rxPhases(),
+      templates:         rxTemplates(),
+      triggers:          rxTriggers(),
+      findTemplate:      rxFindTemplate,
+      findPhase:         rxFindPhase,
+      templatesForPhase: rxTemplatesForPhase,
+    };
+  }
+
+  if (modality === 'behavioral_therapy') {
+    const {
+      ibtPhases, ibtTemplates, ibtTriggers,
+      ibtFindTemplate, ibtFindPhase, ibtTemplatesForPhase,
+    } = require('./behavioral-therapy-config');
+    return {
+      phases:            ibtPhases(),
+      templates:         ibtTemplates(),
+      triggers:          ibtTriggers(),
+      findTemplate:      ibtFindTemplate,
+      findPhase:         ibtFindPhase,
+      templatesForPhase: ibtTemplatesForPhase,
+    };
+  }
+
+  if (modality === 'metabolic_health') {
+    const {
+      metabolicPhases, metabolicTemplates, metabolicTriggers,
+      metabolicFindTemplate, metabolicFindPhase, metabolicTemplatesForPhase,
+    } = require('./metabolic-health-config');
+    return {
+      phases:            metabolicPhases(),
+      templates:         metabolicTemplates(),
+      triggers:          metabolicTriggers(),
+      findTemplate:      metabolicFindTemplate,
+      findPhase:         metabolicFindPhase,
+      templatesForPhase: metabolicTemplatesForPhase,
+    };
+  }
+
   // Default: GLP-1 / Adherix Keep
   const { phases, templates, triggers, findTemplate, findPhase, templatesForPhase } = require('./config');
   return { phases: phases(), templates: templates(), triggers: triggers(), findTemplate, findPhase, templatesForPhase };

@@ -7,10 +7,11 @@ import { enrollPatientAction } from '@/app/patients/actions';
 const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
 
 export const PRODUCT_TYPES = [
-  { value: 'glp1',                label: 'GLP-1 (Adherix Keep)',      available: true  },
-  { value: 'bariatric',           label: 'Bariatric (Adherix Bridge)', available: true  },
-  { value: 'pharmacotherapy',     label: 'Pharmacotherapy',            available: false },
-  { value: 'behavioral_therapy',  label: 'Behavioral Therapy',         available: false },
+  { value: 'glp1',                label: 'GLP-1 (Adherix Keep)',              available: true  },
+  { value: 'bariatric',           label: 'Bariatric Surgery (Adherix Bridge)', available: true  },
+  { value: 'pharmacotherapy',     label: 'Pharmacotherapy (Adherix Rx)',       available: true  },
+  { value: 'behavioral_therapy',  label: 'Behavioral Therapy (Adherix IBT)',   available: true  },
+  { value: 'metabolic_health',    label: 'Metabolic Health (Adherix Metabolic)', available: true },
 ] as const;
 
 export function EnrollForm({ error, defaultModality = 'glp1' }: { error?: string; defaultModality?: string }) {
