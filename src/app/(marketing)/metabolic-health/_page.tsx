@@ -23,7 +23,7 @@ const levers = [
 const without = [
   'Pre-diabetes flagged at annual visit - no follow-up program offered',
   'Patient leaves with a pamphlet and a recommendation to "eat better"',
-  'No between-visit contact until next year\\'s lab',
+  'No between-visit contact until the next annual lab',
   'Metabolic drift continues undetected',
   'A1c crosses into T2D range - now a more complex, more expensive patient',
   'Practice had no touchpoint to prevent it',
