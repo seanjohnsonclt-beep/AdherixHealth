@@ -5,19 +5,19 @@ import { FadeRise, StaggerGroup } from '../_components/animation/MotionPrimitive
 
 const steps = [
   {
-    n: '01',
-    title: 'Establish the baseline',
-    body: 'Two weeks of carb awareness, sleep tracking, and post-meal walk introduction. Behavioral snapshot before targets are set - so the habits that follow are grounded in what is actually happening.',
+    n: 'The move',
+    title: 'A 10-minute walk after eating reduces glucose spikes by up to 25%',
+    body: 'No gym. No equipment. No willpower required beyond timing. The post-meal walk is the highest-leverage, lowest-friction metabolic intervention available - and most pre-diabetic patients have never been told this.',
   },
   {
-    n: '02',
-    title: 'Deliver the specific habits',
-    body: 'Post-meal walks (25% glucose spike reduction). Protein at breakfast. Carb quality swaps. Sleep targeting. One habit per message - no tracking apps, no overwhelm.',
+    n: 'The number',
+    title: 'A 0.5% A1c reduction cuts T2D progression risk by ~30%',
+    body: 'That shift is achievable with lifestyle change alone for most pre-diabetic patients. Adherix Metabolic builds the quarterly lab reminder into the program so patients see the number - and believe the change is real.',
   },
   {
-    n: '03',
-    title: 'Track the number that matters',
-    body: 'Quarterly A1c lab reminder built into the maintenance phase. A 0.5% reduction in A1c cuts T2D progression risk by ~30%. Patients need to see the number to believe the change.',
+    n: 'The gap',
+    title: 'Sleep under 7 hours raises fasting glucose the next day',
+    body: 'Cortisol from poor sleep triggers direct glucose release. Most pre-diabetic patients have never connected their sleep to their A1c. The engine surfaces this as a metabolic signal - not a wellness tip.',
   },
 ];
 
@@ -32,9 +32,9 @@ export function MetabolicHealthPage() {
             <br />Few have a plan.
           </FadeRise>
           <FadeRise as="p" className="dc-hero__sub" delay={0.1}>
-            Pre-diabetes is reversible. But only with consistent behavioral intervention between clinic
-            visits - not a pamphlet and a recommendation to eat better. Adherix Metabolic delivers
-            the specific habits that move A1c in the right direction, automatically, via SMS.
+            Pre-diabetes is reversible - but only with consistent behavioral intervention between
+            clinic visits. Most practices flag it at an annual lab and have nothing to offer next.
+            Adherix Metabolic turns that lab result into a 90-day behavioral program, automatically.
           </FadeRise>
           <FadeRise className="dc-hero__stats" delay={0.14}>
             <div className="dc-hero__stat">
@@ -61,14 +61,16 @@ export function MetabolicHealthPage() {
 
       <section className="mkt-v2-section mkt-v2-section--alt">
         <div className="mkt-container">
-          <div className="mkt-v2-section__head">
+          <div className="mkt-v2-section__head mkt-v2-section__head--lg">
             <FadeRise as="span" className="mkt-eyebrow">The problem</FadeRise>
-            <FadeRise as="h2" className="mkt-h2" delay={0.05}>Pre-diabetes gets flagged. Then nothing happens.</FadeRise>
+            <FadeRise as="h2" className="mkt-h2" delay={0.05}>
+              Pre-diabetes gets flagged. The patient leaves with a pamphlet. Then nothing.
+            </FadeRise>
             <FadeRise as="p" className="mkt-subhead" delay={0.1}>
-              Most practices identify pre-diabetes at an annual lab and have nowhere to send the patient.
-              No structured follow-up. No between-visit contact. By the time the next lab comes back,
-              the window has closed - and A1c has crossed into T2D range. Every practice has these
-              patients. Most have no active program for them.
+              Every practice has these patients. Most have no structured follow-up to offer them.
+              The annual visit schedule cannot carry the frequency of contact that behavior change requires.
+              Without a between-visit program, A1c drifts - and by the time the next lab comes back,
+              the pre-diabetes window has closed. Adherix Metabolic is that program.
             </FadeRise>
           </div>
         </div>
@@ -77,8 +79,8 @@ export function MetabolicHealthPage() {
       <section className="mkt-v2-section">
         <div className="mkt-container">
           <div className="mkt-v2-section__head">
-            <FadeRise as="span" className="mkt-eyebrow">How it works</FadeRise>
-            <FadeRise as="h2" className="mkt-h2" delay={0.05}>Three steps. Lab result to lasting habit change.</FadeRise>
+            <FadeRise as="span" className="mkt-eyebrow">How we fix it</FadeRise>
+            <FadeRise as="h2" className="mkt-h2" delay={0.05}>Three specific, evidence-based levers. Delivered via SMS.</FadeRise>
           </div>
           <StaggerGroup className="prod-step-grid" stagger={0.07} amount={0.2}>
             {steps.map(s => (
@@ -94,9 +96,9 @@ export function MetabolicHealthPage() {
 
       <section className="mkt-v2-section mkt-v2-section--ink">
         <div className="mkt-container mkt-v2-trust">
-          <FadeRise as="h2" className="mkt-h2 mkt-v2-trust__title">Turn a lab result into a 90-day intervention.</FadeRise>
+          <FadeRise as="h2" className="mkt-h2 mkt-v2-trust__title">Turn every pre-diabetes diagnosis into an active intervention.</FadeRise>
           <FadeRise as="p" className="mkt-subhead mkt-v2-trust__sub" delay={0.08}>
-            Every practice has pre-diabetic patients with no active program. Adherix Metabolic closes that gap automatically.
+            No staff overhead. No portal. Just the specific habits that move A1c - delivered automatically.
           </FadeRise>
           <FadeRise className="mkt-v2-trust__cta" delay={0.15}>
             <Link href="/pilot" className="mkt-btn mkt-btn--primary mkt-btn--lg">Book a demo</Link>

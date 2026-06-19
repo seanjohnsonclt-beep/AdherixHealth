@@ -5,19 +5,19 @@ import { FadeRise, StaggerGroup } from '../_components/animation/MotionPrimitive
 
 const steps = [
   {
-    n: '01',
-    title: 'Discharge through week six',
-    body: 'Supplement adherence, protein targets, hydration, and wound healing cues. The first six weeks are when behavioral habits form - and when patients are most likely to slip without contact.',
+    n: 'Weeks 1-6',
+    title: 'The anatomy changed. The behavioral environment did not.',
+    body: 'Protein deficiency, supplement non-adherence, and grazing begin within the first six weeks - before the first follow-up visit. Grazing behavior is present in roughly half of post-op patients and is the single strongest predictor of long-term regain. The engine surfaces it through reply pattern detection before it becomes clinical.',
   },
   {
-    n: '02',
-    title: 'Diet advancement and habit building',
-    body: 'Stage-by-stage diet progression cues. Protein-first framing. Grazing detection via reply patterns. Patients who build the habit in months two and three sustain it through year one.',
+    n: 'Months 2-6',
+    title: 'Habit formation - the window that determines year-two outcomes',
+    body: 'Patients who hit consistent protein targets and build movement habits in months two through six have significantly better outcomes at year two. This is the window most programs treat as stable. It is not. Adherix Bridge maintains daily behavioral contact through it.',
   },
   {
-    n: '03',
-    title: 'Rebound prevention through long-term maintenance',
-    body: 'Month 12-24 is when regain begins. The engine flags the pattern early - before the scale moves significantly - and prompts corrective action before it becomes a clinical problem.',
+    n: 'Month 12+',
+    title: 'Rebound begins quietly - long before the scale shows it',
+    body: 'Weight regain typically begins month 12-18, when most programs have stopped active outreach. The behavioral signals arrive first - lower protein, fewer replies, skipped supplements. The engine detects the drift and corrects it before the number moves.',
   },
 ];
 
@@ -32,10 +32,9 @@ export function ObesityCarePage() {
             <br />Post-op behavior is the variable.
           </FadeRise>
           <FadeRise as="p" className="dc-hero__sub" delay={0.1}>
-            The anatomy changes. The behavioral environment does not.
-            Most programs discharge patients with a pamphlet and a follow-up in six weeks.
-            Adherix Bridge runs structured post-op behavioral support automatically - from discharge
-            through long-term maintenance.
+            The operation produces rapid, significant weight loss. What happens in the two years
+            after discharge determines whether it lasts. Most programs cannot staff the behavioral
+            contact that long-term outcomes require. Adherix Bridge does it automatically.
           </FadeRise>
           <FadeRise className="dc-hero__stats" delay={0.14}>
             <div className="dc-hero__stat">
@@ -44,13 +43,13 @@ export function ObesityCarePage() {
             </div>
             <div className="dc-hero__stat-div" />
             <div className="dc-hero__stat">
-              <span className="dc-hero__stat-n">6</span>
-              <span className="dc-hero__stat-l">phases from pre-op through long-term maintenance</span>
+              <span className="dc-hero__stat-n">Week 1</span>
+              <span className="dc-hero__stat-l">is when behavioral drift begins - before most programs have their first follow-up</span>
             </div>
             <div className="dc-hero__stat-div" />
             <div className="dc-hero__stat">
-              <span className="dc-hero__stat-n">SMS</span>
-              <span className="dc-hero__stat-l">first - no app, no portal, no friction</span>
+              <span className="dc-hero__stat-n">0 staff</span>
+              <span className="dc-hero__stat-l">required to run the between-visit behavioral program</span>
             </div>
           </FadeRise>
           <FadeRise className="dc-hero__ctas" delay={0.2}>
@@ -62,14 +61,16 @@ export function ObesityCarePage() {
 
       <section className="mkt-v2-section mkt-v2-section--alt">
         <div className="mkt-container">
-          <div className="mkt-v2-section__head">
+          <div className="mkt-v2-section__head mkt-v2-section__head--lg">
             <FadeRise as="span" className="mkt-eyebrow">The problem</FadeRise>
-            <FadeRise as="h2" className="mkt-h2" delay={0.05}>The surgery holds. The behavioral support after it does not.</FadeRise>
+            <FadeRise as="h2" className="mkt-h2" delay={0.05}>
+              Your patient left the OR with a changed anatomy and an unchanged environment.
+            </FadeRise>
             <FadeRise as="p" className="mkt-subhead" delay={0.1}>
-              Bariatric surgery produces significant, rapid weight loss. The long-term outcome depends on
-              what the patient does with food, movement, supplements, and stress for the next two years.
-              Most programs have limited capacity for the between-visit contact that behavioral maintenance requires.
-              Adherix Bridge runs it automatically.
+              The surgery is a tool. The behavioral work that follows determines the long-term outcome.
+              Protein targets, supplement adherence, grazing patterns, stress responses - these are
+              not things a six-week follow-up visit can monitor. Most programs discharge patients
+              into a behavioral gap. Adherix Bridge closes it.
             </FadeRise>
           </div>
         </div>
@@ -78,8 +79,8 @@ export function ObesityCarePage() {
       <section className="mkt-v2-section">
         <div className="mkt-container">
           <div className="mkt-v2-section__head">
-            <FadeRise as="span" className="mkt-eyebrow">How it works</FadeRise>
-            <FadeRise as="h2" className="mkt-h2" delay={0.05}>Three critical windows. Covered from day one.</FadeRise>
+            <FadeRise as="span" className="mkt-eyebrow">How we fix it</FadeRise>
+            <FadeRise as="h2" className="mkt-h2" delay={0.05}>Three windows where outcomes are won or lost.</FadeRise>
           </div>
           <StaggerGroup className="prod-step-grid" stagger={0.07} amount={0.2}>
             {steps.map(s => (
@@ -95,9 +96,9 @@ export function ObesityCarePage() {
 
       <section className="mkt-v2-section mkt-v2-section--ink">
         <div className="mkt-container mkt-v2-trust">
-          <FadeRise as="h2" className="mkt-h2 mkt-v2-trust__title">Protect the outcome your patients worked for.</FadeRise>
+          <FadeRise as="h2" className="mkt-v2-trust__title" style={{fontFamily: 'Fraunces, Georgia, serif', fontSize: 'clamp(28px, 4vw, 44px)', fontWeight: 400, color: 'var(--mkt-paper)', lineHeight: 1.1, marginBottom: 20}}>Protect the outcome your patients worked for.</FadeRise>
           <FadeRise as="p" className="mkt-subhead mkt-v2-trust__sub" delay={0.08}>
-            Adherix Bridge runs post-op behavioral support automatically - from discharge through year two.
+            Adherix Bridge runs post-op behavioral support from discharge through year two. No staff overhead. No portal.
           </FadeRise>
           <FadeRise className="mkt-v2-trust__cta" delay={0.15}>
             <Link href="/pilot" className="mkt-btn mkt-btn--primary mkt-btn--lg">Book a demo</Link>

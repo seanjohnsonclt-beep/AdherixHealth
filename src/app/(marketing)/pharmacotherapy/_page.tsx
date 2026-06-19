@@ -5,24 +5,22 @@ import { FadeRise, StaggerGroup } from '../_components/animation/MotionPrimitive
 
 const steps = [
   {
-    n: '01',
-    title: 'First dose — anchored',
-    body: 'Patient picks a daily time and commits to it in the first 48 hours. Same time every day is the single strongest predictor of long-term pill adherence.',
+    n: 'Week 1-2',
+    stat: 'Day 9',
+    title: 'The nausea window',
+    body: 'Nausea peaks at days 7-14 on most weight loss medications. Patients who receive context before it hits are significantly less likely to stop. The engine sends it automatically - before the symptom, not after the dropout.',
   },
   {
-    n: '02',
-    title: 'Side effects — addressed early',
-    body: 'Patients who understand what to expect in the first two weeks stay on medication at significantly higher rates. The engine sends context before they quit silently.',
+    n: 'Day 21',
+    stat: '30-day',
+    title: 'The refill window',
+    body: 'Every 30-day supply cycle is a dropout opportunity. For controlled substances requiring a monthly Rx, missing the window means going without. Adherix Rx flags the refill at day 21 - before the gap opens.',
   },
   {
-    n: '03',
-    title: 'Refill windows — covered',
-    body: 'Day-21 refill reminder on every 30-day supply. For controlled substances, the monthly Rx window is flagged before patients run out between visits.',
-  },
-  {
-    n: '04',
-    title: 'Plateau — reframed',
-    body: 'Month 3 is when confidence drops and patients assume the medication stopped working. The engine sends plateau framing before the stall hits.',
+    n: 'Month 3',
+    stat: '85%',
+    title: 'The plateau moment',
+    body: 'The scale stalls around month 3 for most patients. 85% interpret this as treatment failure and quietly stop. The engine sends plateau framing before the stall hits - reframing it as expected, not a reason to quit.',
   },
 ];
 
@@ -38,8 +36,8 @@ export function PharmacotherapyPage() {
           </FadeRise>
           <FadeRise as="p" className="dc-hero__sub" delay={0.1}>
             Weight loss medications work when patients take them consistently, manage side effects early,
-            and stay on through the plateau. Most do not. Adherix Rx runs the behavioral support layer
-            automatically - no staff involvement required.
+            and push through the plateau. Most do not. Adherix Rx runs the behavioral support layer
+            automatically - no staff involvement, no portal, no extra overhead.
           </FadeRise>
           <FadeRise className="dc-hero__stats" delay={0.14}>
             <div className="dc-hero__stat">
@@ -48,13 +46,13 @@ export function PharmacotherapyPage() {
             </div>
             <div className="dc-hero__stat-div" />
             <div className="dc-hero__stat">
-              <span className="dc-hero__stat-n">Month 3</span>
-              <span className="dc-hero__stat-l">is when the plateau hits and most practices have no touchpoint</span>
+              <span className="dc-hero__stat-n">3 windows</span>
+              <span className="dc-hero__stat-l">where most patients quit - nausea, refill gap, plateau</span>
             </div>
             <div className="dc-hero__stat-div" />
             <div className="dc-hero__stat">
-              <span className="dc-hero__stat-n">SMS</span>
-              <span className="dc-hero__stat-l">first - no app, no portal, no friction for the patient</span>
+              <span className="dc-hero__stat-n">0 calls</span>
+              <span className="dc-hero__stat-l">required from your staff - the engine handles it</span>
             </div>
           </FadeRise>
           <FadeRise className="dc-hero__ctas" delay={0.2}>
@@ -66,14 +64,16 @@ export function PharmacotherapyPage() {
 
       <section className="mkt-v2-section mkt-v2-section--alt">
         <div className="mkt-container">
-          <div className="mkt-v2-section__head">
+          <div className="mkt-v2-section__head mkt-v2-section__head--lg">
             <FadeRise as="span" className="mkt-eyebrow">The problem</FadeRise>
-            <FadeRise as="h2" className="mkt-h2" delay={0.05}>Adherence is a behavioral problem, not a clinical one.</FadeRise>
+            <FadeRise as="h2" className="mkt-h2" delay={0.05}>
+              On day 9, the nausea hits. The patient does not call. They just stop taking it.
+            </FadeRise>
             <FadeRise as="p" className="mkt-subhead" delay={0.1}>
-              The pharmacology works. What breaks down is what happens between prescriptions.
-              Side effects go unaddressed. Refills get missed. The plateau hits and patients assume
-              the medication stopped working. None of this requires a clinician to fix - it requires
-              a consistent, timely response that no practice can staff at scale.
+              The pharmacology is sound. What breaks down is the patient experience between prescriptions.
+              Side effects go unaddressed. Refill windows get missed. The plateau arrives and patients
+              assume the drug stopped working. None of this requires a clinician to fix - it requires
+              a timely, specific response that no practice can deliver manually at scale.
             </FadeRise>
           </div>
         </div>
@@ -82,8 +82,8 @@ export function PharmacotherapyPage() {
       <section className="mkt-v2-section">
         <div className="mkt-container">
           <div className="mkt-v2-section__head">
-            <FadeRise as="span" className="mkt-eyebrow">How it works</FadeRise>
-            <FadeRise as="h2" className="mkt-h2" delay={0.05}>Four critical windows. Covered automatically.</FadeRise>
+            <FadeRise as="span" className="mkt-eyebrow">How we fix it</FadeRise>
+            <FadeRise as="h2" className="mkt-h2" delay={0.05}>Three dropout windows. Covered before they open.</FadeRise>
           </div>
           <StaggerGroup className="prod-step-grid" stagger={0.07} amount={0.2}>
             {steps.map(s => (
@@ -99,9 +99,9 @@ export function PharmacotherapyPage() {
 
       <section className="mkt-v2-section mkt-v2-section--ink">
         <div className="mkt-container mkt-v2-trust">
-          <FadeRise as="h2" className="mkt-h2 mkt-v2-trust__title">Close the adherence gap - automatically.</FadeRise>
+          <FadeRise as="h2" className="mkt-h2 mkt-v2-trust__title">Your patients stay on it. Without your staff lifting a finger.</FadeRise>
           <FadeRise as="p" className="mkt-subhead mkt-v2-trust__sub" delay={0.08}>
-            Adherix Rx runs from first fill through year one with no coordinator overhead.
+            Adherix Rx runs from first fill through year one. Automatically.
           </FadeRise>
           <FadeRise className="mkt-v2-trust__cta" delay={0.15}>
             <Link href="/pilot" className="mkt-btn mkt-btn--primary mkt-btn--lg">Book a demo</Link>

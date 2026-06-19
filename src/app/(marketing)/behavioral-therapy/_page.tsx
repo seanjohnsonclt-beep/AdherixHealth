@@ -5,19 +5,19 @@ import { FadeRise, StaggerGroup } from '../_components/animation/MotionPrimitive
 
 const steps = [
   {
-    n: '01',
-    title: 'Daily contact in month one',
-    body: 'The highest behavioral risk window. SMS checks in every day - food log prompts, hunger scale, eating speed, movement. The visit alone cannot carry this frequency.',
+    n: 'Month 1',
+    title: 'Daily contact - unstaffable without automation',
+    body: 'Daily behavioral contact in the first 30 days predicts 12-month outcomes more strongly than any other single factor in IBT research. No practice can staff that frequency manually. Adherix IBT delivers it automatically via SMS.',
   },
   {
-    n: '02',
-    title: 'Structured cadence through month six',
-    body: 'Every 2-3 days between visits. Emotional eating, environment redesign, sleep, the plate method. Patients stay engaged between the biweekly appointments Medicare requires.',
+    n: 'Months 2-6',
+    title: 'Between every visit - the gap where behavior drifts',
+    body: 'Patients who engage with behavioral prompts 3+ days per week between visits lose significantly more weight than those who do not. The biweekly visit cadence alone cannot carry this. The engine fills every gap.',
   },
   {
-    n: '03',
-    title: 'Weekly maintenance through year one',
-    body: 'Weekly behavioral check-ins and visit prep reminders. Patients who stay engaged in months 7-12 are significantly less likely to regain. The engine runs it automatically.',
+    n: 'Months 7-12',
+    title: 'Year-one retention - where most programs go silent',
+    body: 'Without structured follow-up after month 6, most IBT patients show no measurable behavioral change by the end of year one. Weekly SMS check-ins and visit prep keep the habit alive - and the reimbursement justified.',
   },
 ];
 
@@ -32,19 +32,19 @@ export function BehavioralTherapyPage() {
             <br />Most practices deliver 4.
           </FadeRise>
           <FadeRise as="p" className="dc-hero__sub" delay={0.1}>
-            The reimbursement exists. The between-visit program does not.
-            Behavior change requires contact at a frequency that appointments alone cannot provide.
-            Adherix IBT fills every gap between visits - automatically, via SMS.
+            The reimbursement is there. The clinical evidence is strong. What most programs are missing
+            is the daily behavioral contact that keeps patients on track between appointments.
+            Adherix IBT fills every gap - automatically, via SMS, with zero coordinator overhead.
           </FadeRise>
           <FadeRise className="dc-hero__stats" delay={0.14}>
             <div className="dc-hero__stat">
               <span className="dc-hero__stat-n">22</span>
-              <span className="dc-hero__stat-l">Medicare-covered IBT visits in year one - most programs use fewer than 5</span>
+              <span className="dc-hero__stat-l">Medicare-covered visits per year - most programs use fewer than 5</span>
             </div>
             <div className="dc-hero__stat-div" />
             <div className="dc-hero__stat">
               <span className="dc-hero__stat-n">Daily</span>
-              <span className="dc-hero__stat-l">SMS in month one - the window when habits form or fail</span>
+              <span className="dc-hero__stat-l">contact in month one predicts year-one outcomes - no practice can staff this manually</span>
             </div>
             <div className="dc-hero__stat-div" />
             <div className="dc-hero__stat">
@@ -61,14 +61,17 @@ export function BehavioralTherapyPage() {
 
       <section className="mkt-v2-section mkt-v2-section--alt">
         <div className="mkt-container">
-          <div className="mkt-v2-section__head">
+          <div className="mkt-v2-section__head mkt-v2-section__head--lg">
             <FadeRise as="span" className="mkt-eyebrow">The problem</FadeRise>
-            <FadeRise as="h2" className="mkt-h2" delay={0.05}>The visits exist. The between-visit program does not.</FadeRise>
+            <FadeRise as="h2" className="mkt-h2" delay={0.05}>
+              The visits exist. The between-visit program does not.
+            </FadeRise>
             <FadeRise as="p" className="mkt-subhead" delay={0.1}>
-              IBT is reimbursed at the highest frequency of any CMS obesity benefit - monthly in month one,
-              biweekly through month six, monthly through year one. The clinical evidence is strong.
-              What most practices are missing is the daily behavioral contact that keeps patients
-              on track between those appointments. That is what Adherix IBT provides.
+              IBT is one of the most well-reimbursed obesity interventions CMS offers. The clinical
+              protocol is designed around high-frequency contact - daily in month one, biweekly
+              through month six. The research supports it. But behavioral change requires daily
+              reinforcement, not monthly appointments. Most practices cannot staff that gap.
+              That is exactly what Adherix IBT was built to close.
             </FadeRise>
           </div>
         </div>
@@ -77,8 +80,8 @@ export function BehavioralTherapyPage() {
       <section className="mkt-v2-section">
         <div className="mkt-container">
           <div className="mkt-v2-section__head">
-            <FadeRise as="span" className="mkt-eyebrow">How it works</FadeRise>
-            <FadeRise as="h2" className="mkt-h2" delay={0.05}>Three phases. One year. Zero overhead.</FadeRise>
+            <FadeRise as="span" className="mkt-eyebrow">How we fix it</FadeRise>
+            <FadeRise as="h2" className="mkt-h2" delay={0.05}>Automated contact across all three behavioral windows.</FadeRise>
           </div>
           <StaggerGroup className="prod-step-grid" stagger={0.07} amount={0.2}>
             {steps.map(s => (
@@ -94,9 +97,9 @@ export function BehavioralTherapyPage() {
 
       <section className="mkt-v2-section mkt-v2-section--ink">
         <div className="mkt-container mkt-v2-trust">
-          <FadeRise as="h2" className="mkt-h2 mkt-v2-trust__title">Deliver IBT the way it was designed.</FadeRise>
+          <FadeRise as="h2" className="mkt-h2 mkt-v2-trust__title">Deliver the benefit Medicare designed - without adding staff.</FadeRise>
           <FadeRise as="p" className="mkt-subhead mkt-v2-trust__sub" delay={0.08}>
-            Daily contact. Structured cadence. Year-one retention - without adding staff.
+            Daily contact. Structured cadence. Year-one outcomes. Zero overhead.
           </FadeRise>
           <FadeRise className="mkt-v2-trust__cta" delay={0.15}>
             <Link href="/pilot" className="mkt-btn mkt-btn--primary mkt-btn--lg">Book a demo</Link>
