@@ -7405,3 +7405,72 @@ a.mkt-btn--primary:hover,
   margin-top: 32px;
   letter-spacing: 0.15em;
 }
+
+/* ── Products dropdown nav ─────────────────────────────────── */
+.mkt-products-dd {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.mkt-products-dd__trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.9rem;
+  color: var(--mkt-graphite);
+  transition: color 0.15s;
+}
+.mkt-products-dd__trigger:hover { color: var(--mkt-ink); }
+.mkt-products-dd__trigger svg { transition: transform 0.2s; }
+.mkt-products-dd__trigger svg.is-open { transform: rotate(180deg); }
+
+.mkt-products-dd__menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 220px;
+  background: var(--mkt-paper-soft, #faf6ed);
+  border: 1px solid var(--mkt-sage-mist, #e0ece9);
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(31,42,42,0.10);
+  padding: 6px;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mkt-products-dd__item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 9px 12px;
+  border-radius: 7px;
+  text-decoration: none;
+  transition: background 0.12s;
+}
+.mkt-products-dd__item:hover {
+  background: var(--mkt-sage-mist, #e0ece9);
+}
+
+.mkt-products-dd__item-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--mkt-ink, #1f2a2a);
+  line-height: 1.2;
+}
+
+.mkt-products-dd__item-sub {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--mkt-graphite, #6b7878);
+  line-height: 1.3;
+}
