@@ -24,7 +24,7 @@ export default async function NewPatientPage({
           If a medication is selected, weekly injection confirmations start automatically after day 7.
         </p>
 
-        <EnrollForm error={searchParams.error} />
+        <EnrollForm error={searchParams.error} defaultModality={user.clinicModality} />
       </div>
     </div>
   );

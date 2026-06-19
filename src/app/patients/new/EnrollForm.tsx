@@ -6,11 +6,20 @@ import { enrollPatientAction } from '@/app/patients/actions';
 
 const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
 
-export function EnrollForm({ error }: { error?: string }) {
+export const PRODUCT_TYPES = [
+  { value: 'glp1',                label: 'GLP-1 (Adherix Keep)',      available: true  },
+  { value: 'bariatric',           label: 'Bariatric (Adherix Bridge)', available: true  },
+  { value: 'pharmacotherapy',     label: 'Pharmacotherapy',            available: false },
+  { value: 'behavioral_therapy',  label: 'Behavioral Therapy',         available: false },
+] as const;
+
+export function EnrollForm({ error, defaultModality = 'glp1' }: { error?: string; defaultModality?: string }) {
   const [selectedMed, setSelectedMed] = useState('');
+  const [modality, setModality] = useState(defaultModality);
 
   const protocol = MEDICATION_PROTOCOLS.find(p => p.key === selectedMed);
   const firstDose = protocol?.titrationSteps[0]?.dose ?? '';
+  const isGlp1 = modality === 'glp1';
 
   return (
     <form action={enrollPatientAction}>
@@ -35,25 +44,52 @@ export function EnrollForm({ error }: { error?: string }) {
         </p>
       </div>
 
-      {/* -- Medication ---------------------------------------------------- */}
-      <div style={{ marginBottom: 16 }}>
-        <label className="label" htmlFor="medication">Medication</label>
+      {/* -- Product type -------------------------------------------------- */}
+      <div style={{ marginBottom: 24 }}>
+        <label className="label" htmlFor="modality">Product type</label>
         <select
           className="input"
-          name="medication"
-          id="medication"
-          value={selectedMed}
-          onChange={e => setSelectedMed(e.target.value)}
+          name="modality"
+          id="modality"
+          value={modality}
+          onChange={e => {
+            setModality(e.target.value);
+            // Clear medication fields when switching away from GLP-1
+            if (e.target.value !== 'glp1') setSelectedMed('');
+          }}
         >
-          <option value=""> -  None / Other (no injection tracking)  - </option>
-          {MEDICATION_PROTOCOLS.map(p => (
-            <option key={p.key} value={p.key}>{p.displayName}</option>
+          {PRODUCT_TYPES.map(pt => (
+            <option key={pt.value} value={pt.value} disabled={!pt.available}>
+              {pt.label}{!pt.available ? ' — coming soon' : ''}
+            </option>
           ))}
         </select>
+        <p className="small faint" style={{ marginTop: 6 }}>
+          Determines which message cadence and behavioral engine the patient receives.
+        </p>
       </div>
 
-      {/* Starting dose  -  auto-populated from protocol, shown when med is selected */}
-      {protocol && (
+      {/* -- Medication (GLP-1 only) --------------------------------------- */}
+      {isGlp1 && (
+        <div style={{ marginBottom: 16 }}>
+          <label className="label" htmlFor="medication">Medication</label>
+          <select
+            className="input"
+            name="medication"
+            id="medication"
+            value={selectedMed}
+            onChange={e => setSelectedMed(e.target.value)}
+          >
+            <option value=""> - None / Other (no injection tracking) - </option>
+            {MEDICATION_PROTOCOLS.map(p => (
+              <option key={p.key} value={p.key}>{p.displayName}</option>
+            ))}
+          </select>
+        </div>
+      )}
+
+      {/* Starting dose */}
+      {isGlp1 && protocol && (
         <div style={{ marginBottom: 16 }}>
           <label className="label" htmlFor="starting_dose">Starting dose</label>
           <select className="input" name="starting_dose" id="starting_dose">
@@ -70,12 +106,12 @@ export function EnrollForm({ error }: { error?: string }) {
         </div>
       )}
 
-      {/* -- Injection day -------------------------------------------------- */}
-      {protocol && (
+      {/* Injection day */}
+      {isGlp1 && protocol && (
         <div style={{ marginBottom: 16 }}>
           <label className="label" htmlFor="next_dose_day">Injection day</label>
           <select className="input" name="next_dose_day" id="next_dose_day">
-            <option value=""> -  Unknown  - </option>
+            <option value=""> - Unknown - </option>
             {DAYS.map(d => <option key={d} value={d}>{d}</option>)}
           </select>
           <p className="small faint" style={{ marginTop: 6 }}>
@@ -84,8 +120,8 @@ export function EnrollForm({ error }: { error?: string }) {
         </div>
       )}
 
-      {/* -- Supply quantity ----------------------------------------------- */}
-      {protocol && (
+      {/* Supply quantity */}
+      {isGlp1 && protocol && (
         <div style={{ marginBottom: 24 }}>
           <label className="label" htmlFor="supply_quantity">
             Supply quantity (doses in current pen/pack)
@@ -105,15 +141,14 @@ export function EnrollForm({ error }: { error?: string }) {
         </div>
       )}
 
-      {/* Hidden field for first dose (so server action can read it without JS magic) */}
-      {protocol && (
+      {isGlp1 && protocol && (
         <input type="hidden" name="_protocol_first_dose" value={firstDose} />
       )}
 
       {/* -- Error --------------------------------------------------------- */}
       {error === 'invalid_phone' && (
         <p style={{ color: 'var(--accent)', fontSize: 13, marginBottom: 16 }}>
-          That phone number doesn't look right.
+          That phone number does not look right.
         </p>
       )}
 

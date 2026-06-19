@@ -10,6 +10,7 @@ export type EnrollArgs = {
   clinicId: string;
   phone: string;          // E.164
   firstName?: string;
+  modality?: string;      // 'glp1' | 'bariatric' - defaults to clinic modality
   // Adherence fields (optional  -  legacy enrollment without medication is still valid)
   medication?: string;    // MEDICATION_PROTOCOLS key
   startingDose?: string;  // override first titration step dose (rare)
@@ -20,6 +21,7 @@ export async function enrollPatient({
   clinicId,
   phone,
   firstName,
+  modality: explicitModality,
   medication,
   startingDose,
   supplyQuantity,
@@ -31,12 +33,15 @@ export async function enrollPatient({
   );
   if (existing) return existing.id;
 
-  // Inherit modality from clinic (glp1 = Adherix Keep, bariatric = Adherix Bridge)
-  const clinicRow = await queryOne<{ modality: string }>(
-    `select coalesce(modality, 'glp1') as modality from clinics where id = $1`,
-    [clinicId]
-  );
-  const modality = clinicRow?.modality ?? 'glp1';
+  // Modality: use explicit value from enrollment form, fall back to clinic default
+  let modality = explicitModality ?? 'glp1';
+  if (!explicitModality) {
+    const clinicRow = await queryOne<{ modality: string }>(
+      `select coalesce(modality, 'glp1') as modality from clinics where id = $1`,
+      [clinicId]
+    );
+    modality = clinicRow?.modality ?? 'glp1';
+  }
 
   // Compute titration schedule from protocol if medication is set
   const now = new Date();

@@ -29,6 +29,7 @@ export async function enrollPatientAction(formData: FormData) {
   const supplyRaw      = String(formData.get('supply_quantity') || '').trim();
   const supplyQuantity = supplyRaw ? parseInt(supplyRaw, 10) || undefined : undefined;
   const nextDoseDay    = String(formData.get('next_dose_day') || '').trim() || undefined;
+  const modality       = String(formData.get('modality') || '').trim() || undefined;
 
   const id = await enrollPatient({
     clinicId: user.clinicId,
@@ -37,6 +38,7 @@ export async function enrollPatientAction(formData: FormData) {
     medication,
     startingDose,
     supplyQuantity,
+    modality,
   });
 
   // Set next_dose_day if provided (column added in 0006 migration)

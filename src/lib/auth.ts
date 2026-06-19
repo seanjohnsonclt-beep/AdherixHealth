@@ -7,6 +7,7 @@ export type CurrentUser = {
   email: string;
   clinicId: string;
   clinicName: string;
+  clinicModality: string;
 };
 
 export async function requireUser(): Promise<CurrentUser> {
@@ -14,8 +15,8 @@ export async function requireUser(): Promise<CurrentUser> {
   const { data: { user } } = await supa.auth.getUser();
   if (!user) redirect('/login');
 
-  const row = await queryOne<{ clinic_id: string; clinic_name: string; email: string }>(
-    `select cu.clinic_id, c.name as clinic_name, cu.email
+  const row = await queryOne<{ clinic_id: string; clinic_name: string; email: string; clinic_modality: string }>(
+    `select cu.clinic_id, c.name as clinic_name, cu.email, coalesce(c.modality, 'glp1') as clinic_modality
      from clinic_users cu
      join clinics c on c.id = cu.clinic_id
      where cu.user_id = $1`,
@@ -32,5 +33,6 @@ export async function requireUser(): Promise<CurrentUser> {
     email: row.email,
     clinicId: row.clinic_id,
     clinicName: row.clinic_name,
+    clinicModality: row.clinic_modality,
   };
 }
