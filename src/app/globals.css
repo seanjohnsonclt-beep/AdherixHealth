@@ -4950,7 +4950,251 @@ a.mkt-btn--primary:hover,
   line-height: 1.35;
 }
 
-.mkt-demo-walk
+/* Demo walk — panel + phone + enroll (truncated CSS restored) */
+
+.mkt-demo-walk__panel {
+  padding: 32px 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-height: 380px;
+}
+
+.mkt-demo-walk__phase {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.mkt-demo-walk__engine {
+  font-size: 14px;
+  color: var(--mkt-ink-2);
+  line-height: 1.7;
+  margin: 0;
+  padding: 16px 20px;
+  background: var(--mkt-bg-alt);
+  border-left: 3px solid var(--mkt-sage-deep);
+  border-radius: 0 6px 6px 0;
+}
+
+.mkt-demo-walk__nav {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: auto;
+  padding-top: 8px;
+}
+
+.mkt-demo-walk__progress {
+  font-size: 13px;
+  color: var(--mkt-muted);
+  font-family: var(--mkt-mono);
+}
+
+/* Risk badges */
+.mkt-demo-risk {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.03em;
+}
+.mkt-demo-risk--high {
+  background: rgba(185,28,28,0.08);
+  color: #b91c1c;
+}
+.mkt-demo-risk--low {
+  background: rgba(48,209,88,0.10);
+  color: #15803d;
+}
+
+/* Phone frame */
+.mkt-demo-phone {
+  background: var(--mkt-bg);
+  border: 1px solid var(--mkt-line);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 480px;
+}
+
+.mkt-demo-phone__header {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--mkt-muted);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--mkt-line);
+  margin-bottom: 4px;
+}
+
+.mkt-demo-bubble-out {
+  display: flex;
+  justify-content: flex-start;
+}
+.mkt-demo-bubble-out__inner {
+  background: var(--mkt-sage-deep);
+  color: #fff;
+  font-size: 13.5px;
+  line-height: 1.55;
+  padding: 10px 14px;
+  border-radius: 4px 16px 16px 16px;
+  max-width: 88%;
+}
+
+.mkt-demo-bubble-in {
+  display: flex;
+  justify-content: flex-end;
+}
+.mkt-demo-bubble-in__inner {
+  background: var(--mkt-line);
+  color: var(--mkt-ink);
+  font-size: 13.5px;
+  line-height: 1.55;
+  padding: 10px 14px;
+  border-radius: 16px 4px 16px 16px;
+  max-width: 72%;
+}
+
+.mkt-demo-bubble-key {
+  font-family: var(--mkt-mono);
+  font-size: 10px;
+  opacity: 0.55;
+  margin-top: 6px;
+  letter-spacing: 0.04em;
+}
+
+/* Live enroll section */
+.mkt-demo-enroll {
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 60px;
+  align-items: start;
+}
+@media (max-width: 860px) {
+  .mkt-demo-enroll { grid-template-columns: 1fr; gap: 40px; }
+}
+
+.mkt-demo-enroll__form-card {
+  background: var(--mkt-bg);
+  border: 1px solid var(--mkt-line);
+  border-radius: var(--mkt-radius-lg);
+  padding: 32px;
+}
+
+.mkt-demo-enroll__features {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.mkt-demo-enroll__feat {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--mkt-graphite);
+  line-height: 1.5;
+}
+
+.mkt-demo-enroll__feat-mark {
+  color: var(--mkt-sage-deep);
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.mkt-demo-form__field {
+  margin-bottom: 16px;
+}
+
+.mkt-demo-form__label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--mkt-graphite);
+  margin-bottom: 6px;
+  letter-spacing: 0.03em;
+}
+
+.mkt-demo-form__input {
+  display: block;
+  width: 100%;
+  padding: 10px 14px;
+  font-size: 14px;
+  border: 1px solid var(--mkt-line);
+  border-radius: 8px;
+  background: var(--mkt-bg-alt);
+  color: var(--mkt-ink);
+  box-sizing: border-box;
+  transition: border-color 0.15s;
+}
+.mkt-demo-form__input:focus {
+  outline: none;
+  border-color: var(--mkt-sage-deep);
+}
+
+.mkt-demo-form__note {
+  font-size: 12px;
+  color: var(--mkt-muted);
+  line-height: 1.6;
+  margin-top: 12px;
+  text-align: center;
+}
+
+.mkt-demo-form__success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 40px 32px;
+}
+
+.mkt-demo-form__success-mark {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(48,209,88,0.12);
+  color: #15803d;
+  font-size: 22px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+/* Demo walk responsive */
+@media (max-width: 680px) {
+  .mkt-demo-walk {
+    grid-template-columns: 1fr;
+  }
+  .mkt-demo-walk__steps {
+    border-right: none;
+    border-bottom: 1px solid var(--mkt-line);
+    display: flex;
+    overflow-x: auto;
+    padding: 0;
+  }
+  .mkt-demo-walk__step-btn {
+    flex-shrink: 0;
+    border-left: none;
+    border-bottom: 3px solid transparent;
+    padding: 10px 16px;
+  }
+  .mkt-demo-walk__step-btn--active {
+    border-left-color: transparent;
+    border-bottom-color: var(--mkt-sage-deep);
+  }
+  .mkt-demo-walk__panel {
+    padding: 24px 20px;
+  }
+}
+
 /* ═══════════════════════════════════════════════════════════════════
    DRIFT CORRECTION PAGE  (reuses mkt-iphone, mkt-v2-*, mkt-r-hero)
    ═══════════════════════════════════════════════════════════════════ */
