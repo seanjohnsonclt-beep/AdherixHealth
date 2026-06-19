@@ -7803,3 +7803,56 @@ a.mkt-btn--primary:hover,
   background: rgba(244, 239, 230, 0.1);
   border-color: rgba(244, 239, 230, 0.6);
 }
+
+/* ── Product page step cards (3-col how-it-works grid) ───────────── */
+.prod-step-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  border: 1px solid var(--mkt-line);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.prod-step-card {
+  padding: 36px 28px 32px;
+  border-right: 1px solid var(--mkt-line);
+  background: var(--mkt-paper-soft, #faf6ed);
+  transition: background 0.18s;
+}
+.prod-step-card:last-child { border-right: none; }
+.prod-step-card:hover {
+  background: color-mix(in srgb, var(--mkt-sage) 6%, var(--mkt-paper-soft));
+}
+
+.prod-step-card__n {
+  display: block;
+  font-family: 'Geist Mono', ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--mkt-sage-deep, #3d7670);
+  margin-bottom: 16px;
+}
+
+.prod-step-card__title {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--mkt-ink, #1f2a2a);
+  line-height: 1.25;
+  margin: 0 0 12px;
+}
+
+.prod-step-card__body {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--mkt-graphite, #6b7878);
+  margin: 0;
+}
+
+@media (max-width: 860px) {
+  .prod-step-grid { grid-template-columns: 1fr; border-radius: 10px; }
+  .prod-step-card { border-right: none; border-bottom: 1px solid var(--mkt-line); }
+  .prod-step-card:last-child { border-bottom: none; }
+}
