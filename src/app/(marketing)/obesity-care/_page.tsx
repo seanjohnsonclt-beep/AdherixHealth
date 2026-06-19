@@ -61,16 +61,19 @@ export function ObesityCarePage() {
 
       <section className="mkt-v2-section mkt-v2-section--alt">
         <div className="mkt-container">
-          <div className="mkt-v2-section__head mkt-v2-section__head--lg">
-            <FadeRise as="span" className="mkt-eyebrow">The problem</FadeRise>
-            <FadeRise as="h2" className="mkt-h2" delay={0.05}>
-              Your patient left the OR with a changed anatomy and an unchanged environment.
-            </FadeRise>
-            <FadeRise as="p" className="mkt-subhead" delay={0.1}>
-              The surgery is a tool. The behavioral work that follows determines the long-term outcome.
-              Protein targets, supplement adherence, grazing patterns, stress responses - these are
-              not things a six-week follow-up visit can monitor. Most programs discharge patients
-              into a behavioral gap. Adherix Bridge closes it.
+          <div className="mkt-v2-problem">
+            <div className="mkt-v2-problem__copy">
+              <FadeRise as="span" className="mkt-eyebrow">The problem</FadeRise>
+              <FadeRise as="h2" className="mkt-h2" delay={0.05}>Your patient left the OR with a changed anatomy and an unchanged environment.</FadeRise>
+              <FadeRise as="div" className="mkt-v2-problem__body" delay={0.1}>
+                <p>The surgery is a tool. The behavioral work that follows determines the long-term outcome. Protein targets, supplement adherence, grazing patterns, stress responses - these are not things a six-week follow-up visit can monitor. Most programs discharge patients into a behavioral gap. Adherix Bridge closes it.</p>
+              </FadeRise>
+            </div>
+            <FadeRise className="mkt-v2-problem__visual" delay={0.06} amount={0.2}>
+              <div className="mkt-v2-problem__pull">
+                <div className="mkt-v2-problem__pull-num">~40%</div>
+                <div className="mkt-v2-problem__pull-text">of bariatric patients regain significant weight within 5 years. The surgery holds. The behavioral support after it does not.</div>
+              </div>
             </FadeRise>
           </div>
         </div>

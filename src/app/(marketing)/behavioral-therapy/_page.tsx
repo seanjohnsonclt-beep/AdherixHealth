@@ -61,17 +61,19 @@ export function BehavioralTherapyPage() {
 
       <section className="mkt-v2-section mkt-v2-section--alt">
         <div className="mkt-container">
-          <div className="mkt-v2-section__head mkt-v2-section__head--lg">
-            <FadeRise as="span" className="mkt-eyebrow">The problem</FadeRise>
-            <FadeRise as="h2" className="mkt-h2" delay={0.05}>
-              The visits exist. The between-visit program does not.
-            </FadeRise>
-            <FadeRise as="p" className="mkt-subhead" delay={0.1}>
-              IBT is one of the most well-reimbursed obesity interventions CMS offers. The clinical
-              protocol is designed around high-frequency contact - daily in month one, biweekly
-              through month six. The research supports it. But behavioral change requires daily
-              reinforcement, not monthly appointments. Most practices cannot staff that gap.
-              That is exactly what Adherix IBT was built to close.
+          <div className="mkt-v2-problem">
+            <div className="mkt-v2-problem__copy">
+              <FadeRise as="span" className="mkt-eyebrow">The problem</FadeRise>
+              <FadeRise as="h2" className="mkt-h2" delay={0.05}>The visits exist. The between-visit program does not.</FadeRise>
+              <FadeRise as="div" className="mkt-v2-problem__body" delay={0.1}>
+                <p>IBT is one of the most well-reimbursed obesity interventions CMS offers. The protocol is designed around high-frequency contact - daily in month one, biweekly through month six. The research supports it. But behavioral change requires daily reinforcement, not monthly appointments. Most practices cannot staff that gap. That is exactly what Adherix IBT was built to close.</p>
+              </FadeRise>
+            </div>
+            <FadeRise className="mkt-v2-problem__visual" delay={0.06} amount={0.2}>
+              <div className="mkt-v2-problem__pull">
+                <div className="mkt-v2-problem__pull-num">4</div>
+                <div className="mkt-v2-problem__pull-text">visits - the average number most IBT practices actually deliver out of 22 Medicare-covered visits per year.</div>
+              </div>
             </FadeRise>
           </div>
         </div>

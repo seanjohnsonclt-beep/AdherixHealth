@@ -61,16 +61,19 @@ export function MetabolicHealthPage() {
 
       <section className="mkt-v2-section mkt-v2-section--alt">
         <div className="mkt-container">
-          <div className="mkt-v2-section__head mkt-v2-section__head--lg">
-            <FadeRise as="span" className="mkt-eyebrow">The problem</FadeRise>
-            <FadeRise as="h2" className="mkt-h2" delay={0.05}>
-              Pre-diabetes gets flagged. The patient leaves with a pamphlet. Then nothing.
-            </FadeRise>
-            <FadeRise as="p" className="mkt-subhead" delay={0.1}>
-              Every practice has these patients. Most have no structured follow-up to offer them.
-              The annual visit schedule cannot carry the frequency of contact that behavior change requires.
-              Without a between-visit program, A1c drifts - and by the time the next lab comes back,
-              the pre-diabetes window has closed. Adherix Metabolic is that program.
+          <div className="mkt-v2-problem">
+            <div className="mkt-v2-problem__copy">
+              <FadeRise as="span" className="mkt-eyebrow">The problem</FadeRise>
+              <FadeRise as="h2" className="mkt-h2" delay={0.05}>Pre-diabetes gets flagged. The patient leaves with a pamphlet. Then nothing.</FadeRise>
+              <FadeRise as="div" className="mkt-v2-problem__body" delay={0.1}>
+                <p>Every practice has these patients. Most have no structured follow-up to offer them. The annual visit schedule cannot carry the frequency of contact that behavior change requires. Without a between-visit program, A1c drifts - and by the time the next lab comes back, the pre-diabetes window has closed. Adherix Metabolic is that program.</p>
+              </FadeRise>
+            </div>
+            <FadeRise className="mkt-v2-problem__visual" delay={0.06} amount={0.2}>
+              <div className="mkt-v2-problem__pull">
+                <div className="mkt-v2-problem__pull-num">70%</div>
+                <div className="mkt-v2-problem__pull-text">of people with pre-diabetes will develop type 2 diabetes within 10 years without intervention. The window is reversible - but only with active between-visit support.</div>
+              </div>
             </FadeRise>
           </div>
         </div>

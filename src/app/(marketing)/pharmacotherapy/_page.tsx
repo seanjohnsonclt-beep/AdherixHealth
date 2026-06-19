@@ -64,16 +64,19 @@ export function PharmacotherapyPage() {
 
       <section className="mkt-v2-section mkt-v2-section--alt">
         <div className="mkt-container">
-          <div className="mkt-v2-section__head mkt-v2-section__head--lg">
-            <FadeRise as="span" className="mkt-eyebrow">The problem</FadeRise>
-            <FadeRise as="h2" className="mkt-h2" delay={0.05}>
-              On day 9, the nausea hits. The patient does not call. They just stop taking it.
-            </FadeRise>
-            <FadeRise as="p" className="mkt-subhead" delay={0.1}>
-              The pharmacology is sound. What breaks down is the patient experience between prescriptions.
-              Side effects go unaddressed. Refill windows get missed. The plateau arrives and patients
-              assume the drug stopped working. None of this requires a clinician to fix - it requires
-              a timely, specific response that no practice can deliver manually at scale.
+          <div className="mkt-v2-problem">
+            <div className="mkt-v2-problem__copy">
+              <FadeRise as="span" className="mkt-eyebrow">The problem</FadeRise>
+              <FadeRise as="h2" className="mkt-h2" delay={0.05}>On day 9, the nausea hits. The patient does not call. They just stop taking it.</FadeRise>
+              <FadeRise as="div" className="mkt-v2-problem__body" delay={0.1}>
+                <p>The pharmacology is sound. What breaks down is the patient experience between prescriptions. Side effects go unaddressed. Refill windows get missed. The plateau arrives and patients assume the drug stopped working. None of this requires a clinician to fix - it requires a timely, specific response that no practice can deliver manually at scale.</p>
+              </FadeRise>
+            </div>
+            <FadeRise className="mkt-v2-problem__visual" delay={0.06} amount={0.2}>
+              <div className="mkt-v2-problem__pull">
+                <div className="mkt-v2-problem__pull-num">~50%</div>
+                <div className="mkt-v2-problem__pull-text">of patients discontinue weight loss medication within 3 months. Side effects and the month-3 plateau are the top two reasons.</div>
+              </div>
             </FadeRise>
           </div>
         </div>
