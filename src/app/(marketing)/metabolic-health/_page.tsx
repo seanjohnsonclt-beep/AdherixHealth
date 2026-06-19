@@ -46,7 +46,7 @@ export function MetabolicHealthPage() {
           <FadeRise as="span" className="dc-hero__eyebrow">Adherix Metabolic - Metabolic Health</FadeRise>
           <FadeRise as="h1" className="dc-hero__title" delay={0.06}>
             88 million Americans have pre-diabetes.
-            <br />Most do not know it. None have a plan.
+            <br />Most do not know it. Few have a plan.
           </FadeRise>
           <FadeRise as="p" className="dc-hero__sub" delay={0.1}>
             Pre-diabetes and metabolic syndrome are reversible - but only with
