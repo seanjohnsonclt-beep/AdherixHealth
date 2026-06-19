@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { AdherixLogo } from './AdherixLogo';
 import { MobileNav } from './MobileNav';
+import { ProductsDropdown } from './ProductsDropdown';
 
 export function SiteHeader() {
   return (
@@ -16,11 +17,10 @@ export function SiteHeader() {
           </Link>
           <nav className="mkt-nav mkt-nav--desktop" aria-label="Primary">
             <Link href="/">Overview</Link>
-            <Link href="/platform">Platform</Link>
+            <ProductsDropdown />
             <Link href="/drift-correction">Drift Correction</Link>
             <Link href="/roi">ROI calculator</Link>
             <Link href="/audit" className="mkt-nav__audit-link">Free audit</Link>
-            <Link href="/obesity-care">Obesity Care</Link>
             <Link href="/login">Sign in</Link>
             <Link href="/pilot" className="mkt-btn mkt-btn--primary mkt-btn--sm mkt-nav__cta">
               Book a demo

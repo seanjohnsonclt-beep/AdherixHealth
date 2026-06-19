@@ -222,8 +222,9 @@ Supabase SSR cookies are wrapped in try/catch inside `src/lib/supabase.ts` becau
 1. **`src/app/admin/page.tsx`** - Server Component. Auth via `?secret=ADMIN_SECRET` query param - wrong/missing secret redirects to `/`. Runs 10 DB queries in parallel via `Promise.all`. Corrected all column names to actual schema (`events.kind`, `patients.current_phase`, `patients.last_inbound_at`, `drift_correction_events.resolution_status`).
 2. **`src/app/admin/AdminDashboard.tsx`** - `'use client'` 8-tab UI. Dark Ink theme, Sage accents, Fraunces + Geist Mono typography. Tabs: Engine / Cohorts / Signals / Drift / Delivery / Alerts / Revenue / Infra.
 3. **`src/app/api/admin/metrics/route.ts`** - GET endpoint returning queue + delivery + signal counts as JSON, auth'd via `x-admin-secret` header or `?secret` param.
-4. **`ADMIN_SECRET`** - add to Vercel env vars before use. This page is NOT linked from any nav - access by bookmarking the URL with secret.
-5. **Commit** - `d503307` on `main`. Run `PUSH_ADMIN.bat` from PowerShell to push, then add `ADMIN_SECRET` in Vercel env vars.
+4. **`ADMIN_SECRET`** - added to Vercel env vars via API from browser session. Page is NOT linked from any nav - bookmark: `https://adherixhealth.com/admin?secret=G1_vjlOWJSgnaM-FNg-TJzicu8PFZd9HeIVynrONgmU`.
+5. **Commit** - `d503307` on `main`. Redeployed via Vercel API (`dpl_2LydmSu4hK3ZRJESatkf3EUfxa4f`), confirmed READY.
+6. **Data is live on every page load** - `force-dynamic`, `revalidate = 0`. No caching. Refresh to update.
 
 ### 2026-05-11 — Marketing site UI polish (font size, spacing, contrast)
 1. **Font size** — `.mkt-page` base bumped from `15px → 16px`, line-height `1.55 → 1.6`. Pillar body and pull-quote text also bumped to `16px`. Applies globally across all marketing pages.
