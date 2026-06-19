@@ -7432,7 +7432,8 @@ a.mkt-btn--primary:hover,
 
 .mkt-products-dd__menu {
   position: absolute;
-  top: calc(100% + 10px);
+  top: 100%;
+  padding-top: 10px;
   left: 50%;
   transform: translateX(-50%);
   min-width: 220px;
