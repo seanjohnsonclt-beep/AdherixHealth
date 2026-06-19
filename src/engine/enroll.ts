@@ -31,6 +31,13 @@ export async function enrollPatient({
   );
   if (existing) return existing.id;
 
+  // Inherit modality from clinic (glp1 = Adherix Keep, bariatric = Adherix Bridge)
+  const clinicRow = await queryOne<{ modality: string }>(
+    `select coalesce(modality, 'glp1') as modality from clinics where id = $1`,
+    [clinicId]
+  );
+  const modality = clinicRow?.modality ?? 'glp1';
+
   // Compute titration schedule from protocol if medication is set
   const now = new Date();
   let titrationSchedule: Array<{ weekOffset: number; dose: string; scheduledDate: string }> | null = null;
@@ -51,9 +58,9 @@ export async function enrollPatient({
     `insert into patients (
        clinic_id, phone, first_name, current_phase, phase_started_at,
        medication, starting_dose, current_dose, injection_frequency,
-       titration_schedule, next_titration_date, supply_quantity
+       titration_schedule, next_titration_date, supply_quantity, modality
      )
-     values ($1, $2, $3, 0, now(), $4, $5, $6, $7, $8, $9, $10)
+     values ($1, $2, $3, 0, now(), $4, $5, $6, $7, $8, $9, $10, $11)
      returning id`,
     [
       clinicId,
@@ -66,6 +73,7 @@ export async function enrollPatient({
       titrationSchedule ? JSON.stringify(titrationSchedule) : null,
       nextTitrationDate,
       supplyQuantity ?? null,
+      modality,
     ]
   );
   if (!row) throw new Error('Failed to insert patient');

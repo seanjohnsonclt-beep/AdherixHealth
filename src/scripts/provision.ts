@@ -15,9 +15,13 @@ config({ path: '.env.local' });
 import { createClient } from '@supabase/supabase-js';
 import { query, queryOne } from '@/lib/db';
 
-async function provision(clinicName: string, email: string) {
+async function provision(clinicName: string, email: string, modality: string = 'glp1') {
   if (!clinicName || !email) {
-    console.error('Usage: tsx src/scripts/provision.ts "Clinic Name" admin@email.com');
+    console.error('Usage: tsx src/scripts/provision.ts "Clinic Name" admin@email.com [glp1|bariatric]');
+    process.exit(1);
+  }
+  if (!['glp1', 'bariatric'].includes(modality)) {
+    console.error(`[provision] invalid modality "${modality}" - must be glp1 or bariatric`);
     process.exit(1);
   }
 
@@ -29,11 +33,11 @@ async function provision(clinicName: string, email: string) {
 
   // 1. Clinic
   const clinic = await queryOne<{ id: string }>(
-    `insert into clinics (name, plan) values ($1, 'pilot') returning id`,
-    [clinicName]
+    `insert into clinics (name, plan, modality) values ($1, 'pilot', $2) returning id`,
+    [clinicName, modality]
   );
   if (!clinic) throw new Error('failed to create clinic');
-  console.log(`[provision] clinic ${clinic.id} (${clinicName})`);
+  console.log(`[provision] clinic ${clinic.id} (${clinicName}) modality=${modality}`);
 
   // 2. Invite user (Supabase generates user, sends magic link)
   const { data, error } = await supa.auth.admin.inviteUserByEmail(email, {
@@ -54,8 +58,8 @@ async function provision(clinicName: string, email: string) {
   console.log(`[provision] done. invite email sent to ${email}`);
 }
 
-const [, , clinicName, email] = process.argv;
-provision(clinicName, email)
+const [, , clinicName, email, modality] = process.argv;
+provision(clinicName, email, modality ?? 'glp1')
   .then(() => process.exit(0))
   .catch((err) => {
     console.error('[provision] failed:', err);
