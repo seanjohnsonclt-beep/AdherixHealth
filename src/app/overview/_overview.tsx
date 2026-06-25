@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 
 /* ─── tokens ─────────────────────────────────────────────────────────── */
 const GREEN  = '#4ade80';
@@ -23,6 +23,7 @@ type Scene =
   | { type: 'trigger'; eyebrow: string; headline: string; context: string; trigger: { condition: string; action: string; result: string } }
   | { type: 'bridge' }
   | { type: 'gauge'; bubbles: Bubble[] }
+  | { type: 'milestone' }
   | { type: 'close' };
 
 /* ─── scenes ─────────────────────────────────────────────────────────── */
@@ -124,6 +125,8 @@ const SCENES: Scene[] = [
       { dir: 'out', text: "Down 11 lbs since you started, Alex. That's real. Keep going.", delay: 2700 },
     ],
   },
+
+  { type: 'milestone' },
 
   { type: 'close' },
 ];
@@ -290,6 +293,168 @@ function VolumeScene() {
   );
 }
 
+/* ─── milestone scene ───────────────────────────────────────────────── */
+const MILESTONES = [
+  {
+    label: 'First weigh-in',
+    tag: 'Week 1',
+    color: '#4ade80',
+    bubbles: [
+      { dir: 'out' as const, text: "Hi Alex - quick check-in: what's your weight this week?", delay: 400 },
+      { dir: 'in'  as const, text: '247', delay: 1400 },
+      { dir: 'out' as const, text: "First check-in logged. That's how it starts. See you next week.", delay: 2200 },
+    ],
+  },
+  {
+    label: '5 lbs down',
+    tag: 'Milestone',
+    color: '#34d399',
+    bubbles: [
+      { dir: 'out' as const, text: "Weekly check-in - what's the number this week?", delay: 400 },
+      { dir: 'in'  as const, text: '242', delay: 1400 },
+      { dir: 'out' as const, text: "Down 5 lbs since you started. That's not nothing - that's real progress. Keep it up.", delay: 2200 },
+    ],
+  },
+  {
+    label: '10 lbs down',
+    tag: 'Milestone',
+    color: '#22d3ee',
+    bubbles: [
+      { dir: 'out' as const, text: "Monday check-in. What's your weight today?", delay: 400 },
+      { dir: 'in'  as const, text: '237', delay: 1400 },
+      { dir: 'out' as const, text: "10 lbs down, Alex. You're past the first big milestone. The hardest part is behind you.", delay: 2200 },
+    ],
+  },
+  {
+    label: '10% body weight',
+    tag: 'Major milestone',
+    color: '#818cf8',
+    bubbles: [
+      { dir: 'out' as const, text: "Weekly check-in. What's the scale saying?", delay: 400 },
+      { dir: 'in'  as const, text: '222', delay: 1400 },
+      { dir: 'out' as const, text: "You've lost 10% of your starting body weight. That's a clinical milestone. Your team knows. This is what you started for.", delay: 2200 },
+    ],
+  },
+];
+
+function MilestonePhone({
+  milestone,
+  color,
+}: {
+  milestone: typeof MILESTONES[0];
+  color: string;
+}) {
+  const [hovered, setHovered] = useState(false);
+  const [visible, setVisible] = useState<number[]>([]);
+  const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
+
+  useEffect(() => {
+    timersRef.current.forEach(clearTimeout);
+    timersRef.current = [];
+    setVisible([]);
+
+    if (hovered) {
+      milestone.bubbles.forEach((b, i) => {
+        const t = setTimeout(() => setVisible(v => [...v, i]), b.delay);
+        timersRef.current.push(t);
+      });
+    }
+  }, [hovered, milestone]);
+
+  return (
+    <div
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      onClick={e => e.stopPropagation()}
+      style={{
+        flex: 1,
+        minWidth: 0,
+        background: '#0f0f0f',
+        borderRadius: 28,
+        border: `2px solid ${hovered ? color : BORDER}`,
+        padding: '36px 12px 24px',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 8,
+        position: 'relative',
+        cursor: 'default',
+        transition: 'border-color 0.3s ease, box-shadow 0.3s ease',
+        boxShadow: hovered ? `0 0 32px ${color}22` : 'none',
+      }}
+    >
+      {/* notch */}
+      <div style={{ position: 'absolute', top: 12, left: '50%', transform: 'translateX(-50%)', width: 48, height: 4, background: BORDER, borderRadius: 2 }} />
+      {/* tag */}
+      <div style={{
+        textAlign: 'center', marginBottom: 4,
+        fontSize: 9, letterSpacing: '0.1em', textTransform: 'uppercase', fontWeight: 700,
+        color: hovered ? color : MUTED, transition: 'color 0.3s ease',
+      }}>
+        {milestone.tag}
+      </div>
+      <div style={{
+        textAlign: 'center', marginBottom: 8,
+        fontSize: 11, fontWeight: 600, color: hovered ? '#e5e7eb' : MUTED,
+        transition: 'color 0.3s ease',
+      }}>
+        {milestone.label}
+      </div>
+      {milestone.bubbles.map((b, i) => (
+        <div key={i} style={{
+          display: 'flex',
+          justifyContent: b.dir === 'out' ? 'flex-start' : 'flex-end',
+          opacity: visible.includes(i) ? 1 : 0,
+          transform: visible.includes(i) ? 'translateY(0)' : 'translateY(4px)',
+          transition: 'opacity 0.35s ease, transform 0.35s ease',
+        }}>
+          <div style={{
+            maxWidth: '85%',
+            padding: '7px 10px',
+            borderRadius: b.dir === 'out' ? '12px 12px 12px 3px' : '12px 12px 3px 12px',
+            background: b.dir === 'out' ? CARD : color,
+            color: b.dir === 'out' ? '#e5e7eb' : '#0a0a0a',
+            fontSize: 11,
+            lineHeight: 1.45,
+            border: b.dir === 'out' ? `1px solid ${BORDER}` : 'none',
+          }}>
+            {b.text}
+          </div>
+        </div>
+      ))}
+      {!hovered && (
+        <div style={{
+          position: 'absolute', bottom: 16, left: 0, right: 0,
+          textAlign: 'center', color: MUTED, fontSize: 10, letterSpacing: '0.06em',
+        }}>
+          hover to see
+        </div>
+      )}
+    </div>
+  );
+}
+
+function MilestoneScene() {
+  return (
+    <div style={{ width: '100%', maxWidth: 960 }}>
+      <p style={{ color: GREEN, fontSize: 12, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 12, fontWeight: 600, textAlign: 'center' }}>
+        Adherix Gauge - Scale Tracker
+      </p>
+      <h2 style={{ fontSize: 'clamp(20px, 2.6vw, 32px)', fontWeight: 700, textAlign: 'center', marginBottom: 8 }}>
+        Every milestone lands in their pocket.
+      </h2>
+      <p style={{ color: DIM, fontSize: 15, textAlign: 'center', marginBottom: 36, lineHeight: 1.6 }}>
+        The engine tracks every weigh-in and fires a personalized message when a patient hits a milestone.<br />
+        Hover each phone to see what they receive.
+      </p>
+      <div style={{ display: 'flex', gap: 12, alignItems: 'stretch' }}>
+        {MILESTONES.map((m, i) => (
+          <MilestonePhone key={i} milestone={m} color={m.color} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 /* ─── gap scene ──────────────────────────────────────────────────────── */
 function GapScene() {
   return (
@@ -300,23 +465,23 @@ function GapScene() {
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 16 }}>
         {[
           {
-            icon: '📞',
+            n: '01',
             label: 'Clinics call. Patients ghost.',
             sub: 'Coordinators can\'t reach every patient. The ones who stop responding are exactly the ones who need help most.',
           },
           {
-            icon: '📋',
+            n: '02',
             label: 'Manual check-ins don\'t scale.',
-            sub: 'A 500-patient practice can\'t afford to follow up weekly with every GLP-1 patient. So they don\'t - and dropout climbs.',
+            sub: 'A 500-patient practice can\'t follow up weekly with every GLP-1 patient. So they don\'t - and dropout climbs.',
           },
           {
-            icon: '🔕',
+            n: '03',
             label: 'Silent dropout is invisible.',
-            sub: 'There\'s no EHR alert when a patient just... stops. Clinics often don\'t know until the patient misses an appointment months later.',
+            sub: 'There\'s no EHR alert when a patient just stops. Clinics often don\'t know until a missed appointment months later.',
           },
         ].map((item, i) => (
           <div key={i} style={{ padding: 24, background: CARD, borderRadius: 12, border: `1px solid ${BORDER}` }}>
-            <div style={{ fontSize: 28, marginBottom: 12 }}>{item.icon}</div>
+            <div style={{ color: GREEN, fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', marginBottom: 12 }}>{item.n}</div>
             <div style={{ color: '#e5e7eb', fontSize: 14, fontWeight: 600, marginBottom: 8 }}>{item.label}</div>
             <div style={{ color: MUTED, fontSize: 13, lineHeight: 1.5 }}>{item.sub}</div>
           </div>
@@ -538,6 +703,9 @@ export function OverviewDeck() {
             </div>
           </div>
         )}
+
+        {/* MILESTONE */}
+        {scene.type === 'milestone' && <MilestoneScene />}
 
         {/* CLOSE */}
         {scene.type === 'close' && (

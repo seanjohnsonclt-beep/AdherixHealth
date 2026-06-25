@@ -439,26 +439,7 @@ export function PitchDeck() {
             }}>
               {scene.headline}
             </h2>
-            <p style={{ color: '#9ca3af', fontSize: 22, marginBottom: 64, lineHeight: 1.5 }}>{scene.sub}</p>
-            <div style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
-              {[
-                { label: 'Keep — GLP-1 Retention', price: '$6,500 / mo' },
-                { label: 'Gauge — Scale Tracker', price: 'Included' },
-                { label: 'Onboarding', price: '$7,500 one-time' },
-              ].map((item, i) => (
-                <div key={i} style={{
-                  padding: '16px 24px',
-                  background: CARD,
-                  borderRadius: 12,
-                  border: `1px solid ${BORDER}`,
-                  minWidth: 180,
-                  textAlign: 'center',
-                }}>
-                  <div style={{ color: '#9ca3af', fontSize: 12, marginBottom: 6 }}>{item.label}</div>
-                  <div style={{ color: i === 2 ? MUTED : GREEN, fontSize: 18, fontWeight: 700 }}>{item.price}</div>
-                </div>
-              ))}
-            </div>
+            <p style={{ color: '#9ca3af', fontSize: 22, lineHeight: 1.5 }}>{scene.sub}</p>
           </div>
         )}
 
