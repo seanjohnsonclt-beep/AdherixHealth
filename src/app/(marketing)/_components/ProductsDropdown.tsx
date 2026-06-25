@@ -34,6 +34,12 @@ const products = [
     href: '/metabolic-health',
     tag: 'metabolic',
   },
+  {
+    label: 'Adherix Gauge',
+    sub: 'Weight tracking & milestone engine',
+    href: '/gauge',
+    tag: 'gauge',
+  },
 ];
 
 export function ProductsDropdown() {
