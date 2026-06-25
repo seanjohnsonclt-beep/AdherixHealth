@@ -147,11 +147,11 @@ function Phone({ bubbles, sceneKey }: { bubbles: Bubble[]; sceneKey: number }) {
     <div style={{
       width: 300,
       flexShrink: 0,
-      background: '#0f0f0f',
+      background: '#111111',
       borderRadius: 44,
-      border: `2px solid ${BORDER}`,
+      border: '2px solid #3a3a3a',
       padding: '56px 16px 40px',
-      boxShadow: '0 32px 64px rgba(0,0,0,0.7)',
+      boxShadow: '0 32px 64px rgba(0,0,0,0.7), 0 0 0 1px #222',
       minHeight: 560,
       display: 'flex',
       flexDirection: 'column',
@@ -161,7 +161,7 @@ function Phone({ bubbles, sceneKey }: { bubbles: Bubble[]; sceneKey: number }) {
       <div style={{
         position: 'absolute', top: 14, left: '50%',
         transform: 'translateX(-50%)',
-        width: 72, height: 5, background: BORDER, borderRadius: 3,
+        width: 72, height: 5, background: '#333', borderRadius: 3,
       }} />
       <div style={{ textAlign: 'center', color: MUTED, fontSize: 10, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 6 }}>
         Your Clinic
@@ -371,8 +371,9 @@ function MilestonePhone({
         minWidth: 0,
         background: '#0f0f0f',
         borderRadius: 36,
-        border: `2px solid ${hovered ? color : BORDER}`,
+        border: `2px solid ${hovered ? color : '#3a3a3a'}`,
         padding: '48px 12px 32px',
+        minHeight: 480,
         display: 'flex',
         flexDirection: 'column',
         gap: 8,
@@ -383,7 +384,7 @@ function MilestonePhone({
       }}
     >
       {/* notch */}
-      <div style={{ position: 'absolute', top: 12, left: '50%', transform: 'translateX(-50%)', width: 48, height: 4, background: BORDER, borderRadius: 2 }} />
+      <div style={{ position: 'absolute', top: 12, left: '50%', transform: 'translateX(-50%)', width: 48, height: 4, background: '#333', borderRadius: 2 }} />
       {/* tag */}
       <div style={{
         textAlign: 'center', marginBottom: 4,
