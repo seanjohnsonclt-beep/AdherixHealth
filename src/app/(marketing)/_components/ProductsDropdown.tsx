@@ -17,28 +17,16 @@ const products = [
     tag: 'bariatric',
   },
   {
-    label: 'Adherix Rx',
-    sub: 'Pharmacotherapy adherence',
-    href: '/pharmacotherapy',
-    tag: 'rx',
-  },
-  {
-    label: 'Adherix IBT',
-    sub: 'Intensive behavioral therapy',
-    href: '/behavioral-therapy',
-    tag: 'ibt',
+    label: 'Adherix Gauge',
+    sub: 'Scale Tracker for GLP-1 programs',
+    href: '/gauge',
+    tag: 'gauge',
   },
   {
     label: 'Adherix Metabolic',
     sub: 'Pre-diabetes & metabolic syndrome',
     href: '/metabolic-health',
     tag: 'metabolic',
-  },
-  {
-    label: 'Adherix Gauge',
-    sub: 'Weight tracking & milestone engine',
-    href: '/gauge',
-    tag: 'gauge',
   },
 ];
 

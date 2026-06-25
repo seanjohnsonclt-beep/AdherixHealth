@@ -35,11 +35,10 @@ export function MobileNav() {
           <div className="mkt-mobile-menu__inner">
             <Link href="/"         className="mkt-mobile-menu__link" onClick={close}>Overview</Link>
             <div className="mkt-mobile-menu__section-head">Products</div>
-            <Link href="/platform"          className="mkt-mobile-menu__link mkt-mobile-menu__link--sub" onClick={close}>Adherix Keep — GLP-1</Link>
-            <Link href="/obesity-care"      className="mkt-mobile-menu__link mkt-mobile-menu__link--sub" onClick={close}>Adherix Bridge — Bariatric</Link>
-            <Link href="/pharmacotherapy"   className="mkt-mobile-menu__link mkt-mobile-menu__link--sub" onClick={close}>Adherix Rx — Pharmacotherapy</Link>
-            <Link href="/behavioral-therapy" className="mkt-mobile-menu__link mkt-mobile-menu__link--sub" onClick={close}>Adherix IBT — Behavioral</Link>
-            <Link href="/metabolic-health"  className="mkt-mobile-menu__link mkt-mobile-menu__link--sub" onClick={close}>Adherix Metabolic — Metabolic Health</Link>
+            <Link href="/platform"         className="mkt-mobile-menu__link mkt-mobile-menu__link--sub" onClick={close}>Adherix Keep — GLP-1</Link>
+            <Link href="/obesity-care"     className="mkt-mobile-menu__link mkt-mobile-menu__link--sub" onClick={close}>Adherix Bridge — Bariatric</Link>
+            <Link href="/gauge"            className="mkt-mobile-menu__link mkt-mobile-menu__link--sub" onClick={close}>Adherix Gauge — Scale Tracker</Link>
+            <Link href="/metabolic-health" className="mkt-mobile-menu__link mkt-mobile-menu__link--sub" onClick={close}>Adherix Metabolic — Metabolic Health</Link>
             <Link href="/platform" className="mkt-mobile-menu__link" onClick={close}>Platform</Link>
             <Link href="/roi"      className="mkt-mobile-menu__link" onClick={close}>ROI</Link>
             <Link href="/audit"    className="mkt-mobile-menu__link" onClick={close}>Free cohort audit</Link>
