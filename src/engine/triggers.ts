@@ -56,6 +56,14 @@ async function queueTemplateNow(patientId: string, templateKey: string) {
      values ($1, 'outbound', $2, $3, now(), 'pending')`,
     [patientId, templateKey, body]
   );
+
+  // Gauge: track when the weekly check-in was sent so the condition stays accurate
+  if (templateKey === 'gauge.weekly_checkin') {
+    await query(
+      `update patients set last_gauge_checkin_at = now() where id = $1`,
+      [patientId]
+    );
+  }
 }
 
 async function flagPatient(patientId: string, reason: string) {
@@ -236,7 +244,13 @@ export async function evaluateTriggersForAllPatients() {
          coalesce((select count(*)::int from injection_events ie
                    where ie.patient_id = p.id
                      and ie.expected_at >= p.phase_started_at), 0) as phase_total_count,
-         coalesce(p.modality, 'glp1') as modality
+         coalesce(p.modality, 'glp1') as modality,
+         -- Adherix Gauge: last time we sent the weekly weight check-in
+         (select m.sent_at from messages m
+          where m.patient_id = p.id
+            and m.template_key = 'gauge.weekly_checkin'
+            and m.sent_at is not null
+          order by m.sent_at desc limit 1) as last_gauge_checkin_at
        from patients p
        where p.status in ('active', 'flagged')`
     );
@@ -248,7 +262,7 @@ export async function evaluateTriggersForAllPatients() {
       'last_confirmed_injection_at' | 'confirmed_injection_streak' |
       'consecutive_missed_injections' | 'missed_injection_count' |
       'pending_overdue_injection_id' | 'last_confirmation_at' | 'supply_remaining' |
-      'phase_confirmed_count' | 'phase_total_count'>>(
+      'phase_confirmed_count' | 'phase_total_count' | 'last_gauge_checkin_at'>>(
       `select id, current_phase, phase_started_at, last_inbound_at, enrolled_at, status
        from patients where status in ('active', 'flagged')`
     );
@@ -269,6 +283,7 @@ export async function evaluateTriggersForAllPatients() {
       supply_remaining: null,
       phase_confirmed_count: 0,
       phase_total_count: 0,
+      last_gauge_checkin_at: null,
     }));
   }
 

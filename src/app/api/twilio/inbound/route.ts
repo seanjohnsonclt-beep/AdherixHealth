@@ -16,6 +16,7 @@ import twilio from 'twilio';
 import { query, queryOne } from '@/lib/db';
 import { handleReplyGate } from '@/engine/replyGate';
 import { scanInbound, isEscalationKeyword } from '@/engine/keyword-scanner';
+import { parseWeightReply, hasPendingGaugeCheckin, handleWeightReply } from '@/engine/gauge';
 
 function twiml(body = '') {
   return new NextResponse(`<Response>${body}</Response>`, {
@@ -255,6 +256,20 @@ export async function POST(req: NextRequest) {
       await handleDcEscalation(patient.id);
     } catch (err) {
       console.warn('[inbound] DC escalation failed (migration pending?):', err);
+    }
+  }
+
+  // Adherix Gauge: detect weight reply and log it
+  // Only fires if there's a pending gauge check-in from the last 48h.
+  const weightLbs = parseWeightReply(body);
+  if (weightLbs !== null) {
+    try {
+      const pending = await hasPendingGaugeCheckin(patient.id);
+      if (pending) {
+        await handleWeightReply(patient.id, weightLbs);
+      }
+    } catch (err) {
+      console.warn('[inbound] gauge weight handler failed (migration pending?):', err);
     }
   }
 

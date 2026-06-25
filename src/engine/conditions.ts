@@ -37,6 +37,9 @@ export type PatientForEval = {
   supply_remaining: number | null;             // supply_quantity - used doses
   phase_confirmed_count: number;               // confirmed injections in current phase
   phase_total_count: number;                   // total injection_events in current phase
+
+  // Adherix Gauge - weight tracking
+  last_gauge_checkin_at: Date | null;          // when we last sent gauge.weekly_checkin
 };
 
 type ConditionFn = (p: PatientForEval, args: Record<string, any>) => boolean;
@@ -109,6 +112,19 @@ export const conditions: Record<string, ConditionFn> = {
   // N or more consecutive missed injections
   consecutive_misses_gte: (p, args) =>
     p.consecutive_missed_injections >= (args.count ?? 2),
+
+  // --- Adherix Gauge -----------------------------------------------------------
+
+  // Patient enrolled 7+ days ago AND hasn't received a gauge check-in in 7+ days.
+  gauge_checkin_due: (p) => {
+    const daysSinceEnrolled = (Date.now() - new Date(p.enrolled_at).getTime()) / DAY_MS;
+    if (daysSinceEnrolled < 7) return false;
+
+    if (!p.last_gauge_checkin_at) return true;
+
+    const daysSinceCheckin = (Date.now() - new Date(p.last_gauge_checkin_at).getTime()) / DAY_MS;
+    return daysSinceCheckin >= 7;
+  },
 
   // --- Titration lifecycle -----------------------------------------------------
 

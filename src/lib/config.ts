@@ -130,6 +130,11 @@ const TEMPLATES: Template[] = [
   { key: 'phase5.week12.longevity',  phase: 5, after: { days: 84 }, send_at_local: '09:30',
     body: "Three months of maintenance. Most people don't make it this far. You're not most people. Still going? Reply YES." },
 
+  // --- Adherix Gauge - weight check-in (fired by trigger, not phase schedule) ---
+
+  { key: 'gauge.weekly_checkin',
+    body: "Hi {first_name} - quick check-in: what's your weight this week? Just reply with the number." },
+
   // Intervention messages  -  fired by triggers, not schedule
   { key: 'trigger.no_response_48h',
     body: "Haven't heard from you in 2 days. Everything ok? Reply with anything  -  even one word." },
@@ -260,6 +265,12 @@ const TRIGGERS: Trigger[] = [
   // Fires when supply_remaining drops to 2 doses
   { key: 'refill_window', condition: 'supply_low', args: { threshold: 2 },
     action: 'send_template', template: 'trigger.refill_reminder', dedupe_window_hours: 168 },
+
+  // --- Adherix Gauge - weekly weight check-in ----------------------------------
+  // Fires once per week for all active patients enrolled 7+ days.
+  // Dedupe: 144h (6 days) - leaves a buffer against tick timing drift.
+  { key: 'gauge_weekly_checkin', condition: 'gauge_checkin_due',
+    action: 'send_template', template: 'gauge.weekly_checkin', dedupe_window_hours: 144 },
 
   // --- Streak milestones -------------------------------------------------------
   // Very large dedupe window = fires once per milestone (streak resets on miss,
