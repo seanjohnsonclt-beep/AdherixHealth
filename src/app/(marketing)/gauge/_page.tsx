@@ -4,6 +4,113 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { FadeRise, StaggerGroup } from '../_components/animation/MotionPrimitives';
 
+// --- Animated scale SVG ------------------------------------------------------
+
+const WEIGHTS = [247, 241, 236, 229, 224, 218, 213, 207, 202, 196];
+
+function AnimatedScale() {
+  const [idx, setIdx] = useState(0);
+  const [fading, setFading] = useState(false);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setFading(true);
+      setTimeout(() => {
+        setIdx(i => (i + 1) % WEIGHTS.length);
+        setFading(false);
+      }, 350);
+    }, 1800);
+    return () => clearInterval(interval);
+  }, []);
+
+  const weight = WEIGHTS[idx];
+  const startWeight = WEIGHTS[0];
+  const lost = startWeight - weight;
+
+  return (
+    <div className="gauge-scale-wrap">
+      <svg
+        viewBox="0 0 280 320"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        className="gauge-scale-svg"
+        aria-label="Bathroom scale showing weight loss progress"
+      >
+        {/* Shadow */}
+        <ellipse cx="140" cy="308" rx="90" ry="8" fill="#1f2a2a" opacity="0.08" />
+
+        {/* Scale body */}
+        <rect x="20" y="80" width="240" height="210" rx="28" fill="#f0f4f2" />
+        <rect x="20" y="80" width="240" height="210" rx="28" stroke="#d4dedd" strokeWidth="1.5" />
+
+        {/* Top platform highlight */}
+        <rect x="28" y="88" width="224" height="6" rx="4" fill="white" opacity="0.7" />
+
+        {/* Display screen */}
+        <rect x="60" y="108" width="160" height="90" rx="14" fill="#1a2e28" />
+        <rect x="60" y="108" width="160" height="90" rx="14" stroke="#0f1f1b" strokeWidth="1" />
+
+        {/* Screen glow */}
+        <rect x="64" y="112" width="152" height="82" rx="11" fill="#1f3a32" opacity="0.6" />
+
+        {/* Weight number */}
+        <text
+          x="140"
+          y="167"
+          textAnchor="middle"
+          fontFamily="ui-monospace, 'SF Mono', monospace"
+          fontWeight="700"
+          fontSize="44"
+          fill="#4ade80"
+          opacity={fading ? 0.2 : 1}
+          style={{ transition: 'opacity 0.3s ease' }}
+        >
+          {weight}
+        </text>
+
+        {/* Unit label */}
+        <text
+          x="140"
+          y="186"
+          textAnchor="middle"
+          fontFamily="ui-sans-serif, system-ui, sans-serif"
+          fontSize="11"
+          fontWeight="500"
+          fill="#4ade80"
+          opacity="0.55"
+          letterSpacing="2"
+        >
+          LBS
+        </text>
+
+        {/* Feet position markers */}
+        <rect x="52" y="220" width="72" height="4" rx="2" fill="#d4dedd" opacity="0.5" />
+        <rect x="156" y="220" width="72" height="4" rx="2" fill="#d4dedd" opacity="0.5" />
+
+        {/* Scale feet */}
+        <rect x="40" y="278" width="54" height="10" rx="5" fill="#d4dedd" />
+        <rect x="186" y="278" width="54" height="10" rx="5" fill="#d4dedd" />
+
+        {/* Bottom ridge detail */}
+        <rect x="28" y="268" width="224" height="6" rx="3" fill="#e2e8e6" />
+      </svg>
+
+      {/* Live badge */}
+      <div className={`gauge-scale-badge${lost > 0 ? ' gauge-scale-badge--active' : ''}`}
+           style={{ opacity: fading ? 0.4 : 1, transition: 'opacity 0.3s ease' }}>
+        {lost > 0 ? (
+          <>
+            <span className="gauge-scale-badge__arrow">↓</span>
+            <span className="gauge-scale-badge__num">{lost} lbs lost</span>
+          </>
+        ) : (
+          <span className="gauge-scale-badge__num">Starting weight</span>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // --- Animated phone: weekly check-in exchange --------------------------------
 
 const exchanges = [
@@ -185,39 +292,44 @@ export function GaugePage() {
       {/* 1. Hero */}
       <section className="gauge-hero" id="gauge-hero">
         <div className="mkt-container gauge-hero__inner">
-          <FadeRise as="span" className="gauge-hero__eyebrow">
-            Adherix Gauge
-          </FadeRise>
-          <FadeRise as="h1" className="gauge-hero__title" delay={0.06}>
-            Every pound is proof.
-            <br />
-            <span className="gauge-hero__title-sub">We make sure patients know it.</span>
-          </FadeRise>
-          <FadeRise as="p" className="gauge-hero__body" delay={0.1}>
-            GLP-1 patients are motivated by one thing above everything else: the scale moving.
-            Gauge tracks it through a simple weekly text - no app, no friction.
-            When patients hit a milestone, they hear about it. When the scale stalls, we tell them why
-            it&rsquo;s normal and keep them going.
-          </FadeRise>
-          <FadeRise className="gauge-hero__stats" delay={0.14}>
-            <div className="gauge-hero__stat">
-              <span className="gauge-hero__stat-n">1</span>
-              <span className="gauge-hero__stat-l">text per week - no app required</span>
-            </div>
-            <div className="dc-hero__stat-div" />
-            <div className="gauge-hero__stat">
-              <span className="gauge-hero__stat-n">6</span>
-              <span className="gauge-hero__stat-l">milestone triggers from first log to 20% lost</span>
-            </div>
-            <div className="dc-hero__stat-div" />
-            <div className="gauge-hero__stat">
-              <span className="gauge-hero__stat-n">0</span>
-              <span className="gauge-hero__stat-l">plateaus that go unacknowledged</span>
-            </div>
-          </FadeRise>
-          <FadeRise className="gauge-hero__ctas" delay={0.2}>
-            <Link href="/pilot" className="mkt-btn mkt-btn--primary mkt-btn--lg">Book a demo</Link>
-            <Link href="/platform" className="mkt-btn mkt-btn--ghost mkt-btn--lg">See the full platform</Link>
+          <div className="gauge-hero__copy">
+            <FadeRise as="span" className="gauge-hero__eyebrow">
+              Adherix Gauge &mdash; Scale Tracker
+            </FadeRise>
+            <FadeRise as="h1" className="gauge-hero__title" delay={0.06}>
+              Every pound is proof.
+              <br />
+              <span className="gauge-hero__title-sub">We make sure patients know it.</span>
+            </FadeRise>
+            <FadeRise as="p" className="gauge-hero__body" delay={0.1}>
+              GLP-1 patients are motivated by one thing above everything else: the scale moving.
+              Gauge is the Scale Tracker built for GLP-1 programs - a simple weekly text,
+              no app, no friction. When patients hit a milestone, they hear about it.
+              When the scale stalls, we tell them why it&rsquo;s normal and keep them going.
+            </FadeRise>
+            <FadeRise className="gauge-hero__stats" delay={0.14}>
+              <div className="gauge-hero__stat">
+                <span className="gauge-hero__stat-n">1</span>
+                <span className="gauge-hero__stat-l">text per week - no app required</span>
+              </div>
+              <div className="dc-hero__stat-div" />
+              <div className="gauge-hero__stat">
+                <span className="gauge-hero__stat-n">6</span>
+                <span className="gauge-hero__stat-l">milestone triggers from first log to 20% lost</span>
+              </div>
+              <div className="dc-hero__stat-div" />
+              <div className="gauge-hero__stat">
+                <span className="gauge-hero__stat-n">0</span>
+                <span className="gauge-hero__stat-l">plateaus that go unacknowledged</span>
+              </div>
+            </FadeRise>
+            <FadeRise className="gauge-hero__ctas" delay={0.2}>
+              <Link href="/pilot" className="mkt-btn mkt-btn--primary mkt-btn--lg">Book a demo</Link>
+              <Link href="/platform" className="mkt-btn mkt-btn--ghost mkt-btn--lg">See the full platform</Link>
+            </FadeRise>
+          </div>
+          <FadeRise className="gauge-hero__visual" delay={0.1}>
+            <AnimatedScale />
           </FadeRise>
         </div>
       </section>

@@ -7866,9 +7866,63 @@ a.mkt-btn--primary:hover,
   padding: 120px 0 80px;
   background: linear-gradient(160deg, #f5f9f7 0%, #fdfcf8 60%, #f8f5f0 100%);
   border-bottom: 1px solid var(--mkt-line, #e8edec);
+  overflow: hidden;
 }
 .gauge-hero__inner {
-  max-width: 780px;
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 64px;
+  align-items: center;
+  max-width: 1100px;
+}
+.gauge-hero__copy {
+  min-width: 0;
+}
+.gauge-hero__visual {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Scale SVG */
+.gauge-scale-wrap {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+.gauge-scale-svg {
+  width: 260px;
+  height: auto;
+  filter: drop-shadow(0 20px 40px rgba(31,42,42,0.12));
+}
+.gauge-scale-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 16px;
+  border-radius: 20px;
+  background: #fff;
+  border: 1px solid var(--mkt-line, #e8edec);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--mkt-graphite, #6b7878);
+  box-shadow: 0 2px 8px rgba(31,42,42,0.07);
+  transition: opacity 0.3s ease;
+}
+.gauge-scale-badge--active {
+  background: #f0f9f4;
+  border-color: #a3d4b8;
+  color: #2d6e4e;
+}
+.gauge-scale-badge__arrow {
+  font-size: 15px;
+  color: #4ade80;
+  line-height: 1;
+}
+.gauge-scale-badge__num {
+  letter-spacing: 0.01em;
 }
 .gauge-hero__eyebrow {
   display: inline-block;
@@ -8078,12 +8132,16 @@ a.mkt-btn--primary:hover,
 
 /* Responsive */
 @media (max-width: 1024px) {
+  .gauge-hero__inner { grid-template-columns: 1fr; gap: 48px; }
+  .gauge-hero__visual { order: -1; }
+  .gauge-scale-svg { width: 200px; }
   .gauge-moment-grid { grid-template-columns: repeat(2, 1fr); }
   .gauge-milestones-grid { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 640px) {
   .gauge-hero { padding: 80px 0 56px; }
   .gauge-hero__stats { gap: 20px; }
+  .gauge-hero__visual { display: none; }
   .gauge-moment-grid { grid-template-columns: 1fr; }
   .gauge-milestones-grid { grid-template-columns: 1fr; }
   .gauge-clinic-grid { grid-template-columns: 1fr; }
