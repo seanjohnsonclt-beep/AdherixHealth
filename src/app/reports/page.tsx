@@ -281,19 +281,18 @@ function StatCard({
   sub,
   accent,
   hint,
+  href,
 }: {
   label: string;
   value: string | number;
   sub?: string;
   accent?: boolean;
   hint?: string;
+  href?: string;
 }) {
-  return (
-    <div className="report-stat-card">
-      {hint && <div className="report-stat-card__hint">{hint}</div>}
-      <div className="label" style={{ marginBottom: 8 }}>
-        {label}
-      </div>
+  const inner = (
+    <>
+      <div className="label" style={{ marginBottom: 8 }}>{label}</div>
       <div
         style={{
           fontFamily: 'var(--serif)',
@@ -308,6 +307,21 @@ function StatCard({
       {sub && (
         <div style={{ fontSize: 12, color: 'var(--fg-faint)', marginTop: 6 }}>{sub}</div>
       )}
+      {hint && (
+        <div className="report-stat-card__hint-bar">{href ? 'Click to filter →' : hint}</div>
+      )}
+    </>
+  );
+  if (href) {
+    return (
+      <a href={href} className="report-stat-card report-stat-card--link" title={hint}>
+        {inner}
+      </a>
+    );
+  }
+  return (
+    <div className="report-stat-card" title={hint}>
+      {inner}
     </div>
   );
 }
@@ -947,6 +961,7 @@ export default async function ReportsPage({
           value={active}
           sub={total > 0 ? `${Math.round((active / total) * 100)}% of enrolled` : undefined}
           hint="Patients currently receiving scheduled messages"
+          href="/reports?status=active"
         />
         <StatCard
           label="Flagged"
@@ -954,12 +969,14 @@ export default async function ReportsPage({
           accent={flagged > 0}
           sub={total > 0 ? `${Math.round((flagged / total) * 100)}% of enrolled` : undefined}
           hint="No reply in 5+ days - needs a human call"
+          href="/reports?status=flagged"
         />
         <StatCard
           label="Churned"
           value={churned}
           sub={total > 0 ? `${Math.round((churned / total) * 100)}% of enrolled` : undefined}
           hint="Patients who have left the program"
+          href="/reports?status=churned"
         />
         <StatCard
           label="Patient Reply Rate"
@@ -1124,7 +1141,7 @@ export default async function ReportsPage({
                 const recv = parseInt(p.messages_received);
                 const rRate = sent > 0 ? Math.round((recv / sent) * 100) : 0;
                 return (
-                  <tr key={p.id}>
+                  <tr key={p.id} data-href={`/patients/${p.id}`} style={{ cursor: 'pointer' }}>
                     <td className="name">
                       <a href={`/patients/${p.id}`}>{p.first_name || ' - '}</a>
                     </td>
@@ -1161,6 +1178,16 @@ export default async function ReportsPage({
           </table>
         )}
       </SectionBox>
+
+      {/* Clickable row script */}
+      <script dangerouslySetInnerHTML={{ __html: `
+        document.addEventListener('click', function(e) {
+          const tr = e.target.closest('tr[data-href]');
+          if (!tr) return;
+          if (e.target.closest('a')) return;
+          window.location.href = tr.dataset.href;
+        });
+      `}} />
     </div>
   );
 }

@@ -7873,23 +7873,26 @@ a.mkt-btn--primary:hover,
   box-shadow: 0 2px 12px rgba(0,0,0,0.07);
   transform: translateY(-1px);
 }
-.report-stat-card .report-stat-card__hint {
-  display: none;
-  position: absolute;
-  bottom: 100%;
-  left: 0;
-  right: 0;
-  background: var(--fg);
-  color: var(--bg);
+.report-stat-card__hint-bar {
   font-size: 11px;
-  padding: 6px 10px;
-  line-height: 1.4;
-  pointer-events: none;
-  z-index: 10;
-  white-space: nowrap;
+  color: var(--fg-faint);
+  margin-top: 10px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  opacity: 0;
+  transition: opacity 120ms ease;
 }
-.report-stat-card:hover .report-stat-card__hint {
+.report-stat-card:hover .report-stat-card__hint-bar {
+  opacity: 1;
+}
+.report-stat-card--link {
   display: block;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+.report-stat-card--link:hover {
+  border-color: var(--navy);
 }
 
 .report-section-box {
