@@ -7914,3 +7914,292 @@ a.mkt-btn--primary:hover,
   box-shadow: 0 2px 10px rgba(0,0,0,0.06);
   transform: translateY(-1px);
 }
+/* ─────────────────────────────────────────────────────────────────────────────
+   ADHERIX GAUGE PAGE
+───────────────────────────────────────────────────────────────────────────── */
+
+/* Hero */
+.gauge-hero {
+  padding: 120px 0 80px;
+  background: linear-gradient(160deg, #f5f9f7 0%, #fdfcf8 60%, #f8f5f0 100%);
+  border-bottom: 1px solid var(--mkt-line, #e8edec);
+  overflow: hidden;
+}
+.gauge-hero__inner {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 64px;
+  align-items: center;
+  max-width: 1100px;
+}
+.gauge-hero__copy {
+  min-width: 0;
+}
+.gauge-hero__visual {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Scale SVG */
+.gauge-scale-wrap {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+.gauge-scale-svg {
+  width: 260px;
+  height: auto;
+  filter: drop-shadow(0 20px 40px rgba(31,42,42,0.12));
+}
+.gauge-scale-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 16px;
+  border-radius: 20px;
+  background: #fff;
+  border: 1px solid var(--mkt-line, #e8edec);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--mkt-graphite, #6b7878);
+  box-shadow: 0 2px 8px rgba(31,42,42,0.07);
+  transition: opacity 0.3s ease;
+}
+.gauge-scale-badge--active {
+  background: #f0f9f4;
+  border-color: #a3d4b8;
+  color: #2d6e4e;
+}
+.gauge-scale-badge__arrow {
+  font-size: 15px;
+  color: #4ade80;
+  line-height: 1;
+}
+.gauge-scale-badge__num {
+  letter-spacing: 0.01em;
+}
+.gauge-hero__eyebrow {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #5b8a6f;
+  margin-bottom: 20px;
+}
+.gauge-hero__title {
+  font-size: clamp(36px, 5.5vw, 60px);
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--mkt-ink, #1f2a2a);
+  margin: 0 0 8px;
+  letter-spacing: -0.02em;
+}
+.gauge-hero__title-sub {
+  color: #5b8a6f;
+}
+.gauge-hero__body {
+  font-size: 18px;
+  line-height: 1.7;
+  color: var(--mkt-graphite, #6b7878);
+  margin: 20px 0 36px;
+  max-width: 660px;
+}
+.gauge-hero__stats {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+}
+.gauge-hero__stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.gauge-hero__stat-n {
+  font-size: 28px;
+  font-weight: 700;
+  color: #5b8a6f;
+  line-height: 1;
+}
+.gauge-hero__stat-l {
+  font-size: 12px;
+  color: var(--mkt-graphite, #6b7878);
+  max-width: 160px;
+  line-height: 1.4;
+}
+.gauge-hero__ctas {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* Moment grid */
+.gauge-moment-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-top: 48px;
+}
+.gauge-moment-card {
+  padding: 28px 24px;
+  border-radius: 12px;
+  border: 1px solid var(--mkt-line, #e8edec);
+  background: #fff;
+  position: relative;
+  overflow: hidden;
+}
+.gauge-moment-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  border-radius: 12px 12px 0 0;
+}
+.gauge-moment-card--positive::before { background: #5b8a6f; }
+.gauge-moment-card--warning::before  { background: #c4933a; }
+.gauge-moment-card--danger::before   { background: #a05050; }
+.gauge-moment-card__step {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--mkt-graphite, #6b7878);
+  opacity: 0.6;
+  display: block;
+  margin-bottom: 10px;
+}
+.gauge-moment-card__label {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--mkt-ink, #1f2a2a);
+  margin: 0 0 10px;
+}
+.gauge-moment-card__body {
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--mkt-graphite, #6b7878);
+  margin: 0;
+}
+
+/* Exchange tabs */
+.gauge-exchange-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.gauge-exchange-tab {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  border-radius: 10px;
+  border: 1px solid var(--mkt-line, #e8edec);
+  background: #fff;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.15s, background 0.15s;
+}
+.gauge-exchange-tab:hover {
+  border-color: var(--gauge-color, #5b8a6f);
+  background: #fafcfb;
+}
+.gauge-exchange-tab.is-active {
+  border-color: var(--gauge-color, #5b8a6f);
+  background: color-mix(in srgb, var(--gauge-color, #5b8a6f) 6%, #fff);
+}
+.gauge-exchange-tab__label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--mkt-ink, #1f2a2a);
+}
+.gauge-exchange-tab.is-active .gauge-exchange-tab__label {
+  color: var(--gauge-color, #5b8a6f);
+}
+
+/* Gauge response bubble - slightly warmer background */
+.gauge-response-bubble {
+  background: color-mix(in srgb, #5b8a6f 8%, #f5f9f7) !important;
+  border-color: color-mix(in srgb, #5b8a6f 18%, #e8edec) !important;
+}
+
+/* Milestones grid */
+.gauge-milestones-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-top: 48px;
+}
+.gauge-milestone-card {
+  padding: 28px 24px;
+  border-radius: 12px;
+  border: 1px solid var(--mkt-line, #e8edec);
+  background: #fff;
+  position: relative;
+}
+.gauge-milestone-card__icon {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--milestone-color, #5b8a6f);
+  margin-bottom: 14px;
+  opacity: 0.85;
+  font-family: monospace;
+}
+.gauge-milestone-card__label {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--mkt-ink, #1f2a2a);
+  margin: 0 0 10px;
+}
+.gauge-milestone-card__body {
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--mkt-graphite, #6b7878);
+  margin: 0;
+}
+
+/* Clinic value cards */
+.gauge-clinic-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  margin-top: 48px;
+}
+.gauge-clinic-card {
+  padding: 32px 28px;
+  border-radius: 12px;
+  border: 1px solid var(--mkt-line, #e8edec);
+  background: #fff;
+}
+.gauge-clinic-card__title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--mkt-ink, #1f2a2a);
+  margin: 0 0 12px;
+}
+.gauge-clinic-card__body {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--mkt-graphite, #6b7878);
+  margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .gauge-hero__inner { grid-template-columns: 1fr; gap: 48px; }
+  .gauge-hero__visual { order: -1; }
+  .gauge-scale-svg { width: 200px; }
+  .gauge-moment-grid { grid-template-columns: repeat(2, 1fr); }
+  .gauge-milestones-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px) {
+  .gauge-hero { padding: 80px 0 56px; }
+  .gauge-hero__stats { gap: 20px; }
+  .gauge-hero__visual { display: none; }
+  .gauge-moment-grid { grid-template-columns: 1fr; }
+  .gauge-milestones-grid { grid-template-columns: 1fr; }
+  .gauge-clinic-grid { grid-template-columns: 1fr; }
+}
