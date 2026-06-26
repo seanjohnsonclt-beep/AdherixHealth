@@ -80,7 +80,7 @@ export async function personalizeMessage(params: PersonalizeParams): Promise<{ b
   const programType = modalityLabel(modality);
 
   const replyContext = recentReplies.length > 0
-    ? `Recent patient replies: "${recentReplies.slice(0, 3).join('" | "'")}"`
+    ? `Recent patient replies: "${recentReplies.slice(0, 3).join(' | ')}"`
     : 'No recent replies from patient yet.';
 
   const trajectoryNote = engagementTrajectory === 'declining'
