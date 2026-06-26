@@ -35,7 +35,9 @@ const N = Date.now();
 function daysAgo(d: number, hour?: number): Date {
   const dt = new Date(N - d * 86_400_000);
   const h = hour ?? 9;
-  dt.setHours(h, 0, 0, 0);
+  // Store as UTC so the fmtTime(tz=America/New_York) display lands at the right local hour.
+  // EDT = UTC-4, so 9am ET = 13:00 UTC. We accept the ET hour and add 4.
+  dt.setUTCHours(h + 4, 0, 0, 0);
   return dt;
 }
 function hoursAgo(h: number): Date {
