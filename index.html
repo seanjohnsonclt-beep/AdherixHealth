@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>We need Tiff.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,200;0,9..144,300;0,9..144,400;1,9..144,200;1,9..144,300;1,9..144,400&family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sage: #5B9B94;
+  --sage-deep: #3D7670;
+  --sage-soft: #B8D4CF;
+  --sage-mist: #E0ECE9;
+  --paper: #F4EFE6;
+  --paper-soft: #FAF6ED;
+  --ink: #1F2A2A;
+  --ink2: #3B4848;
+  --graphite: #6B7878;
+  --clay: #D99877;
+  --clay-deep: #B37151;
+  --honey: #E8C989;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Geist', sans-serif;
+  background: var(--ink);
+  color: var(--paper);
+  overflow-x: hidden;
+}
+
+/* ── CURSOR ── */
+.cursor {
+  width: 8px; height: 8px;
+  background: var(--sage);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  transition: transform 0.15s ease, opacity 0.2s;
+  transform: translate(-50%, -50%);
+}
+.cursor-ring {
+  width: 32px; height: 32px;
+  border: 1px solid rgba(91,155,148,0.4);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%, -50%);
+  transition: transform 0.08s ease, width 0.2s, height 0.2s, border-color 0.2s;
+}
+
+/* ── NOISE OVERLAY ── */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  opacity: 0.035;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 0 8vw;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(120px);
+  pointer-events: none;
+}
+.hero-orb-1 { width: 600px; height: 600px; background: rgba(91,155,148,0.12); top: -100px; right: -100px; }
+.hero-orb-2 { width: 400px; height: 400px; background: rgba(217,152,119,0.07); bottom: -80px; left: 20%; }
+
+.hero-eyebrow {
+  font-family: 'Geist Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--sage);
+  margin-bottom: 28px;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.2s forwards;
+}
+
+.hero-title {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(56px, 9vw, 120px);
+  font-weight: 200;
+  line-height: 0.95;
+  color: var(--paper);
+  margin-bottom: 32px;
+  opacity: 0;
+  animation: fadeUp 0.9s 0.4s forwards;
+}
+.hero-title em {
+  font-style: italic;
+  color: var(--sage);
+}
+.hero-title .tiff {
+  font-style: italic;
+  color: var(--clay);
+}
+
+.hero-sub {
+  font-size: clamp(15px, 2vw, 19px);
+  color: rgba(244,239,230,0.55);
+  max-width: 520px;
+  line-height: 1.7;
+  margin-bottom: 48px;
+  opacity: 0;
+  animation: fadeUp 0.9s 0.6s forwards;
+}
+
+.hero-stats {
+  display: flex;
+  gap: 48px;
+  opacity: 0;
+  animation: fadeUp 0.9s 0.8s forwards;
+}
+.hero-stat-num {
+  font-family: 'Fraunces', serif;
+  font-size: 36px;
+  font-weight: 300;
+  color: var(--paper);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.hero-stat-num span { color: var(--sage); }
+.hero-stat-label {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--graphite);
+}
+
+.scroll-hint {
+  position: absolute;
+  bottom: 40px;
+  left: 8vw;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--graphite);
+  opacity: 0;
+  animation: fadeUp 1s 1.4s forwards;
+}
+.scroll-line {
+  width: 40px;
+  height: 1px;
+  background: var(--sage);
+  position: relative;
+  overflow: hidden;
+}
+.scroll-line::after {
+  content: '';
+  position: absolute;
+  left: -100%;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--paper);
+  animation: scanline 2s 1.6s infinite;
+}
+
+/* ── SECTIONS ── */
+section { padding: 120px 8vw; position: relative; }
+section.alt { background: rgba(255,255,255,0.02); }
+
+.section-eyebrow {
+  font-family: 'Geist Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--sage);
+  margin-bottom: 16px;
+}
+
+.section-title {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(36px, 5vw, 64px);
+  font-weight: 300;
+  line-height: 1.1;
+  color: var(--paper);
+  margin-bottom: 20px;
+}
+.section-title em { font-style: italic; color: var(--sage); }
+.section-title .clay-em { font-style: italic; color: var(--clay); }
+
+.section-body {
+  font-size: 16px;
+  color: rgba(244,239,230,0.6);
+  line-height: 1.8;
+  max-width: 600px;
+}
+
+/* ── WHAT WE DO ── */
+.pillars {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-top: 60px;
+}
+.pillar {
+  background: var(--ink);
+  padding: 40px 32px;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.3s;
+}
+.pillar:hover { background: rgba(91,155,148,0.06); }
+.pillar-num {
+  font-family: 'Fraunces', serif;
+  font-size: 64px;
+  font-weight: 200;
+  color: rgba(91,155,148,0.12);
+  line-height: 1;
+  margin-bottom: 16px;
+}
+.pillar-title {
+  font-family: 'Fraunces', serif;
+  font-size: 22px;
+  font-weight: 300;
+  color: var(--paper);
+  margin-bottom: 10px;
+}
+.pillar-body { font-size: 13px; color: var(--graphite); line-height: 1.7; }
+
+/* ── FINANCIAL SECTION ── */
+.fin-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: center;
+  margin-top: 60px;
+}
+
+.fin-visual {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 12px;
+  padding: 32px;
+  position: relative;
+  overflow: hidden;
+}
+.fin-visual::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--sage-deep), var(--sage), transparent);
+}
+
+.fin-metric {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.fin-metric:last-child { border-bottom: none; }
+.fin-metric-label { font-size: 12px; color: var(--graphite); letter-spacing: 0.05em; }
+.fin-metric-val {
+  font-family: 'Fraunces', serif;
+  font-size: 22px;
+  font-weight: 300;
+  color: var(--paper);
+}
+.fin-metric-val .unit { font-size: 13px; color: var(--sage); font-family: 'Geist', sans-serif; margin-left: 4px; }
+
+.fin-bar-wrap { margin-top: 24px; }
+.fin-bar-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--graphite); margin-bottom: 6px; }
+.fin-bar-track {
+  height: 6px;
+  background: rgba(255,255,255,0.07);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+.fin-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--sage-deep), var(--sage));
+  width: 0;
+  transition: width 1.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.fin-bar-fill.clay { background: linear-gradient(90deg, var(--clay-deep), var(--clay)); }
+
+.fin-content { }
+.fin-content .section-body { max-width: 100%; }
+.fin-content h3 {
+  font-family: 'Fraunces', serif;
+  font-size: 28px;
+  font-weight: 300;
+  color: var(--paper);
+  margin: 24px 0 12px;
+  line-height: 1.2;
+}
+.fin-content h3 em { font-style: italic; color: var(--honey); }
+
+/* ── SMS THREAD ── */
+.sms-thread {
+  background: #0d0f0f;
+  border-radius: 16px;
+  padding: 24px 20px;
+  max-width: 340px;
+  border: 1px solid rgba(255,255,255,0.06);
+  position: relative;
+}
+.sms-thread::before {
+  content: 'Patient · Week 6';
+  font-family: 'Geist Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--graphite);
+  display: block;
+  margin-bottom: 18px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.sms-msg {
+  display: flex;
+  margin-bottom: 10px;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.4s, transform 0.4s;
+}
+.sms-msg.visible { opacity: 1; transform: translateY(0); }
+.sms-msg.out { justify-content: flex-end; }
+
+.sms-bubble {
+  max-width: 75%;
+  padding: 9px 14px;
+  border-radius: 14px;
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+.sms-in .sms-bubble { background: rgba(255,255,255,0.08); color: rgba(244,239,230,0.85); border-radius: 14px 14px 14px 4px; }
+.sms-out .sms-bubble { background: var(--sage-deep); color: var(--paper); border-radius: 14px 14px 4px 14px; }
+
+/* ── PARTNER SECTION ── */
+.partners-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 60px;
+}
+.partner-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 12px;
+  padding: 36px 32px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.3s, background 0.3s;
+}
+.partner-card:hover {
+  border-color: rgba(91,155,148,0.3);
+  background: rgba(91,155,148,0.04);
+}
+.partner-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--sage), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.partner-card:hover::after { opacity: 1; }
+
+.partner-tag {
+  font-family: 'Geist Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--sage);
+  margin-bottom: 16px;
+}
+.partner-name {
+  font-family: 'Fraunces', serif;
+  font-size: 26px;
+  font-weight: 300;
+  color: var(--paper);
+  margin-bottom: 6px;
+}
+.partner-title { font-size: 12px; color: var(--graphite); margin-bottom: 20px; line-height: 1.5; }
+.partner-body { font-size: 13px; color: rgba(244,239,230,0.55); line-height: 1.7; }
+.partner-stat {
+  margin-top: 24px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+.partner-stat-num {
+  font-family: 'Fraunces', serif;
+  font-size: 32px;
+  font-weight: 300;
+  color: var(--clay);
+}
+.partner-stat-label { font-size: 10px; color: var(--graphite); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 3px; }
+
+/* ── A16Z SECTION ── */
+.a16z-wrap {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 16px;
+  padding: 56px 52px;
+  margin-top: 60px;
+  position: relative;
+  overflow: hidden;
+}
+.a16z-wrap::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--sage), var(--clay), transparent);
+}
+.a16z-logo-text {
+  font-family: 'Fraunces', serif;
+  font-size: 80px;
+  font-weight: 200;
+  color: rgba(255,255,255,0.05);
+  position: absolute;
+  right: 40px;
+  top: 20px;
+  letter-spacing: -4px;
+  pointer-events: none;
+}
+.a16z-content { max-width: 640px; position: relative; z-index: 1; }
+.a16z-quote {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(24px, 3.5vw, 40px);
+  font-weight: 300;
+  font-style: italic;
+  color: var(--paper);
+  line-height: 1.3;
+  margin-bottom: 28px;
+}
+.a16z-quote em { color: var(--sage); font-style: normal; }
+.a16z-body { font-size: 15px; color: rgba(244,239,230,0.55); line-height: 1.8; margin-bottom: 36px; }
+.a16z-signals {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.signal-pill {
+  background: rgba(91,155,148,0.1);
+  border: 1px solid rgba(91,155,148,0.2);
+  border-radius: 100px;
+  padding: 8px 18px;
+  font-size: 12px;
+  color: var(--sage-soft);
+  font-family: 'Geist Mono', monospace;
+  letter-spacing: 0.05em;
+}
+
+/* ── EXIT SECTION ── */
+.exit-section {
+  background: linear-gradient(160deg, rgba(91,155,148,0.08) 0%, rgba(217,152,119,0.05) 100%);
+  border-top: 1px solid rgba(91,155,148,0.15);
+  border-bottom: 1px solid rgba(91,155,148,0.15);
+}
+.exit-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-top: 60px;
+}
+.exit-card {
+  background: rgba(20,28,28,0.9);
+  padding: 36px 28px;
+  text-align: center;
+}
+.exit-card-val {
+  font-family: 'Fraunces', serif;
+  font-size: 48px;
+  font-weight: 200;
+  color: var(--paper);
+  line-height: 1;
+  margin-bottom: 8px;
+}
+.exit-card-val .acc { color: var(--clay); }
+.exit-card-label { font-size: 11px; color: var(--graphite); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 10px; }
+.exit-card-note { font-size: 12px; color: rgba(244,239,230,0.4); line-height: 1.6; }
+
+/* ── ASK SECTION ── */
+.ask-section { background: #0d1414; }
+.ask-card {
+  background: var(--ink);
+  border: 1px solid rgba(91,155,148,0.2);
+  border-radius: 16px;
+  padding: 56px 52px;
+  margin-top: 60px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: start;
+  position: relative;
+  overflow: hidden;
+}
+.ask-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 0% 0%, rgba(91,155,148,0.06) 0%, transparent 60%);
+  pointer-events: none;
+}
+.ask-items { }
+.ask-item {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 28px;
+  align-items: flex-start;
+}
+.ask-num {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--sage-deep);
+  color: var(--paper-soft);
+  font-size: 11px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.ask-text-title { font-size: 14px; font-weight: 500; color: var(--paper); margin-bottom: 4px; }
+.ask-text-body { font-size: 12.5px; color: var(--graphite); line-height: 1.65; }
+
+.ask-close {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(28px, 4vw, 46px);
+  font-weight: 300;
+  color: var(--paper);
+  line-height: 1.2;
+}
+.ask-close em { font-style: italic; color: var(--clay); }
+.ask-close-sub {
+  font-size: 14px;
+  color: rgba(244,239,230,0.45);
+  margin-top: 20px;
+  line-height: 1.7;
+}
+.ask-sig {
+  margin-top: 36px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255,255,255,0.07);
+}
+.ask-sig-name { font-family: 'Fraunces', serif; font-size: 18px; font-style: italic; color: var(--paper); }
+.ask-sig-role { font-size: 11px; color: var(--graphite); margin-top: 3px; }
+
+/* ── FOOTER ── */
+footer {
+  padding: 32px 8vw;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+.footer-logo { display: flex; align-items: center; gap: 8px; }
+.footer-wordmark { font-family: 'Fraunces', serif; font-size: 15px; }
+.footer-wordmark em { color: var(--sage); font-style: italic; }
+.footer-note { font-size: 11px; color: var(--graphite); }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes scanline {
+  0%   { left: -100%; }
+  100% { left: 200%; }
+}
+@keyframes pulse-dot {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.4; transform: scale(0.7); }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+
+/* ── LIVE DOT ── */
+.live-dot {
+  display: inline-block;
+  width: 7px; height: 7px;
+  background: var(--sage);
+  border-radius: 50%;
+  margin-right: 8px;
+  vertical-align: middle;
+  animation: pulse-dot 2s infinite;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .pillars, .fin-grid, .partners-grid, .exit-grid, .ask-card { grid-template-columns: 1fr; }
+  .hero-stats { gap: 28px; flex-wrap: wrap; }
+  .a16z-wrap { padding: 36px 24px; }
+  section { padding: 80px 6vw; }
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- ═══════════════════════════════ HERO -->
+<section class="hero">
+  <div class="hero-orb hero-orb-1"></div>
+  <div class="hero-orb hero-orb-2"></div>
+
+  <div class="hero-eyebrow"><span class="live-dot"></span>Adherix Health · Private briefing for Tiffany Johnson</div>
+
+  <h1 class="hero-title">
+    We need<br>
+    <span class="tiff">Tiff.</span>
+  </h1>
+
+  <p class="hero-sub">
+    This isn't a side project. It's a company that could redefine how metabolic care works in America — and it needs your mind at the table.
+  </p>
+
+  <div class="hero-stats">
+    <div>
+      <div class="hero-stat-num">$4.5<span>B</span></div>
+      <div class="hero-stat-label">GLP-1 market by 2028</div>
+    </div>
+    <div>
+      <div class="hero-stat-num">40<span>%</span></div>
+      <div class="hero-stat-label">Patients drop off in 90 days</div>
+    </div>
+    <div>
+      <div class="hero-stat-num">$7.2<span>K</span></div>
+      <div class="hero-stat-label">Lost revenue per dropout</div>
+    </div>
+    <div>
+      <div class="hero-stat-num">0</div>
+      <div class="hero-stat-label">Solutions that actually work</div>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    Scroll to explore
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ WHAT WE DO -->
+<section>
+  <div class="section-eyebrow reveal">What we built</div>
+  <h2 class="section-title reveal reveal-delay-1">The retention layer<br>medicine was <em>missing.</em></h2>
+  <p class="section-body reveal reveal-delay-2">Adherix is an SMS-first behavioral engine. It runs silently alongside any GLP-1 program — no app, no EHR integration, no new workflow for clinical staff. It just keeps patients on therapy.</p>
+
+  <div class="pillars">
+    <div class="pillar reveal reveal-delay-1">
+      <div class="pillar-num">01</div>
+      <div class="pillar-title">Detect drift early</div>
+      <div class="pillar-body">Behavioral signals — silence, missed replies, keyword patterns — trigger automated intervention before a patient quits. We catch them at week 3, not week 12.</div>
+    </div>
+    <div class="pillar reveal reveal-delay-2">
+      <div class="pillar-num">02</div>
+      <div class="pillar-title">Act with precision</div>
+      <div class="pillar-body">Phase-based SMS sequences. Directive, warm, short. Not a chatbot. Not a coach. A quietly intelligent system that knows what week a patient is on and what they need to hear.</div>
+    </div>
+    <div class="pillar reveal reveal-delay-3">
+      <div class="pillar-num">03</div>
+      <div class="pillar-title">Optimize the cohort</div>
+      <div class="pillar-body">Every clinic gets a real-time retention dashboard. Recovered patients, flagged patients, revenue protected. The kind of data that turns a pilot into a permanent line item.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ SMS DEMO -->
+<section class="alt">
+  <div class="section-eyebrow reveal">The product in practice</div>
+  <h2 class="section-title reveal reveal-delay-1">A text at the<br>right moment <em>changes everything.</em></h2>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; margin-top: 60px;">
+    <div class="reveal reveal-delay-1">
+      <p class="section-body" style="margin-bottom: 24px;">This is what the product looks like from a patient's perspective. Week 6 — historically the highest drop-off window for GLP-1 therapy. Adherix detects the silence and responds before the clinic even knows there's a problem.</p>
+      <p class="section-body" style="margin-bottom: 24px;">No phone call. No staff intervention. No friction. Just a message that feels like it came from someone who actually cares — because the system was built to sound exactly like that.</p>
+      <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 10px; padding: 20px 22px; margin-top: 32px;">
+        <div style="font-family: 'Geist Mono', monospace; font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--sage); margin-bottom: 12px;">Trigger logic</div>
+        <div style="font-size: 12px; color: var(--graphite); line-height: 1.8;">
+          IF patient_silence > 48h<br>
+          AND phase = onboarding<br>
+          AND trigger_not_fired_today<br>
+          → schedule nudge · patient local time 9AM
+        </div>
+      </div>
+    </div>
+
+    <div class="sms-thread reveal reveal-delay-2" id="smsThread">
+      <div class="sms-msg sms-out" data-delay="0">
+        <div class="sms-bubble">Hi Maria — six weeks in. How's it feeling? Your refill's ready whenever you are.</div>
+      </div>
+      <div class="sms-msg sms-in" data-delay="600">
+        <div class="sms-bubble">Honestly kind of rough. I've been skipping it because I feel nauseous after</div>
+      </div>
+      <div class="sms-msg sms-out" data-delay="1200">
+        <div class="sms-bubble">That's really common at week 6. The nausea usually peaks then settles. Your care team has been flagged — someone will reach out today.</div>
+      </div>
+      <div class="sms-msg sms-in" data-delay="1800">
+        <div class="sms-bubble">Oh wow okay. I thought something was wrong with me</div>
+      </div>
+      <div class="sms-msg sms-out" data-delay="2400">
+        <div class="sms-bubble">Nothing's wrong. You're right on track. Stay with it — you're doing the hard part.</div>
+      </div>
+      <div class="sms-msg sms-in" data-delay="3000">
+        <div class="sms-bubble">Thank you. Really.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ FINANCIAL -->
+<section>
+  <div class="section-eyebrow reveal">The financial engine</div>
+  <h2 class="section-title reveal reveal-delay-1">Simple model.<br><em>Serious</em> numbers.</h2>
+
+  <div class="fin-grid">
+    <div class="fin-content reveal reveal-delay-1">
+      <p class="section-body">The unit economics are clean and compounding. Clinics pay per patient per month. We protect revenue that would otherwise walk out the door. The more patients stay on therapy, the more the clinic earns — and the more our value is impossible to argue with.</p>
+      <h3>This is where your <em>lens matters.</em></h3>
+      <p class="section-body">Pricing architecture, financial controls, revenue recognition — we're at the exact moment where getting these foundations right determines what kind of company we become. We're not looking for a healthcare advisor. We need someone who's built the financial scaffolding inside one of the most regulated institutions in the world.</p>
+      <p class="section-body" style="margin-top: 12px;">That's you.</p>
+    </div>
+
+    <div class="fin-visual reveal reveal-delay-2" id="finVisual">
+      <div class="fin-metric">
+        <span class="fin-metric-label">Revenue per patient / month</span>
+        <span class="fin-metric-val">$600<span class="unit">avg</span></span>
+      </div>
+      <div class="fin-metric">
+        <span class="fin-metric-label">Churn without Adherix</span>
+        <span class="fin-metric-val">35<span class="unit">%</span></span>
+      </div>
+      <div class="fin-metric">
+        <span class="fin-metric-label">Revenue recovered / patient</span>
+        <span class="fin-metric-val">$714<span class="unit">modeled</span></span>
+      </div>
+      <div class="fin-metric">
+        <span class="fin-metric-label">Adherix fee / patient</span>
+        <span class="fin-metric-val">~$30<span class="unit">/ mo</span></span>
+      </div>
+      <div class="fin-metric">
+        <span class="fin-metric-label">Clinic ROI at 100 patients</span>
+        <span class="fin-metric-val">$21K<span class="unit">/ mo protected</span></span>
+      </div>
+
+      <div class="fin-bar-wrap" style="margin-top: 28px;">
+        <div class="fin-bar-label"><span>Retention without Adherix</span><span>62%</span></div>
+        <div class="fin-bar-track"><div class="fin-bar-fill clay" data-width="62"></div></div>
+        <div class="fin-bar-label"><span>Retention with Adherix</span><span>84%</span></div>
+        <div class="fin-bar-track"><div class="fin-bar-fill" data-width="84"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ PARTNERS -->
+<section class="alt">
+  <div class="section-eyebrow reveal">Strategic partners</div>
+  <h2 class="section-title reveal reveal-delay-1">The people who<br>believe we're <em>building something real.</em></h2>
+
+  <div class="partners-grid">
+    <div class="partner-card reveal reveal-delay-1">
+      <div class="partner-tag">Strategic advisor · Partner</div>
+      <div class="partner-name">Dr. Adam Nadler</div>
+      <div class="partner-title">Pioneer of the Childhood Obesity Program<br>National Children's Hospital</div>
+      <div class="partner-body">Dr. Nadler didn't just advise on a pediatric arm — he's actively co-architecting it. His work at National Children's Hospital pioneered structured childhood obesity intervention at a systems level. That same framework is now being translated into Adherix's pediatric GLP-1 module.</div>
+      <div class="partner-stat">
+        <div class="partner-stat-num">1 in 5</div>
+        <div class="partner-stat-label">U.S. children with obesity · the next frontier</div>
+      </div>
+    </div>
+
+    <div class="partner-card reveal reveal-delay-2">
+      <div class="partner-tag">Expansion arm · Launching 2026</div>
+      <div class="partner-name">Pediatric Obesity</div>
+      <div class="partner-title">Co-developed with Dr. Nadler · National Children's Hospital network</div>
+      <div class="partner-body">The adult GLP-1 market is the beachhead. The pediatric market is the mission. With Dr. Nadler's clinical credibility, his institutional relationships, and Adherix's behavior engine — we're positioned to be the only platform operating at this intersection.</div>
+      <div class="partner-stat">
+        <div class="partner-stat-num">$890M</div>
+        <div class="partner-stat-label">Pediatric obesity care market · growing 18% YoY</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ A16Z -->
+<section>
+  <div class="section-eyebrow reveal">Investor conversations</div>
+  <h2 class="section-title reveal reveal-delay-1">Andreessen Horowitz<br>is <em>paying attention.</em></h2>
+
+  <div class="a16z-wrap reveal reveal-delay-1">
+    <div class="a16z-logo-text">a16z</div>
+    <div class="a16z-content">
+      <div class="a16z-quote">
+        "The adherence problem in metabolic care is a <em>$40 billion gap</em> nobody has closed. The firms that close it own the category."
+      </div>
+      <p class="a16z-body">We are in active dialogue with Andreessen Horowitz's bio + health team. The conversations are real. The interest is genuine. a16z has been one of the most aggressive investors in digital health infrastructure — and our thesis maps directly onto what they've publicly said they want to fund: clinical outcomes delivered through software, at the intersection of behavior and biology.</p>
+      <p class="a16z-body">This is not a cold deck submission. These are live conversations, and they're asking exactly the questions we need a sharp financial mind to help us answer.</p>
+      <div class="a16z-signals">
+        <span class="signal-pill"><span class="live-dot" style="width:5px;height:5px;margin-right:6px;"></span>Active dialogue</span>
+        <span class="signal-pill">Bio + health team engaged</span>
+        <span class="signal-pill">Thesis alignment confirmed</span>
+        <span class="signal-pill">Data room in preparation</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ EXIT -->
+<section class="exit-section">
+  <div class="section-eyebrow reveal">The horizon</div>
+  <h2 class="section-title reveal reveal-delay-1">We're not building<br>for a feature. We're building<br>for an <span class="clay-em">exit.</span></h2>
+  <p class="section-body reveal reveal-delay-2" style="max-width: 680px;">The GLP-1 space is attracting the largest acquisitions in healthcare history. Eli Lilly, Novo Nordisk, CVS Health, and major PBMs are all acquiring the infrastructure layer around GLP-1 therapy. Adherix is positioned directly in that acquisition path — a behavioral adherence engine with proven retention data, clinical partnerships, and a pediatric arm no one else has.</p>
+
+  <div class="exit-grid reveal reveal-delay-2">
+    <div class="exit-card">
+      <div class="exit-card-val">$50<span class="acc">M+</span></div>
+      <div class="exit-card-label">Conservative exit floor</div>
+      <div class="exit-card-note">Based on comparable digital health acquisitions at 8–12x ARR multiples in the adherence category</div>
+    </div>
+    <div class="exit-card">
+      <div class="exit-card-val">$200<span class="acc">M+</span></div>
+      <div class="exit-card-label">Strategic scenario</div>
+      <div class="exit-card-note">If acquired by a PBM or GLP-1 manufacturer as their adherence infrastructure layer — the CVS / Signify Health playbook</div>
+    </div>
+    <div class="exit-card">
+      <div class="exit-card-val">$1<span class="acc">B+</span></div>
+      <div class="exit-card-label">Category-defining outcome</div>
+      <div class="exit-card-note">If we own adult + pediatric metabolic adherence and become the retention layer for the entire GLP-1 ecosystem</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ THE ASK -->
+<section class="ask-section">
+  <div class="section-eyebrow reveal">The ask</div>
+
+  <div class="ask-card">
+    <div class="ask-items reveal reveal-delay-1">
+      <div class="ask-item">
+        <div class="ask-num">1</div>
+        <div>
+          <div class="ask-text-title">Join the advisory board</div>
+          <div class="ask-text-body">As Finance Leadership Advisor — formally. Your name, your title, your credibility attached to a company that's earning it.</div>
+        </div>
+      </div>
+      <div class="ask-item">
+        <div class="ask-num">2</div>
+        <div>
+          <div class="ask-text-title">Quarterly 45-minute calls</div>
+          <div class="ask-text-body">Financial review of where we are. Pricing, unit economics, burn. The kind of check that prevents expensive mistakes before they happen.</div>
+        </div>
+      </div>
+      <div class="ask-item">
+        <div class="ask-num">3</div>
+        <div>
+          <div class="ask-text-title">Pressure-test the big decisions</div>
+          <div class="ask-text-body">Before we sign a pilot contract, set pricing, or walk into a data room with a16z — we want you in the room first. Low volume. High impact.</div>
+        </div>
+      </div>
+      <div class="ask-item">
+        <div class="ask-num">4</div>
+        <div>
+          <div class="ask-text-title">Equity — advisor standard</div>
+          <div class="ask-text-body">0.1–0.25% with a one-year cliff and two-year vest. Real upside in a company that's positioned for a real exit.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="reveal reveal-delay-2">
+      <div class="ask-close">
+        You've built controls<br>frameworks at the top of<br>the financial world.<br><br>Now help us build the<br><em>financial backbone</em><br>of the next one.
+      </div>
+      <p class="ask-close-sub">This is no side project. It's a company with clinical partnerships, active investor conversations, a pediatric arm launching alongside a pioneering physician, and a market that is only getting bigger. We need your mind at the table while the table is still being built.</p>
+      <div class="ask-sig">
+        <div class="ask-sig-name">Sean Johnson</div>
+        <div class="ask-sig-role">Founder · Adherix Health · adherixhealth.com</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ FOOTER -->
+<footer>
+  <div class="footer-logo">
+    <svg width="20" height="20" viewBox="0 0 100 100" fill="none">
+      <path d="M20 85 L50 20 L80 85" stroke="#FAF6ED" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect x="38" y="58" width="7" height="15" rx="1.5" fill="#5B9B94"/>
+      <rect x="50" y="47" width="7" height="26" rx="1.5" fill="#5B9B94" opacity="0.75"/>
+      <rect x="62" y="36" width="7" height="37" rx="1.5" fill="#5B9B94" opacity="0.55"/>
+      <circle cx="83" cy="27" r="4" fill="#5B9B94"/>
+    </svg>
+    <div class="footer-wordmark">Adherix <em>health</em></div>
+  </div>
+  <div class="footer-note">Private · Prepared for Tiffany Johnson · May 2026</div>
+</footer>
+
+<script>
+// Cursor
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; cursor.style.left = mx + 'px'; cursor.style.top = my + 'px'; });
+function animRing() { rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12; ring.style.left = rx + 'px'; ring.style.top = ry + 'px'; requestAnimationFrame(animRing); }
+animRing();
+document.querySelectorAll('a,button,.partner-card,.pillar').forEach(el => {
+  el.addEventListener('mouseenter', () => { ring.style.width = '52px'; ring.style.height = '52px'; ring.style.borderColor = 'rgba(91,155,148,0.7)'; });
+  el.addEventListener('mouseleave', () => { ring.style.width = '32px'; ring.style.height = '32px'; ring.style.borderColor = 'rgba(91,155,148,0.4)'; });
+});
+
+// Intersection Observer — reveal
+const revealEls = document.querySelectorAll('.reveal');
+const revealObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+}, { threshold: 0.12 });
+revealEls.forEach(el => revealObs.observe(el));
+
+// Bar animations
+const barObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.querySelectorAll('.fin-bar-fill').forEach(bar => {
+        bar.style.width = bar.dataset.width + '%';
+      });
+      barObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.3 });
+const finVisual = document.getElementById('finVisual');
+if (finVisual) barObs.observe(finVisual);
+
+// SMS thread animation
+const smsObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const msgs = e.target.querySelectorAll('.sms-msg');
+      msgs.forEach(msg => {
+        const delay = parseInt(msg.dataset.delay) || 0;
+        setTimeout(() => msg.classList.add('visible'), delay);
+      });
+      smsObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.3 });
+const smsThread = document.getElementById('smsThread');
+if (smsThread) smsObs.observe(smsThread);
+
+// Counter animation
+function animateCounter(el, target, suffix, duration) {
+  let start = 0; const step = target / (duration / 16);
+  const timer = setInterval(() => {
+    start = Math.min(start + step, target);
+    el.textContent = (Number.isInteger(target) ? Math.round(start) : start.toFixed(1)) + suffix;
+    if (start >= target) clearInterval(timer);
+  }, 16);
+}
+</script>
+</body>
+</html>
