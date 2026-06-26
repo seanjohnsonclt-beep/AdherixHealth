@@ -2,7 +2,8 @@
 //
 // Rewrites outbound SMS bodies using the full patient behavioral context
 // already tracked by the engine: phase, trajectory, medication category,
-// titration timing, adherence signals, injection streak, and recent reply history.
+// titration timing, adherence signals, injection streak, weight progress,
+// and recent reply history.
 //
 // Runs at SEND TIME (not schedule time) so context is always current.
 // Falls back to the original template body on any failure.
@@ -58,6 +59,10 @@ export type PersonalizeParams = {
   consecutiveMisses: number;
   injectionStreak: number;
   daysEnrolled: number;
+  // Gauge weight context
+  lbsLost: number | null;
+  pctLost: number | null;
+  recentMilestone: string | null;
 };
 
 export async function personalizeMessage(params: PersonalizeParams): Promise<{ body: string; personalized: boolean }> {
@@ -68,13 +73,14 @@ export async function personalizeMessage(params: PersonalizeParams): Promise<{ b
     body, firstName, phaseName, daysInPhase, recentReplies,
     engagementTrajectory, medicationKey, modality,
     daysSinceTitration, consecutiveMisses, injectionStreak, daysEnrolled,
+    lbsLost, pctLost, recentMilestone,
   } = params;
 
   const treatmentType = medicationCategory(medicationKey);
   const programType = modalityLabel(modality);
 
   const replyContext = recentReplies.length > 0
-    ? `Recent patient replies: "${recentReplies.slice(0, 3).join('" | "')}"`
+    ? `Recent patient replies: "${recentReplies.slice(0, 3).join('" | "'")}"`
     : 'No recent replies from patient yet.';
 
   const trajectoryNote = engagementTrajectory === 'declining'
@@ -93,14 +99,19 @@ export async function personalizeMessage(params: PersonalizeParams): Promise<{ b
     ? `Patient has missed ${consecutiveMisses} consecutive doses - keep tone supportive, not pressuring.`
     : '';
 
-  // Streak note: only mention if meaningful (3+). Let the AI celebrate the behavior,
-  // not the outcome - that's what Gauge is for.
   const streakNote = injectionStreak >= 3
     ? `Patient has confirmed ${injectionStreak} consecutive doses in a row - you can acknowledge this consistency naturally if it fits the message.`
     : '';
 
   const tenureNote = daysEnrolled > 0
     ? `Patient has been in the program for ${daysEnrolled} days.`
+    : '';
+
+  // Weight progress context - never mention specific numbers unless milestone just fired
+  const weightNote = recentMilestone
+    ? `Patient just hit a weight milestone (${recentMilestone}) - you may reference their progress naturally if it fits.`
+    : lbsLost !== null && lbsLost >= 5
+    ? `Patient has made meaningful weight progress (${Math.round(lbsLost)} lbs lost${pctLost ? ', ' + pctLost.toFixed(1) + '% of starting weight' : ''}).`
     : '';
 
   try {
@@ -120,6 +131,7 @@ ${trajectoryNote}
 ${titrationNote}
 ${missNote}
 ${streakNote}
+${weightNote}
 
 Original message:
 ${body}
@@ -129,7 +141,7 @@ Rules:
 - Keep the same call to action and any reply format (Y/N, YES/NO, a number, etc.)
 - No medication names, drug names, or dose amounts
 - Tone should match the patient's engagement pattern
-- If the patient has a streak, you may acknowledge the behavior naturally - but don't make it sound like a trophy ceremony
+- If the patient has a streak or weight progress, you may acknowledge naturally - but don't make it sound like a trophy ceremony
 - Direct and specific - not motivational-speaker-y
 - Return ONLY the final SMS text. No quotes, no explanation.`,
       }],
@@ -158,4 +170,64 @@ export async function fetchRecentReplies(patientId: string, limit = 4): Promise<
     [patientId, limit]
   );
   return rows.map(r => r.body);
+}
+
+export async function fetchWeightContext(patientId: string): Promise<{
+  lbsLost: number | null;
+  pctLost: number | null;
+  recentMilestone: string | null;
+}> {
+  try {
+    const patient = await query<{ starting_weight_lbs: string | null }>(
+      `select starting_weight_lbs from patients where id = $1`,
+      [patientId]
+    );
+    const startingWeight = patient[0]?.starting_weight_lbs
+      ? parseFloat(patient[0].starting_weight_lbs)
+      : null;
+
+    if (!startingWeight) return { lbsLost: null, pctLost: null, recentMilestone: null };
+
+    // Most recent weight log
+    const logs = await query<{ weight_lbs: string; logged_at: string }>(
+      `select weight_lbs, logged_at from weight_logs
+       where patient_id = $1
+       order by logged_at desc
+       limit 1`,
+      [patientId]
+    );
+    if (!logs.length) return { lbsLost: null, pctLost: null, recentMilestone: null };
+
+    const currentWeight = parseFloat(logs[0].weight_lbs);
+    const lbsLost = startingWeight - currentWeight;
+    const pctLost = (lbsLost / startingWeight) * 100;
+
+    // Check if a gauge milestone fired in the last 7 days
+    const recentFiring = await query<{ trigger_key: string }>(
+      `select trigger_key from trigger_firings
+       where patient_id = $1
+         and trigger_key like 'gauge_milestone_%'
+         and fired_on >= current_date - interval '7 days'
+       order by fired_on desc
+       limit 1`,
+      [patientId]
+    );
+
+    const milestoneMap: Record<string, string> = {
+      gauge_milestone_first_log:    'first weight logged',
+      gauge_milestone_lbs_5:        '5 lbs lost',
+      gauge_milestone_lbs_10:       '10 lbs lost',
+      gauge_milestone_lbs_25:       '25 lbs lost',
+      gauge_milestone_pct_10:       '10% body weight lost',
+      gauge_milestone_pct_20:       '20% body weight lost',
+    };
+
+    const recentMilestone = recentFiring.length
+      ? (milestoneMap[recentFiring[0].trigger_key] ?? null)
+      : null;
+
+    return { lbsLost, pctLost, recentMilestone };
+  } catch {
+    return { lbsLost: null, pctLost: null, recentMilestone: null };
+  }
 }

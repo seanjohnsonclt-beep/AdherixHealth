@@ -1,7 +1,7 @@
 import { query } from '@/lib/db';
 import { sendSms } from '@/lib/twilio';
 import { sendDeliveryFailureAlert, type FailureRecord } from '@/lib/email';
-import { personalizeMessage, fetchRecentReplies } from '@/lib/ai';
+import { personalizeMessage, fetchRecentReplies, fetchWeightContext } from '@/lib/ai';
 import { findPhase } from '@/lib/config';
 
 const DRY_RUN = !process.env.TWILIO_ACCOUNT_SID || process.env.DRY_RUN === 'true';
@@ -87,7 +87,10 @@ export async function sendDueMessages() {
         ? Math.floor((Date.now() - new Date(msg.enrolled_at).getTime()) / 86_400_000)
         : 0;
 
-      const recentReplies = await fetchRecentReplies(msg.patient_id);
+      const [recentReplies, weightContext] = await Promise.all([
+        fetchRecentReplies(msg.patient_id),
+        fetchWeightContext(msg.patient_id),
+      ]);
 
       const result = await personalizeMessage({
         body: msg.body,
@@ -102,6 +105,9 @@ export async function sendDueMessages() {
         consecutiveMisses: msg.consecutive_missed_injections,
         injectionStreak: msg.confirmed_injection_streak,
         daysEnrolled,
+        lbsLost: weightContext.lbsLost,
+        pctLost: weightContext.pctLost,
+        recentMilestone: weightContext.recentMilestone,
       });
 
       finalBody = result.body;

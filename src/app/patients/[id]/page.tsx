@@ -32,6 +32,7 @@ type Message = {
   status: string;
   error: string | null;
   created_at: Date;
+  ai_personalized: boolean;
 };
 
 type DcEvent = {
@@ -127,7 +128,8 @@ export default async function PatientPage({ params }: { params: { id: string } }
   if (!patient) redirect('/dashboard');
 
   const messages = await query<Message>(
-    `select id, direction, template_key, body, scheduled_for, sent_at, status, error, created_at
+    `select id, direction, template_key, body, scheduled_for, sent_at, status, error, created_at,
+            coalesce(ai_personalized, false) as ai_personalized
      from messages where patient_id = $1
      order by coalesce(sent_at, scheduled_for, created_at) desc
      limit 100`,
@@ -345,6 +347,18 @@ export default async function PatientPage({ params }: { params: { id: string } }
                   <div className="body">{m.body}</div>
                   <div className={`meta${isFailed ? ' meta--soft' : ''}`}>
                     {templateLabel(m.template_key) ? `${templateLabel(m.template_key)} · ` : ''}{statusLabel}
+                    {m.ai_personalized && (
+                      <span style={{
+                        marginLeft: 6,
+                        fontSize: 10,
+                        fontWeight: 600,
+                        color: 'var(--green)',
+                        border: '1px solid var(--green)',
+                        borderRadius: 3,
+                        padding: '1px 5px',
+                        letterSpacing: '0.04em',
+                      }}>AI</span>
+                    )}
                     {isFailed && m.error && (
                       <span className="error-detail">  -  carrier held</span>
                     )}
