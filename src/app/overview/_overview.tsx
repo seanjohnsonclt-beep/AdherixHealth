@@ -255,28 +255,29 @@ function EngineScene() {
     { label: 'Plateau',     days: 'Days 52-81',   note: 'Sustain through stall' },
     { label: 'Maintenance', days: 'Ongoing',      note: 'Light-touch check-ins' },
   ];
-  const [active, setActive] = useState(0);
-
-  useEffect(() => {
-    const t = setInterval(() => setActive(v => (v + 1) % phases.length), 1100);
-    return () => clearInterval(t);
-  }, []);
+  const [active, setActive] = useState<number | null>(null);
 
   return (
     <div style={{ maxWidth: 680, margin: '0 auto', width: '100%' }}>
       <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'center', marginBottom: 40 }}>
         {phases.map((p, i) => (
-          <div key={i} style={{
-            padding: '10px 16px',
-            borderRadius: 8,
-            border: `1px solid ${i === active ? GREEN : BORDER}`,
-            background: i === active ? 'rgba(74,222,128,0.08)' : CARD,
-            transition: 'all 0.35s ease',
-            minWidth: 150,
-          }}>
-            <div style={{ color: i === active ? GREEN : DIM, fontSize: 13, fontWeight: 600 }}>{p.label}</div>
+          <div
+            key={i}
+            onMouseEnter={() => setActive(i)}
+            onMouseLeave={() => setActive(null)}
+            onClick={e => e.stopPropagation()}
+            style={{
+              padding: '10px 16px',
+              borderRadius: 8,
+              border: `1px solid ${i === active ? GREEN : BORDER}`,
+              background: i === active ? 'rgba(74,222,128,0.08)' : CARD,
+              transition: 'all 0.25s ease',
+              minWidth: 150,
+              cursor: 'default',
+            }}>
+            <div style={{ color: i === active ? GREEN : DIM, fontSize: 13, fontWeight: 600, transition: 'color 0.25s' }}>{p.label}</div>
             <div style={{ color: MUTED, fontSize: 11, marginTop: 2 }}>{p.days}</div>
-            <div style={{ color: MUTED, fontSize: 11, marginTop: 2, opacity: i === active ? 1 : 0, transition: 'opacity 0.3s' }}>{p.note}</div>
+            <div style={{ color: MUTED, fontSize: 11, marginTop: 2, opacity: i === active ? 1 : 0, transition: 'opacity 0.25s' }}>{p.note}</div>
           </div>
         ))}
       </div>
