@@ -45,13 +45,14 @@ type DcEvent = {
   message_body: string;
 };
 
-function fmtTime(d: Date | null): string {
+function fmtTime(d: Date | null, tz = 'America/New_York'): string {
   if (!d) return ' - ';
   return new Date(d).toLocaleString('en-US', {
     month: 'short',
     day: 'numeric',
     hour: 'numeric',
     minute: '2-digit',
+    timeZone: tz,
   });
 }
 
@@ -67,6 +68,31 @@ function maskPhone(p: string): string {
 }
 
 const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+const TEMPLATE_LABELS: Record<string, string> = {
+  'phase0.welcome':         'Welcome',
+  'phase1.day1.morning':    'Day 1 check-in',
+  'phase1.day3.checkin':    'Day 3 check-in',
+  'phase1.day5.hydrate':    'Hydration reminder',
+  'phase2.day1.habit':      'Habit builder',
+  'phase2.day4.log':        'Meal log prompt',
+  'phase2.day7.review':     'Week 2 review',
+  'phase3.day3.mov':        'Movement check',
+  'phase3.day10.streak':    'Streak check',
+  'phase3.day20.plateau':   'Plateau alert',
+  'phase4.day5.taper':      'Taper start',
+  'phase4.day15.anchor':    'Anchor habit check',
+  'phase5.weekly_checkin':  'Weekly check-in',
+  'phase5.weekly_rate':     'Weekly rating',
+  'trigger.no_response_48h': 'Auto follow-up',
+  'trigger.no_response_5d':  'Escalation nudge',
+  'gauge.weekly_checkin':   'Weight check-in',
+};
+
+function templateLabel(key: string | null): string | null {
+  if (!key) return null;
+  return TEMPLATE_LABELS[key] ?? key.replace(/[._]/g, ' ');
+}
+
 
 const PATTERN_LABELS: Record<string, string> = {
   uncertainty: 'Side effect',
@@ -318,7 +344,7 @@ export default async function PatientPage({ params }: { params: { id: string } }
                   </div>
                   <div className="body">{m.body}</div>
                   <div className={`meta${isFailed ? ' meta--soft' : ''}`}>
-                    {m.template_key ? `${m.template_key} · ` : ''}{statusLabel}
+                    {templateLabel(m.template_key) ? `${templateLabel(m.template_key)} · ` : ''}{statusLabel}
                     {isFailed && m.error && (
                       <span className="error-detail">  -  carrier held</span>
                     )}
