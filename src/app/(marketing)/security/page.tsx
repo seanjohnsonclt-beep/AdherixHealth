@@ -13,7 +13,7 @@ export default function SecurityPage() {
         <div className="mkt-legal__head">
           <span className="mkt-eyebrow">Security</span>
           <h1 className="mkt-h1">Our security posture</h1>
-          <p className="mkt-legal__meta">Last updated: April 26, 2026</p>
+          <p className="mkt-legal__meta">Last updated: June 26, 2026</p>
         </div>
 
         <p className="mkt-legal__lede">
@@ -98,6 +98,15 @@ export default function SecurityPage() {
           <p>
             To request a BAA, contact{' '}
             <a href="mailto:hello@adherixhealth.com">hello@adherixhealth.com</a>.
+          </p>
+          <p>
+            <strong>AI message layer:</strong> Adherix uses a large language model (Claude Haiku,
+            operated by Anthropic) to personalize the wording of outbound SMS messages at send
+            time. The model receives the patient&rsquo;s first name, program phase, engagement
+            signals, and a generic treatment category (e.g., &ldquo;weekly injectable&rdquo;).
+            Drug names, diagnoses, doses, phone numbers, and all other clinical identifiers are
+            never transmitted to the model. Anthropic maintains a HIPAA Business Associate
+            Agreement, which Adherix executes before processing real patient data in production.
           </p>
         </section>
 

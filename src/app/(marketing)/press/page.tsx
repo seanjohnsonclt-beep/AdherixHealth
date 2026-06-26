@@ -4,6 +4,17 @@ import { CopyButton } from './_components/CopyButton';
 export const metadata: Metadata = {
   title: 'Press & media | Adherix Health',
   description: 'Press resources for journalists, analysts, and partners covering metabolic care and GLP-1 adherence.',
+  openGraph: {
+    title: 'Press & media - Adherix Health',
+    description: 'Press releases, brand assets, and media contact for Adherix Health. Covering metabolic care and GLP-1 adherence.',
+    url: 'https://adherixhealth.com/press',
+    siteName: 'Adherix Health',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Press & media - Adherix Health',
+    description: 'Press releases, brand assets, and media contact for Adherix Health.',
+  },
 };
 
 const BOILERPLATE =

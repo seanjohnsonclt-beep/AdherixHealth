@@ -27,6 +27,17 @@ export const metadata: Metadata = {
   title: 'Platform | Adherix Health',
   description:
     'The behavioral adherence engine for GLP-1 retention. Six phases, trigger-driven outreach, clinic routing -- built to run without adding to your team\'s workload.',
+  openGraph: {
+    title: '40% of GLP-1 patients quit within 90 days.',
+    description: 'Adherix Keep delivers phase-based SMS adherence for GLP-1 programs. Right message, right moment, every time. Six phases, 45+ templates, always on.',
+    url: 'https://adherixhealth.com/platform',
+    siteName: 'Adherix Health',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: '40% of GLP-1 patients quit within 90 days.',
+    description: 'Adherix Keep delivers phase-based SMS adherence for GLP-1 programs. Right message, right moment, every time.',
+  },
 };
 
 export default function PlatformPage() {

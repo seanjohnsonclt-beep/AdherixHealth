@@ -6,6 +6,17 @@ export const metadata: Metadata = {
   title: 'Medicare GLP-1 Bridge Resources | Adherix Health',
   description:
     'The Medicare GLP-1 Bridge starts July 1, 2026. Adherix Health helps clinics navigate prior authorization, documentation requirements, and patient onboarding - then keeps those patients on treatment.',
+  openGraph: {
+    title: 'Is your clinic ready for July 1?',
+    description: 'The Medicare GLP-1 Bridge starts July 1, 2026. Free clinic readiness checklist and patient onboarding workflow. No signup required.',
+    url: 'https://adherixhealth.com/medicare-resources',
+    siteName: 'Adherix Health',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Is your clinic ready for July 1?',
+    description: 'Free Medicare GLP-1 Bridge readiness checklist and patient onboarding workflow. Download now.',
+  },
 };
 
 export default function MedicareResourcesPage() {
