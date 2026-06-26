@@ -280,22 +280,17 @@ function StatCard({
   value,
   sub,
   accent,
+  hint,
 }: {
   label: string;
   value: string | number;
   sub?: string;
   accent?: boolean;
+  hint?: string;
 }) {
   return (
-    <div
-      style={{
-        padding: '20px 24px',
-        background: 'white',
-        border: '1px solid var(--line)',
-        flex: 1,
-        minWidth: 140,
-      }}
-    >
+    <div className="report-stat-card">
+      {hint && <div className="report-stat-card__hint">{hint}</div>}
       <div className="label" style={{ marginBottom: 8 }}>
         {label}
       </div>
@@ -327,7 +322,7 @@ function SectionBox({
   sub?: string;
 }) {
   return (
-    <div style={{ background: 'white', border: '1px solid var(--line)', marginBottom: 24 }}>
+    <div className="report-section-box">
       <div
         style={{
           padding: '14px 20px',
@@ -946,37 +941,43 @@ export default async function ReportsPage({
 
       {/* -- Summary cards -- */}
       <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 24 }}>
-        <StatCard label="Total Enrolled" value={total} />
+        <StatCard label="Total Enrolled" value={total} hint="All patients enrolled at this clinic, including inactive" />
         <StatCard
           label="Active"
           value={active}
           sub={total > 0 ? `${Math.round((active / total) * 100)}% of enrolled` : undefined}
+          hint="Patients currently receiving scheduled messages"
         />
         <StatCard
           label="Flagged"
           value={flagged}
           accent={flagged > 0}
           sub={total > 0 ? `${Math.round((flagged / total) * 100)}% of enrolled` : undefined}
+          hint="No reply in 5+ days - needs a human call"
         />
         <StatCard
           label="Churned"
           value={churned}
           sub={total > 0 ? `${Math.round((churned / total) * 100)}% of enrolled` : undefined}
+          hint="Patients who have left the program"
         />
         <StatCard
           label="Patient Reply Rate"
           value={`${patientReplyRate}%`}
           sub={`${everReplied} of ${total} ever replied`}
+          hint="% of enrolled patients who have replied at least once"
         />
         <StatCard
           label="Msg Reply Rate"
           value={`${overallReplyRate}%`}
           sub={`${totalReceived} replies / ${totalSent} sent`}
+          hint="How often patients reply to outbound messages (last 30 days)"
         />
         <StatCard
           label="Avg Days Enrolled"
           value={avgDays}
           sub="across filtered patients"
+          hint="Average tenure on the program - longer = stronger retention"
         />
       </div>
 
