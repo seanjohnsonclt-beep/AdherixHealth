@@ -300,14 +300,14 @@ function EngineScene() {
 /* ─── volume scene ───────────────────────────────────────────────────── */
 function VolumeScene() {
   const items = [
-    { phase: 'Initiation',  count: 3,  color: '#4ade80' },
-    { phase: 'Onboarding',  count: 8,  color: '#34d399' },
-    { phase: 'Activation',  count: 12, color: '#22d3ee' },
-    { phase: 'Momentum',    count: 10, color: '#818cf8' },
+    { phase: 'Initiation',  count: 4,  color: '#4ade80' },
+    { phase: 'Onboarding',  count: 5,  color: '#34d399' },
+    { phase: 'Activation',  count: 5,  color: '#22d3ee' },
+    { phase: 'Momentum',    count: 6,  color: '#818cf8' },
     { phase: 'Plateau',     count: 8,  color: '#f472b6' },
-    { phase: 'Maintenance', count: 6,  color: '#fb923c' },
+    { phase: 'Maintenance', count: 5,  color: '#fb923c' },
   ];
-  const max = 12;
+  const max = 8;
 
   return (
     <div style={{ maxWidth: 640, margin: '0 auto', width: '100%' }}>
@@ -337,7 +337,7 @@ function VolumeScene() {
         ))}
       </div>
       <div style={{ marginTop: 32, padding: 20, background: CARD, borderRadius: 12, border: `1px solid ${BORDER}`, textAlign: 'center' }}>
-        <span style={{ color: GREEN, fontSize: 28, fontWeight: 800 }}>47+</span>
+        <span style={{ color: GREEN, fontSize: 28, fontWeight: 800 }}>33+</span>
         <span style={{ color: DIM, fontSize: 16, marginLeft: 12 }}>scheduled touchpoints per patient</span>
         <p style={{ color: MUTED, fontSize: 13, marginTop: 8, marginBottom: 0 }}>
           Plus behavioral triggers that fire based on patient actions - replies, silences, injection confirmations.
@@ -754,7 +754,7 @@ export function OverviewDeck() {
             </p>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12, maxWidth: 560, margin: '0 auto' }}>
               {[
-                { stat: '47+', label: 'touchpoints per patient' },
+                { stat: '33+', label: 'touchpoints per patient' },
                 { stat: '6',   label: 'behavioral phases' },
                 { stat: '0',   label: 'coordinator actions required' },
               ].map((item, i) => (
