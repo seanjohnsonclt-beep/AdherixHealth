@@ -13,6 +13,7 @@
     "worker:loop": "tsx src/workers/loop.ts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.106.0",
     "@supabase/ssr": "^0.5.0",
     "@supabase/supabase-js": "^2.45.0",
     "date-fns": "^3.6.0",
