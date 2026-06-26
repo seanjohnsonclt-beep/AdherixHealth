@@ -3,7 +3,6 @@ import { query } from '@/lib/db';
 import { findPhase } from '@/lib/config';
 import { getClinicMetrics, fmtMoney } from '@/lib/metrics';
 import { Topbar } from '@/app/_components/Topbar';
-import { ReseedButton } from './ReseedButton';
 import Link from 'next/link';
 
 type PatientRow = {
@@ -152,7 +151,6 @@ export default async function HomePage() {
             <h1 style={{ fontSize: 30, marginTop: 4 }}>{user.clinicName}</h1>
           </div>
           <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-            <ReseedButton />
             <Link href="/patients/import" className="btn btn--ghost" title="Import patients from CSV or PDF">
               Import
             </Link>
@@ -197,45 +195,6 @@ export default async function HomePage() {
         </div>
       </div>
 
-      {/* --- Executive KPI row --- */}
-      <div className="kpi-row">
-        <KpiCard
-          label="Active patients"
-          value={metrics.active + metrics.flagged}
-          sub={`${metrics.retentionRate}% retention`}
-          tone="neutral"
-        />
-        <KpiCard
-          label="Patients at risk"
-          value={metrics.urgent}
-          sub={metrics.urgent > 0 ? 'Review today' : 'None right now'}
-          tone={metrics.urgent > 0 ? 'warn' : 'good'}
-        />
-        <KpiCard
-          label="Patients recovered"
-          value={metrics.recoveredThisMonth}
-          sub="last 30 days"
-          tone="good"
-        />
-        <KpiCard
-          label="Revenue protected"
-          value={fmtMoney(metrics.revenueProtected30d)}
-          sub={metrics.revenueProtectedIsModeled ? 'projected · last 30d' : 'modeled · last 30d'}
-          tone="accent"
-        />
-        <KpiCard
-          label="Avg days on program"
-          value={metrics.avgDaysOnProgram}
-          sub={`${metrics.avgMonthsOnProgram} mo average`}
-          tone="neutral"
-        />
-        <KpiCard
-          label="Staff hours saved"
-          value={metrics.staffHoursSaved30d}
-          sub={`${metrics.outboundSent30d} messages sent`}
-          tone="neutral"
-        />
-      </div>
 
       {/* --- Patient table --- */}
       <div className="section">
@@ -366,26 +325,3 @@ export default async function HomePage() {
   );
 }
 
-// --- KPI card ----------------------------------------------------------------
-
-type KpiTone = 'neutral' | 'good' | 'warn' | 'accent';
-
-function KpiCard({
-  label,
-  value,
-  sub,
-  tone = 'neutral',
-}: {
-  label: string;
-  value: string | number;
-  sub?: string;
-  tone?: KpiTone;
-}) {
-  return (
-    <div className={`kpi-card kpi-card--${tone}`}>
-      <div className="label">{label}</div>
-      <div className="kpi-card__num">{value}</div>
-      {sub && <div className="kpi-card__sub">{sub}</div>}
-    </div>
-  );
-}
