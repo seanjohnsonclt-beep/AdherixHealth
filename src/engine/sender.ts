@@ -17,6 +17,9 @@ type DueMessage = {
   clinic_id: string;
   clinic_name: string;
   clinic_admin_email: string | null;
+  // Quest dual-channel
+  guardian_phone: string | null;
+  guardian_name: string | null;
   // Phase context
   current_phase: number;
   phase_started_at: string | null;
@@ -39,6 +42,7 @@ export async function sendDueMessages() {
     `select
        m.id, m.patient_id, m.template_key, m.body,
        p.phone, p.first_name, p.current_phase, p.phase_started_at,
+       p.guardian_phone, p.guardian_name,
        coalesce(p.modality, 'glp1') as modality,
        p.medication,
        p.engagement_trajectory,
@@ -139,6 +143,23 @@ export async function sendDueMessages() {
       );
       const tag = aiPersonalized ? ' (AI)' : '';
       console.log(`[sender] sent ${msg.id} -> ${smsResult.sid}${tag}`);
+
+      // Quest dual-send: if guardian_phone exists and template is a 'both' or 'guardian' track,
+      // send the guardian version. For now we send the same body to guardian unless
+      // quest-config specifies guardian_body. Full track routing handled by quest-consent layer.
+      if (msg.modality === 'quest' && msg.guardian_phone && msg.template_key?.startsWith('quest.')) {
+        try {
+          await sendSms({
+            to: msg.guardian_phone,
+            from: msg.twilio_number || undefined,
+            body: `[For ${msg.first_name || 'your teen'}] ` + finalBody,
+          });
+          console.log(`[sender] quest guardian-send -> ${msg.guardian_phone}`);
+        } catch (gErr) {
+          console.error(`[sender] guardian send failed:`, gErr);
+          // Non-fatal - teen message already sent
+        }
+      }
     } catch (err) {
       const errMsg = err instanceof Error ? err.message : String(err);
       console.error(`[sender] failed ${msg.id}:`, errMsg);

@@ -12,6 +12,7 @@ export const PRODUCT_TYPES = [
   { value: 'pharmacotherapy',     label: 'Pharmacotherapy (Adherix Rx)',         available: true  },
   { value: 'behavioral_therapy',  label: 'Behavioral Therapy (Adherix IBT)',     available: true  },
   { value: 'metabolic_health',    label: 'Metabolic Health (Adherix Metabolic)', available: true  },
+  { value: 'quest',               label: 'Pediatric / Adolescent (Adherix Quest)',  available: true  },
 ] as const;
 
 export function EnrollForm({ error, defaultModality = 'glp1' }: { error?: string; defaultModality?: string }) {
@@ -26,6 +27,7 @@ export function EnrollForm({ error, defaultModality = 'glp1' }: { error?: string
 
   // For GLP-1: weekly injections have an injection day concept
   const isGlp1 = modality === 'glp1';
+  const isQuest = modality === 'quest';
 
   // The active protocol (selected or first if IBT)
   const protocol = isIbt
@@ -67,7 +69,48 @@ export function EnrollForm({ error, defaultModality = 'glp1' }: { error?: string
 
       {/* -- Product type -------------------------------------------------- */}
       <div style={{ marginBottom: 24 }}>
-        <label className="label" htmlFor="modality">Product type</label>
+        
+      {/* -- Quest fields (pediatric) --------------------------------------- */}
+      {isQuest && (
+        <>
+          <div style={{ marginBottom: 16 }}>
+            <label className="label" htmlFor="date_of_birth">Date of birth</label>
+            <input className="input" type="date" name="date_of_birth" id="date_of_birth" required={isQuest} />
+            <div style={{ fontSize: 12, color: 'rgba(244,239,230,0.45)', marginTop: 6 }}>
+              Used to determine consent type (COPPA for under-13).
+            </div>
+          </div>
+          <div style={{ marginBottom: 16 }}>
+            <label className="label" htmlFor="state">Patient state</label>
+            <input className="input" type="text" name="state" id="state" maxLength={2} placeholder="WA" required={isQuest} />
+            <div style={{ fontSize: 12, color: 'rgba(244,239,230,0.45)', marginTop: 6 }}>
+              2-letter state code. Determines minor consent rules for 13+.
+            </div>
+          </div>
+          <div style={{ marginBottom: 16 }}>
+            <label className="label" htmlFor="guardian_name">Guardian name</label>
+            <input className="input" type="text" name="guardian_name" id="guardian_name" placeholder="Parent / guardian full name" required={isQuest} />
+          </div>
+          <div style={{ marginBottom: 24 }}>
+            <label className="label" htmlFor="guardian_phone">Guardian phone (US)</label>
+            <input className="input" type="tel" name="guardian_phone" id="guardian_phone" placeholder="(555) 123-4567" required={isQuest} />
+            <div style={{ fontSize: 12, color: 'rgba(244,239,230,0.45)', marginTop: 6 }}>
+              Guardian receives a separate message track from the teen.
+            </div>
+          </div>
+          <div style={{ marginBottom: 24 }}>
+            <label className="label">Consent confirmation</label>
+            <label style={{ display: 'flex', alignItems: 'flex-start', gap: 10, cursor: 'pointer' }}>
+              <input type="checkbox" name="consent_confirmed" value="1" required={isQuest} style={{ marginTop: 3 }} />
+              <span style={{ fontSize: 14, color: 'rgba(244,239,230,0.7)', lineHeight: 1.5 }}>
+                I confirm that appropriate consent has been obtained from the patient and/or guardian per HIPAA, COPPA, and applicable state minor-consent laws.
+              </span>
+            </label>
+          </div>
+        </>
+      )}
+
+      <label className="label" htmlFor="modality">Product type</label>
         <select
           className="input"
           name="modality"

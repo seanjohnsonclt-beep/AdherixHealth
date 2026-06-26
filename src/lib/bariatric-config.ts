@@ -275,7 +275,22 @@ export function getConfig(modality: string) {
     };
   }
 
-  // Default: GLP-1 / Adherix Keep
+
+  if (modality === 'quest') {
+    const {
+      QUEST_PHASES, QUEST_TEMPLATES, QUEST_TRIGGERS,
+    } = require('./quest-config');
+    return {
+      phases:            () => QUEST_PHASES,
+      templates:         () => QUEST_TEMPLATES,
+      triggers:          () => QUEST_TRIGGERS,
+      findTemplate:      (key: string) => QUEST_TEMPLATES.find((t: any) => t.key === key),
+      findPhase:         (id: number)  => QUEST_PHASES.find((p: any) => p.id === id),
+      templatesForPhase: (phaseId: number) => QUEST_TEMPLATES.filter((t: any) => t.phase === phaseId),
+    };
+  }
+
+    // Default: GLP-1 / Adherix Keep
   const { phases, templates, triggers, findTemplate, findPhase, templatesForPhase } = require('./config');
   return { phases: phases(), templates: templates(), triggers: triggers(), findTemplate, findPhase, templatesForPhase };
 }
