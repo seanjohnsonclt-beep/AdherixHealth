@@ -5,6 +5,18 @@ export const metadata: Metadata = {
   title: 'Press Release: Adherix Health Releases Free Medicare GLP-1 Bridge Resources | Adherix Health',
   description:
     'Adherix Health releases free clinic preparation resources as the Medicare GLP-1 Bridge program launches July 1, 2026 - covering Wegovy, Zepbound, and Foundayo at $50/month for eligible Medicare beneficiaries.',
+  openGraph: {
+    title: 'Medicare GLP-1 Bridge: Free clinic resources released.',
+    description: 'New CMS program extends $50/month GLP-1 coverage to eligible Medicare beneficiaries. Free clinic readiness checklist and onboarding workflow available now.',
+    url: 'https://adherixhealth.com/press/medicare-glp1-bridge',
+    siteName: 'Adherix Health',
+    type: 'article',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Medicare GLP-1 Bridge: Free clinic resources released.',
+    description: 'New CMS program extends $50/month GLP-1 coverage to eligible Medicare beneficiaries. Free clinic readiness tools available now.',
+  },
 };
 
 export default function MedicareGlp1BridgePressReleasePage() {

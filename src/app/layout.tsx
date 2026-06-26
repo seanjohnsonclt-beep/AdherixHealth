@@ -14,19 +14,16 @@ export const metadata: Metadata = {
     'Adherix helps GLP-1 clinics detect patient disengagement early, trigger smarter interventions, and retain more patients through the treatment journey.',
   openGraph: {
     type: 'website',
-    url: BASE_URL,
     siteName: 'Adherix Health',
     title: 'Adherix Health — Retention Intelligence for GLP-1 Programs',
     description:
       'Behavior-driven SMS adherence for GLP-1 clinics. Phase-based. Trigger-based. Pilot-ready.',
-    images: [{ url: '/opengraph-image', width: 1200, height: 630, alt: 'Adherix Health' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Adherix Health — Retention Intelligence for GLP-1 Programs',
     description:
       'Behavior-driven SMS adherence for GLP-1 clinics. Phase-based. Trigger-based. Pilot-ready.',
-    images: ['/opengraph-image'],
   },
   robots: {
     index: true,
