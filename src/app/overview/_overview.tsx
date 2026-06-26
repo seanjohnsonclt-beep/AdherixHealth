@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 
 /* ─── tokens ─────────────────────────────────────────────────────────── */
 const GREEN  = '#4ade80';
@@ -131,6 +131,77 @@ const SCENES: Scene[] = [
   { type: 'close' },
 ];
 
+/* ─── phone shell ────────────────────────────────────────────────────── */
+function PhoneShell({ children, width = 300, height = 620, accentColor = '#3a3a3a' }: {
+  children: React.ReactNode; width?: number; height?: number; accentColor?: string;
+}) {
+  const btnColor = '#2a2a2a';
+  const btnBorder = '1px solid #444';
+  return (
+    <div style={{ position: 'relative', width, flexShrink: 0 }}>
+      {/* left buttons */}
+      <div style={{ position: 'absolute', left: -4, top: 100, width: 4, height: 28, background: btnColor, borderRadius: '3px 0 0 3px', border: btnBorder, borderRight: 'none' }} />
+      <div style={{ position: 'absolute', left: -4, top: 144, width: 4, height: 48, background: btnColor, borderRadius: '3px 0 0 3px', border: btnBorder, borderRight: 'none' }} />
+      <div style={{ position: 'absolute', left: -4, top: 204, width: 4, height: 48, background: btnColor, borderRadius: '3px 0 0 3px', border: btnBorder, borderRight: 'none' }} />
+      {/* right button */}
+      <div style={{ position: 'absolute', right: -4, top: 160, width: 4, height: 72, background: btnColor, borderRadius: '0 3px 3px 0', border: btnBorder, borderLeft: 'none' }} />
+      {/* frame */}
+      <div style={{
+        width,
+        height,
+        background: 'linear-gradient(145deg, #1e1e1e 0%, #141414 100%)',
+        borderRadius: 52,
+        border: `2px solid ${accentColor}`,
+        boxShadow: `0 40px 80px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.06)`,
+        overflow: 'hidden',
+        position: 'relative',
+        display: 'flex',
+        flexDirection: 'column',
+      }}>
+        {/* screen inset */}
+        <div style={{
+          margin: '10px 8px 8px',
+          flex: 1,
+          background: '#000',
+          borderRadius: 44,
+          overflow: 'hidden',
+          display: 'flex',
+          flexDirection: 'column',
+        }}>
+          {/* status bar */}
+          <div style={{
+            display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+            padding: '14px 20px 0',
+            flexShrink: 0,
+          }}>
+            <span style={{ color: '#fff', fontSize: 11, fontWeight: 600 }}>9:41</span>
+            {/* dynamic island */}
+            <div style={{ width: 88, height: 26, background: '#000', border: '1px solid #1a1a1a', borderRadius: 20, position: 'absolute', left: '50%', transform: 'translateX(-50%)', top: 12 }} />
+            <div style={{ display: 'flex', gap: 5, alignItems: 'center' }}>
+              <svg width="14" height="10" viewBox="0 0 14 10" fill="white" opacity={0.8}><rect x="0" y="4" width="3" height="6" rx="1"/><rect x="4" y="2" width="3" height="8" rx="1"/><rect x="8" y="0" width="3" height="10" rx="1"/><rect x="12" y="0" width="1.5" height="10" rx="0.5" opacity={0.3}/></svg>
+              <svg width="14" height="10" viewBox="0 0 20 14" fill="white" opacity={0.8}><path d="M10 3C13.5 3 16.6 4.4 18.8 6.7L20 5.4C17.5 2.7 13.9 1 10 1C6.1 1 2.5 2.7 0 5.4L1.2 6.7C3.4 4.4 6.5 3 10 3Z"/><path d="M10 7C12.2 7 14.2 7.9 15.7 9.4L17 8C15.1 6.1 12.7 5 10 5C7.3 5 4.9 6.1 3 8L4.3 9.4C5.8 7.9 7.8 7 10 7Z"/><circle cx="10" cy="13" r="2"/></svg>
+              <div style={{ display: 'flex', gap: 1 }}>
+                <div style={{ width: 22, height: 11, border: '1px solid rgba(255,255,255,0.4)', borderRadius: 3, padding: '1px 2px', display: 'flex', alignItems: 'center' }}>
+                  <div style={{ width: '80%', height: 7, background: GREEN, borderRadius: 2 }} />
+                </div>
+                <div style={{ width: 2, height: 5, background: 'rgba(255,255,255,0.4)', borderRadius: 1, alignSelf: 'center' }} />
+              </div>
+            </div>
+          </div>
+          {/* content */}
+          <div style={{ flex: 1, padding: '12px 14px 0', display: 'flex', flexDirection: 'column', gap: 8, overflowY: 'auto' }}>
+            {children}
+          </div>
+          {/* home indicator */}
+          <div style={{ display: 'flex', justifyContent: 'center', padding: '12px 0 10px' }}>
+            <div style={{ width: 100, height: 4, background: 'rgba(255,255,255,0.25)', borderRadius: 2 }} />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ─── phone component ────────────────────────────────────────────────── */
 function Phone({ bubbles, sceneKey }: { bubbles: Bubble[]; sceneKey: number }) {
   const [visible, setVisible] = useState<number[]>([]);
@@ -144,26 +215,8 @@ function Phone({ bubbles, sceneKey }: { bubbles: Bubble[]; sceneKey: number }) {
   }, [sceneKey]);
 
   return (
-    <div style={{
-      width: 300,
-      flexShrink: 0,
-      background: '#111111',
-      borderRadius: 44,
-      border: '2px solid #3a3a3a',
-      padding: '56px 16px 40px',
-      boxShadow: '0 32px 64px rgba(0,0,0,0.7), 0 0 0 1px #222',
-      minHeight: 560,
-      display: 'flex',
-      flexDirection: 'column',
-      gap: 10,
-      position: 'relative',
-    }}>
-      <div style={{
-        position: 'absolute', top: 14, left: '50%',
-        transform: 'translateX(-50%)',
-        width: 72, height: 5, background: '#333', borderRadius: 3,
-      }} />
-      <div style={{ textAlign: 'center', color: MUTED, fontSize: 10, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 6 }}>
+    <PhoneShell width={300} height={620}>
+      <div style={{ textAlign: 'center', color: '#555', fontSize: 10, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 8 }}>
         Your Clinic
       </div>
       {bubbles.map((b, i) => (
@@ -178,17 +231,17 @@ function Phone({ bubbles, sceneKey }: { bubbles: Bubble[]; sceneKey: number }) {
             maxWidth: '80%',
             padding: '9px 13px',
             borderRadius: b.dir === 'out' ? '16px 16px 16px 4px' : '16px 16px 4px 16px',
-            background: b.dir === 'out' ? CARD : GREEN,
+            background: b.dir === 'out' ? '#1c1c1e' : GREEN,
             color: b.dir === 'out' ? '#e5e7eb' : '#0a0a0a',
             fontSize: 13,
             lineHeight: 1.5,
-            border: b.dir === 'out' ? `1px solid ${BORDER}` : 'none',
+            border: b.dir === 'out' ? '1px solid #2c2c2e' : 'none',
           }}>
             {b.text}
           </div>
         </div>
       ))}
-    </div>
+    </PhoneShell>
   );
 }
 
@@ -352,7 +405,6 @@ function MilestonePhone({
     timersRef.current.forEach(clearTimeout);
     timersRef.current = [];
     setVisible([]);
-
     if (hovered) {
       milestone.bubbles.forEach((b, i) => {
         const t = setTimeout(() => setVisible(v => [...v, i]), b.delay);
@@ -366,70 +418,48 @@ function MilestonePhone({
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       onClick={e => e.stopPropagation()}
-      style={{
-        flex: 1,
-        minWidth: 0,
-        background: '#0f0f0f',
-        borderRadius: 36,
-        border: `2px solid ${hovered ? color : '#3a3a3a'}`,
-        padding: '48px 12px 32px',
-        minHeight: 480,
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 8,
-        position: 'relative',
-        cursor: 'default',
-        transition: 'border-color 0.3s ease, box-shadow 0.3s ease',
-        boxShadow: hovered ? `0 0 32px ${color}22` : 'none',
-      }}
+      style={{ cursor: 'default', transition: 'transform 0.2s ease', transform: hovered ? 'translateY(-4px)' : 'none' }}
     >
-      {/* notch */}
-      <div style={{ position: 'absolute', top: 12, left: '50%', transform: 'translateX(-50%)', width: 48, height: 4, background: '#333', borderRadius: 2 }} />
-      {/* tag */}
-      <div style={{
-        textAlign: 'center', marginBottom: 4,
-        fontSize: 9, letterSpacing: '0.1em', textTransform: 'uppercase', fontWeight: 700,
-        color: hovered ? color : MUTED, transition: 'color 0.3s ease',
-      }}>
-        {milestone.tag}
-      </div>
-      <div style={{
-        textAlign: 'center', marginBottom: 8,
-        fontSize: 11, fontWeight: 600, color: hovered ? '#e5e7eb' : MUTED,
-        transition: 'color 0.3s ease',
-      }}>
-        {milestone.label}
-      </div>
-      {milestone.bubbles.map((b, i) => (
-        <div key={i} style={{
-          display: 'flex',
-          justifyContent: b.dir === 'out' ? 'flex-start' : 'flex-end',
-          opacity: visible.includes(i) ? 1 : 0,
-          transform: visible.includes(i) ? 'translateY(0)' : 'translateY(4px)',
-          transition: 'opacity 0.35s ease, transform 0.35s ease',
-        }}>
-          <div style={{
-            maxWidth: '85%',
-            padding: '7px 10px',
-            borderRadius: b.dir === 'out' ? '12px 12px 12px 3px' : '12px 12px 3px 12px',
-            background: b.dir === 'out' ? CARD : color,
-            color: b.dir === 'out' ? '#e5e7eb' : '#0a0a0a',
-            fontSize: 11,
-            lineHeight: 1.45,
-            border: b.dir === 'out' ? `1px solid ${BORDER}` : 'none',
-          }}>
-            {b.text}
+      <PhoneShell width={210} height={460} accentColor={hovered ? color : '#3a3a3a'}>
+        {/* label row */}
+        <div style={{ textAlign: 'center', marginBottom: 6 }}>
+          <div style={{ fontSize: 9, letterSpacing: '0.1em', textTransform: 'uppercase', fontWeight: 700, color: hovered ? color : MUTED, transition: 'color 0.3s ease', marginBottom: 2 }}>
+            {milestone.tag}
+          </div>
+          <div style={{ fontSize: 11, fontWeight: 600, color: hovered ? '#e5e7eb' : '#444', transition: 'color 0.3s ease' }}>
+            {milestone.label}
           </div>
         </div>
-      ))}
-      {!hovered && (
-        <div style={{
-          position: 'absolute', bottom: 16, left: 0, right: 0,
-          textAlign: 'center', color: MUTED, fontSize: 10, letterSpacing: '0.06em',
-        }}>
-          hover to see
-        </div>
-      )}
+        {/* bubbles */}
+        {milestone.bubbles.map((b, i) => (
+          <div key={i} style={{
+            display: 'flex',
+            justifyContent: b.dir === 'out' ? 'flex-start' : 'flex-end',
+            opacity: visible.includes(i) ? 1 : 0,
+            transform: visible.includes(i) ? 'translateY(0)' : 'translateY(4px)',
+            transition: 'opacity 0.35s ease, transform 0.35s ease',
+          }}>
+            <div style={{
+              maxWidth: '85%',
+              padding: '7px 10px',
+              borderRadius: b.dir === 'out' ? '12px 12px 12px 3px' : '12px 12px 3px 12px',
+              background: b.dir === 'out' ? '#1c1c1e' : color,
+              color: b.dir === 'out' ? '#e5e7eb' : '#0a0a0a',
+              fontSize: 11,
+              lineHeight: 1.45,
+              border: b.dir === 'out' ? '1px solid #2c2c2e' : 'none',
+            }}>
+              {b.text}
+            </div>
+          </div>
+        ))}
+        {/* hover hint */}
+        {!hovered && (
+          <div style={{ marginTop: 'auto', textAlign: 'center', color: '#333', fontSize: 10, letterSpacing: '0.06em', paddingBottom: 4 }}>
+            hover to see
+          </div>
+        )}
+      </PhoneShell>
     </div>
   );
 }
@@ -447,7 +477,7 @@ function MilestoneScene() {
         The engine tracks every weigh-in and fires a personalized message when a patient hits a milestone.<br />
         Hover each phone to see what they receive.
       </p>
-      <div style={{ display: 'flex', gap: 12, alignItems: 'stretch' }}>
+      <div style={{ display: 'flex', gap: 20, alignItems: 'flex-start', justifyContent: 'center' }}>
         {MILESTONES.map((m, i) => (
           <MilestonePhone key={i} milestone={m} color={m.color} />
         ))}
