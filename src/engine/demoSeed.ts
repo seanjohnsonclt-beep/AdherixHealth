@@ -407,8 +407,8 @@ export async function reseedDemo(opts: ReseedOptions): Promise<ReseedResult> {
     const row = await queryOne<{ id: string }>(
       `insert into patients
          (clinic_id, phone, first_name, enrolled_at, current_phase,
-          phase_started_at, status, last_inbound_at, timezone)
-       values ($1, $2, $3, $4, $5, $6, $7, $8, 'America/New_York')
+          phase_started_at, status, last_inbound_at)
+       values ($1, $2, $3, $4, $5, $6, $7, $8)
        returning id`,
       [
         clinicId, p.phone, p.first_name,
