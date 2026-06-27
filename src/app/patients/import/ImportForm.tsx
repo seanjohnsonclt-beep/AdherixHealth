@@ -160,14 +160,90 @@ export function ImportForm() {
 
   // --- Render ---------------------------------------------------------------
 
-  if (step === 'upload') {
-    const isQuest = modality === 'quest';
+  const PRODUCTS = [
+    { value: 'glp1',            label: 'Adherix Keep',      sub: 'GLP-1 medication programs' },
+    { value: 'bariatric',       label: 'Adherix Bridge',    sub: 'Bariatric surgery programs' },
+    { value: 'metabolic_health',label: 'Adherix Metabolic', sub: 'Metabolic health programs' },
+    { value: 'glp1_gauge',      label: 'Adherix Gauge',     sub: 'Scale tracking add-on' },
+    { value: 'quest',           label: 'Adherix Quest',     sub: 'Pediatric & adolescent programs' },
+  ];
+
+  const StepBreadcrumb = ({ current }: { current: 1 | 2 }) => (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 0, marginBottom: 28 }}>
+      {([{ n: 1, label: 'Select product' }, { n: 2, label: 'Upload patient list' }] as const).map((s, i) => (
+        <div key={s.n} style={{ display: 'flex', alignItems: 'center' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <div style={{
+              width: 26, height: 26, borderRadius: '50%', display: 'flex',
+              alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 700,
+              background: current >= s.n ? '#5B9B94' : 'rgba(0,0,0,0.08)',
+              color: current >= s.n ? '#fff' : 'var(--fg-muted,#999)',
+            }}>{s.n}</div>
+            <span style={{
+              fontSize: 13,
+              color: current === s.n ? 'var(--fg,#1F2A2A)' : 'var(--fg-muted,#999)',
+              fontWeight: current === s.n ? 600 : 400,
+            }}>{s.label}</span>
+          </div>
+          {i === 0 && <div style={{ width: 36, height: 1, background: 'rgba(0,0,0,0.12)', margin: '0 10px' }} />}
+        </div>
+      ))}
+    </div>
+  );
+
+  if (step === 'select-product') {
     return (
       <div className="import-wrap">
+        <StepBreadcrumb current={1} />
+        <h2 style={{ fontSize: 17, fontWeight: 600, marginBottom: 6, color: 'var(--fg,#1F2A2A)' }}>
+          Which product is this patient list for?
+        </h2>
+        <p style={{ fontSize: 14, color: 'var(--fg-muted,#666)', marginBottom: 24 }}>
+          This sets the message program each patient will be enrolled in.
+        </p>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(190px, 1fr))', gap: 10, marginBottom: 32 }}>
+          {PRODUCTS.map(opt => (
+            <button
+              key={opt.value}
+              type="button"
+              onClick={() => { setModality(opt.value); setStep('upload'); }}
+              style={{
+                padding: '14px 18px', borderRadius: 8,
+                border: '1.5px solid rgba(0,0,0,0.10)', background: '#fff',
+                color: 'var(--fg,#1F2A2A)', cursor: 'pointer', textAlign: 'left' as const,
+              }}
+              onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = '#5B9B94'; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(0,0,0,0.10)'; }}
+            >
+              <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 3 }}>{opt.label}</div>
+              <div style={{ fontSize: 12, color: 'var(--fg-muted,#888)' }}>{opt.sub}</div>
+            </button>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
-        {/* -- Product selector ------------------------------------------- */}
-        <div className="import-product-select">
-          <label className="label" style={{ marginBottom: 10, display: 'block' }}>Product</label>
+  if (step === 'upload') {
+    const isQuest = modality === 'quest';
+    const selectedProduct = PRODUCTS.find(p => p.value === modality);
+    return (
+      <div className="import-wrap">
+        <StepBreadcrumb current={2} />
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 24 }}>
+          <div style={{
+            padding: '5px 12px', borderRadius: 6,
+            background: 'rgba(91,155,148,0.1)', border: '1px solid rgba(91,155,148,0.3)',
+            fontSize: 13, fontWeight: 600, color: '#3D7670',
+          }}>{selectedProduct?.label}</div>
+          <button type="button" onClick={() => setStep('select-product')}
+            style={{ fontSize: 13, color: 'var(--fg-muted,#888)', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline' }}>
+            Change product
+          </button>
+        </div>
+
+        <div
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
             {[
               { value: 'glp1',            label: 'Adherix Keep',     sub: 'GLP-1' },
