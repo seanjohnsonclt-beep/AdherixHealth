@@ -36,8 +36,18 @@ function renderBody(body: string, vars: Record<string, string>): string {
 }
 
 export async function schedulePhaseMessages(patientId: string, phaseId: number) {
-  const patientRow = await queryOne<{ id: string; first_name: string; phase_started_at: Date; modality: string }>(
-    `select id, first_name, phase_started_at, coalesce(modality, 'glp1') as modality from patients where id = $1`,
+  const patientRow = await queryOne<{
+    id: string;
+    first_name: string;
+    phase_started_at: Date;
+    modality: string;
+    quest_handle: string | null;
+    quest_streak: number | null;
+    guardian_name: string | null;
+  }>(
+    `select id, first_name, phase_started_at, coalesce(modality, 'glp1') as modality,
+            quest_handle, quest_streak, guardian_name
+     from patients where id = $1`,
     [patientId]
   );
   if (!patientRow) throw new Error(`Patient not found: ${patientId}`);
@@ -48,14 +58,21 @@ export async function schedulePhaseMessages(patientId: string, phaseId: number) 
   if (!phase) throw new Error(`Unknown phase: ${phaseId}`);
 
   const tpls = cfg.templatesForPhase(phaseId).filter((t: any) => !t.internal && !t.requires_reply_to);
-  console.log(`[scheduler] phase ${phaseId} → ${tpls.length} templates to schedule for patient ${patientId}`);
+  console.log(`[scheduler] phase ${phaseId} -> ${tpls.length} templates to schedule for patient ${patientId}`);
   const base = new Date(patient.phase_started_at);
+
+  const vars: Record<string, string> = {
+    first_name:    patient.first_name || 'there',
+    quest_handle:  patient.quest_handle ?? '',
+    quest_streak:  String(patient.quest_streak ?? 0),
+    guardian_name: patient.guardian_name || 'Guardian',
+  };
 
   for (const t of tpls) {
     let when = applyOffset(base, t.after);
     when = applyTimeOfDay(when, t.send_at_local);
 
-    const body = renderBody(t.body, { first_name: patient.first_name || 'there' });
+    const body = renderBody(t.body, vars);
 
     await query(
       `insert into messages (patient_id, direction, template_key, body, scheduled_for, status)

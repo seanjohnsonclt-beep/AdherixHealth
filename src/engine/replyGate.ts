@@ -34,11 +34,23 @@ export async function handleReplyGate(patientId: string, replyBody: string) {
   const gated = templates().filter((t) => t.requires_reply_to === last.template_key);
   if (gated.length === 0) return;
 
-  // Get patient first name for merge
-  const patient = await queryOne<{ first_name: string | null }>(
-    `select first_name from patients where id = $1`,
+  // Get patient vars for template merge
+  const patient = await queryOne<{
+    first_name: string | null;
+    quest_handle: string | null;
+    quest_streak: number | null;
+    guardian_name: string | null;
+  }>(
+    `select first_name, quest_handle, quest_streak, guardian_name from patients where id = $1`,
     [patientId]
   );
+
+  const vars: Record<string, string> = {
+    first_name:    patient?.first_name ?? 'there',
+    quest_handle:  patient?.quest_handle ?? '',
+    quest_streak:  String(patient?.quest_streak ?? 0),
+    guardian_name: patient?.guardian_name ?? 'Guardian',
+  };
 
   for (const t of gated) {
     // Dedupe: skip if we already queued/sent this template for this patient
@@ -48,9 +60,7 @@ export async function handleReplyGate(patientId: string, replyBody: string) {
     );
     if (existing) continue;
 
-    const body = t.body.trim().replace(/\{(\w+)\}/g, (_, k) =>
-      k === 'first_name' ? (patient?.first_name ?? 'there') : ''
-    );
+    const body = t.body.trim().replace(/\{(\w+)\}/g, (_, k) => vars[k] ?? '');
 
     await query(
       `insert into messages (patient_id, direction, template_key, body, scheduled_for, status)
