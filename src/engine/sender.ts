@@ -118,6 +118,11 @@ export async function sendDueMessages() {
       aiPersonalized = result.personalized;
     }
 
+    // Guardian-only templates route to guardian_phone instead of patient phone.
+    const GUARDIAN_ONLY_TEMPLATES = new Set(['quest.boss_declined_guardian', 'staff.reply.guardian']);
+    const isGuardianOnly = GUARDIAN_ONLY_TEMPLATES.has(msg.template_key ?? '');
+    const sendTo = isGuardianOnly ? (msg.guardian_phone ?? msg.phone) : msg.phone;
+
     if (DRY_RUN) {
       const fakeSid = `DRY_${msg.id.replace(/-/g, '').slice(0, 16).toUpperCase()}`;
       await query(
@@ -127,13 +132,13 @@ export async function sendDueMessages() {
       const preview = finalBody.slice(0, 60) + (finalBody.length > 60 ? '...' : '');
       const tag = aiPersonalized ? ' (AI)' : '';
       console.log(`[sender] dry-run sent ${msg.id} -> ${fakeSid}${tag}`);
-      console.log(`  to=${msg.phone}  body="${preview}"`);
+      console.log(`  to=${sendTo}  body="${preview}"`);
       continue;
     }
 
     try {
       const smsResult = await sendSms({
-        to: msg.phone,
+        to: sendTo,
         from: msg.twilio_number || undefined,
         body: finalBody,
       });
@@ -147,7 +152,11 @@ export async function sendDueMessages() {
       // Quest dual-send: if guardian_phone exists and template is a 'both' or 'guardian' track,
       // send the guardian version. For now we send the same body to guardian unless
       // quest-config specifies guardian_body. Full track routing handled by quest-consent layer.
-      if (msg.modality === 'quest' && msg.guardian_phone && msg.template_key?.startsWith('quest.')) {
+      //
+      // Exception: quest.boss_declined_guardian goes to guardian ONLY (already sent above as main send
+      // but that send was skipped - see guardian-only block below).
+      if (msg.modality === 'quest' && msg.guardian_phone && msg.template_key?.startsWith('quest.')
+          && msg.template_key !== 'quest.boss_declined_guardian') {
         try {
           await sendSms({
             to: msg.guardian_phone,

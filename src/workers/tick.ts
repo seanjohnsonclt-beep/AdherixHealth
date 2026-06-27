@@ -10,6 +10,8 @@
 //   4. runResolutionTracker()            -  resolve or escalate open DC events
 //   5. sendDueMessages()                 -  dispatch pending SMS via Twilio
 //   6. runWeeklyDigestIfDue()            -  Monday 8-10am digest email to clinic admins
+//   7. sendWeeklyBossChallenge()         -  Monday: AI boss challenge SMS to Quest patients (phase 2+)
+//   8. runSundayBossCheck()              -  Sunday: complete/fail boss challenges, award/deduct XP
 
 import { evaluateTriggersForAllPatients } from '@/engine/triggers';
 import { sendDueMessages }                from '@/engine/sender';
@@ -17,6 +19,7 @@ import { updateAllTrajectories }          from '@/engine/trajectory';
 import { runDriftCorrection }             from '@/engine/drift-correction';
 import { runResolutionTracker }           from '@/engine/dc-resolution-tracker';
 import { runWeeklyDigestIfDue }           from '@/workers/digest';
+import { sendWeeklyBossChallenge, runSundayBossCheck } from '@/engine/boss-challenge';
 
 export async function tick() {
   const start = Date.now();
@@ -61,6 +64,22 @@ export async function tick() {
       await runWeeklyDigestIfDue();
     } catch (err) {
       console.error('[tick] weekly digest failed (non-fatal):', err);
+    }
+
+    // Step 7: Quest Boss Challenge - Monday send
+    // Short-circuits immediately on non-Monday. Idempotent via UNIQUE(patient_id, week_start).
+    try {
+      await sendWeeklyBossChallenge();
+    } catch (err) {
+      console.error('[tick] boss challenge send failed (non-fatal):', err);
+    }
+
+    // Step 8: Quest Boss Challenge - Sunday completion check
+    // Short-circuits immediately on non-Sunday. Marks completed/failed, awards/deducts XP.
+    try {
+      await runSundayBossCheck();
+    } catch (err) {
+      console.error('[tick] boss challenge Sunday check failed (non-fatal):', err);
     }
 
     console.log(`[tick] ok in ${Date.now() - start}ms`);

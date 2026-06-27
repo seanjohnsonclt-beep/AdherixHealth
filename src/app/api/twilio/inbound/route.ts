@@ -18,6 +18,7 @@ import { handleReplyGate } from '@/engine/replyGate';
 import { scanInbound, isEscalationKeyword } from '@/engine/keyword-scanner';
 import { parseWeightReply, hasPendingGaugeCheckin, handleWeightReply } from '@/engine/gauge';
 import { parseYesNo, parseQuestIntensity } from '@/engine/response-parser';
+import { handleBossReply } from '@/engine/boss-challenge';
 
 function twiml(body = '') {
   return new NextResponse(`<Response>${body}</Response>`, {
@@ -176,13 +177,15 @@ export async function POST(req: NextRequest) {
   if (!from || !body) return twiml();
 
   const patient = await queryOne<{
-    id:         string;
-    status:     string;
-    clinic_id:  string;
-    medication: string | null;
-    modality:   string | null;
+    id:                     string;
+    status:                 string;
+    clinic_id:              string;
+    medication:             string | null;
+    modality:               string | null;
+    boss_challenge_pending: boolean;
   }>(
-    `select id, status, clinic_id, medication, modality
+    `select id, status, clinic_id, medication, modality,
+            coalesce(boss_challenge_pending, false) as boss_challenge_pending
      from patients where phone = $1 limit 1`,
     [from]
   );
@@ -263,6 +266,19 @@ export async function POST(req: NextRequest) {
       await handleInjectionReply(patient.id, replyClass);
     } catch (err) {
       console.warn('[inbound] injection reply handler failed (migration pending?):', err);
+    }
+  }
+
+  // Quest: boss challenge opt-in (YES/NO while boss_challenge_pending = true)
+  // Must run before injection confirmation so YES doesn't double-fire.
+  if (patient.modality === 'quest' && patient.boss_challenge_pending && (replyClass === 'yes' || replyClass === 'no')) {
+    try {
+      await handleBossReply(patient.id, replyClass);
+      console.log(`[inbound] boss reply handled for ${patient.id}: ${replyClass}`);
+      // Return early - this reply was for the boss, not a check-in or injection
+      return twiml();
+    } catch (err) {
+      console.warn('[inbound] boss reply handler failed:', err);
     }
   }
 
