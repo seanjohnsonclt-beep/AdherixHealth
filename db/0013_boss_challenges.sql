@@ -4,7 +4,10 @@
 --   - patients columns: reward_category, boss_challenge_pending, monthly_xp, rewards_redeemed
 
 -- Boss challenge tracking table
-CREATE TABLE IF NOT EXISTS quest_boss_challenges (
+-- Drop and recreate if stale schema exists (safe - demo environment, no real patient data)
+DROP TABLE IF EXISTS quest_boss_challenges CASCADE;
+
+CREATE TABLE quest_boss_challenges (
   id              UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
   patient_id      UUID        NOT NULL REFERENCES patients(id),
   week_start      DATE        NOT NULL,
