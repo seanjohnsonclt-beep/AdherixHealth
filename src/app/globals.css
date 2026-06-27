@@ -8203,3 +8203,290 @@ a.mkt-btn--primary:hover,
   .gauge-milestones-grid { grid-template-columns: 1fr; }
   .gauge-clinic-grid { grid-template-columns: 1fr; }
 }
+
+/* =========================================================================
+   Quest Theme - /quest marketing page
+   Dark editorial variant of the Adherix brand.
+   All classes prefixed mkt-q- to avoid collision with existing mkt- classes.
+   ========================================================================= */
+
+:root {
+  --quest-bg:       #0D1A1A;
+  --quest-bg-card:  #121F1F;
+  --quest-bg-card2: #162424;
+  --quest-electric: #5CFFC8;
+  --quest-violet:   #A78BFA;
+  --quest-fg:       #F0FFF9;
+  --quest-fg-muted: #7BA89A;
+  --quest-line:     rgba(92, 255, 200, 0.12);
+}
+
+.mkt-q-hero {
+  position: relative;
+  padding: 100px 0 96px;
+  background: var(--quest-bg);
+  overflow: hidden;
+}
+
+.mkt-q-hero__inner {
+  position: relative;
+  z-index: 1;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 32px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 72px;
+  align-items: center;
+}
+
+.mkt-q-hero__copy { text-align: left; }
+
+.mkt-q-eyebrow {
+  display: inline-block;
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--quest-electric);
+  margin-bottom: 22px;
+}
+
+.mkt-q-title {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 52px;
+  font-weight: 500;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  color: var(--quest-fg);
+  margin-bottom: 28px;
+}
+
+.mkt-q-title em {
+  font-style: normal;
+  color: var(--quest-electric);
+}
+
+.mkt-q-sub {
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 18px;
+  line-height: 1.6;
+  color: var(--quest-fg-muted);
+  max-width: 460px;
+  margin: 0 0 44px;
+}
+
+.mkt-q-ctas {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 48px;
+}
+
+.mkt-q-btn--primary {
+  display: inline-flex;
+  align-items: center;
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 14px 28px;
+  background: var(--quest-electric);
+  color: var(--quest-bg);
+  border: 2px solid var(--quest-electric);
+  border-radius: 4px;
+  text-decoration: none;
+  transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+}
+.mkt-q-btn--primary:hover {
+  background: transparent;
+  color: var(--quest-electric);
+  box-shadow: 0 0 16px rgba(92, 255, 200, 0.28);
+  border-bottom: 2px solid var(--quest-electric);
+}
+
+.mkt-q-btn--ghost {
+  display: inline-flex;
+  align-items: center;
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 14px 28px;
+  background: transparent;
+  color: var(--quest-fg);
+  border: 2px solid rgba(240, 255, 249, 0.24);
+  border-radius: 4px;
+  text-decoration: none;
+  transition: border-color 0.18s;
+}
+.mkt-q-btn--ghost:hover {
+  border-color: var(--quest-fg);
+  border-bottom: 2px solid var(--quest-fg);
+}
+
+.mkt-q-stats { display: flex; gap: 32px; }
+.mkt-q-stat { display: flex; flex-direction: column; gap: 4px; }
+.mkt-q-stat__value {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--quest-electric);
+  line-height: 1;
+}
+.mkt-q-stat__label {
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--quest-fg-muted);
+}
+
+.mkt-q-hero__widget { position: relative; }
+
+.mkt-q-card {
+  background: var(--quest-bg-card);
+  border: 1px solid var(--quest-line);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow:
+    0 0 0 1px rgba(92, 255, 200, 0.05),
+    0 4px 24px rgba(0, 0, 0, 0.4),
+    0 0 48px rgba(92, 255, 200, 0.04);
+}
+
+.mkt-q-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.mkt-q-handle {
+  font-family: 'Geist Mono', monospace;
+  font-size: 13px;
+  color: var(--quest-electric);
+}
+
+.mkt-q-pill {
+  display: inline-flex;
+  align-items: center;
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 4px 10px;
+  border-radius: 100px;
+}
+.mkt-q-pill--violet { background: rgba(167, 139, 250, 0.18); color: var(--quest-violet); }
+.mkt-q-pill--squad  { background: rgba(92, 255, 200, 0.1);  color: var(--quest-electric); }
+
+.mkt-q-level { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+.mkt-q-level__label {
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 12px;
+  color: var(--quest-fg-muted);
+}
+
+.mkt-q-xpbar { margin-bottom: 8px; }
+.mkt-q-xpbar__meta {
+  display: flex;
+  justify-content: space-between;
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 11px;
+  color: var(--quest-fg-muted);
+  margin-bottom: 6px;
+}
+.mkt-q-xpbar__track {
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.mkt-q-xpbar__fill {
+  height: 100%;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--quest-electric) 0%, rgba(92, 255, 200, 0.65) 100%);
+  transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow: 0 0 8px rgba(92, 255, 200, 0.35);
+}
+
+.mkt-q-reward {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--quest-electric);
+  background: rgba(92, 255, 200, 0.07);
+  border: 1px solid rgba(92, 255, 200, 0.18);
+  padding: 6px 12px;
+  border-radius: 6px;
+  margin: 16px 0;
+}
+.mkt-q-reward__dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--quest-electric); flex-shrink: 0;
+}
+
+.mkt-q-squad { display: flex; align-items: center; gap: 8px; margin-top: 16px; }
+.mkt-q-squad__label {
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 11px; color: var(--quest-fg-muted);
+  text-transform: uppercase; letter-spacing: 0.06em; margin-right: 4px;
+}
+.mkt-q-avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--quest-bg-card2);
+  border: 1.5px solid var(--quest-line);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 11px; font-weight: 600; color: var(--quest-fg-muted);
+}
+.mkt-q-avatar--active { border-color: var(--quest-electric); color: var(--quest-electric); }
+
+.mkt-q-toast {
+  display: flex; align-items: center; gap: 10px;
+  background: rgba(92, 255, 200, 0.05);
+  border: 1px solid rgba(92, 255, 200, 0.18);
+  border-radius: 10px; padding: 12px 14px; margin-top: 16px;
+}
+.mkt-q-toast__icon { font-size: 18px; flex-shrink: 0; }
+.mkt-q-toast__label {
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 13px; font-weight: 700; color: var(--quest-electric); margin: 0 0 2px;
+}
+.mkt-q-toast__sub {
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 11px; color: var(--quest-fg-muted); margin: 0;
+}
+
+.mkt-q-hero__wash {
+  position: absolute; inset: 0; z-index: 0;
+  background-image: radial-gradient(circle, rgba(92, 255, 200, 0.06) 1px, transparent 1px);
+  background-size: 32px 32px; pointer-events: none;
+}
+.mkt-q-hero__glow {
+  position: absolute; top: -20%; right: -10%;
+  width: 600px; height: 600px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(92, 255, 200, 0.055) 0%, transparent 70%);
+  z-index: 0; pointer-events: none;
+}
+
+@media (max-width: 1000px) {
+  .mkt-q-hero { padding: 72px 0 64px; }
+  .mkt-q-hero__inner { grid-template-columns: 1fr; gap: 48px; max-width: 620px; }
+  .mkt-q-hero__copy { text-align: center; }
+  .mkt-q-sub { margin: 0 auto 44px; }
+  .mkt-q-ctas { justify-content: center; }
+  .mkt-q-stats { justify-content: center; }
+}
+@media (max-width: 680px) {
+  .mkt-q-title { font-size: 38px; }
+  .mkt-q-hero { padding: 60px 0 48px; }
+  .mkt-q-stats { flex-wrap: wrap; gap: 20px; }
+}
+@media (max-width: 420px) { .mkt-q-title { font-size: 32px; } }
+@media (prefers-reduced-motion: reduce) { .mkt-q-xpbar__fill { transition: none; } }
