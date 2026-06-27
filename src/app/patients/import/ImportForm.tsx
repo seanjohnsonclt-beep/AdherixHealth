@@ -184,9 +184,9 @@ export function ImportForm() {
                 style={{
                   padding: '8px 16px',
                   borderRadius: 6,
-                  border: modality === opt.value ? '2px solid #5B9B94' : '2px solid rgba(91,155,148,0.25)',
-                  background: modality === opt.value ? 'rgba(91,155,148,0.12)' : 'transparent',
-                  color: modality === opt.value ? '#5B9B94' : 'rgba(244,239,230,0.55)',
+                  border: modality === opt.value ? '2px solid #5B9B94' : '2px solid rgba(0,0,0,0.12)',
+                  background: modality === opt.value ? 'rgba(91,155,148,0.1)' : 'transparent',
+                  color: modality === opt.value ? '#3D7670' : 'var(--fg-muted, #555)',
                   cursor: 'pointer',
                   fontSize: 13,
                   fontWeight: modality === opt.value ? 600 : 400,
