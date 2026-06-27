@@ -33,12 +33,13 @@ export function MobileNav() {
       {open && (
         <nav id="mkt-mobile-menu" className="mkt-mobile-menu" aria-label="Mobile navigation">
           <div className="mkt-mobile-menu__inner">
-            <Link href="/"         className="mkt-mobile-menu__link" onClick={close}>Overview</Link>
+            <Link href="/"               className="mkt-mobile-menu__link" onClick={close}>Overview</Link>
             <div className="mkt-mobile-menu__section-head">Products</div>
-            <Link href="/platform"         className="mkt-mobile-menu__link mkt-mobile-menu__link--sub" onClick={close}>Adherix Keep — GLP-1</Link>
-            <Link href="/obesity-care"     className="mkt-mobile-menu__link mkt-mobile-menu__link--sub" onClick={close}>Adherix Bridge — Bariatric</Link>
-            <Link href="/gauge"            className="mkt-mobile-menu__link mkt-mobile-menu__link--sub" onClick={close}>Adherix Gauge — Scale Tracker</Link>
-            <Link href="/metabolic-health" className="mkt-mobile-menu__link mkt-mobile-menu__link--sub" onClick={close}>Adherix Metabolic — Metabolic Health</Link>
+            <Link href="/platform"       className="mkt-mobile-menu__link mkt-mobile-menu__link--sub" onClick={close}>Adherix Keep - GLP-1</Link>
+            <Link href="/obesity-care"   className="mkt-mobile-menu__link mkt-mobile-menu__link--sub" onClick={close}>Adherix Bridge - Bariatric</Link>
+            <Link href="/gauge"          className="mkt-mobile-menu__link mkt-mobile-menu__link--sub" onClick={close}>Adherix Gauge - Scale Tracker</Link>
+            <Link href="/metabolic-health" className="mkt-mobile-menu__link mkt-mobile-menu__link--sub" onClick={close}>Adherix Metabolic - Metabolic Health</Link>
+            <Link href="/quest"          className="mkt-mobile-menu__link mkt-mobile-menu__link--sub" onClick={close}>Adherix Quest - Pediatric ages 13-18</Link>
             <Link href="/platform" className="mkt-mobile-menu__link" onClick={close}>Platform</Link>
             <Link href="/roi"      className="mkt-mobile-menu__link" onClick={close}>ROI</Link>
             <Link href="/audit"    className="mkt-mobile-menu__link" onClick={close}>Free cohort audit</Link>

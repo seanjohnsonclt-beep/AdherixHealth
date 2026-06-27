@@ -28,6 +28,12 @@ const products = [
     href: '/metabolic-health',
     tag: 'metabolic',
   },
+  {
+    label: 'Adherix Quest',
+    sub: 'Pediatric weight management, ages 13-18',
+    href: '/quest',
+    tag: 'quest',
+  },
 ];
 
 export function ProductsDropdown() {

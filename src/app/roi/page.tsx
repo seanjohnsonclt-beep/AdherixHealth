@@ -640,11 +640,10 @@ export default function RoiPage() {
               No commitment beyond the pilot window.
             </p>
             <Link href="/pilot" className="mkt-btn mkt-btn--primary mkt-btn--lg">
-              Book a demo &rarr;
+                     Book a demo
             </Link>
           </div>
         </section>
-
       </main>
       <SiteFooter />
     </div>
