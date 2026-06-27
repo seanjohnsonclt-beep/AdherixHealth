@@ -8233,7 +8233,70 @@ a.mkt-btn--primary:hover,
 .mkt-q-page .prod-step-card__body  { color: rgba(244,239,230,0.7); }
 .mkt-q-page .mkt-v2-trust__title   { color: var(--mkt-paper) !important; }
 .mkt-q-page .mkt-v2-trust__sub     { color: rgba(244,239,230,0.75) !important; }
-', system-ui, sans-serif;
+
+/* === Quest hero CSS === */
+.mkt-q-hero,
+.mkt-q-hero * {
+  --quest-electric: #5CFFC8;
+  --quest-violet: #A78BFA;
+  --quest-bg: #0D1A1A;
+  --quest-bg-card: rgba(255,255,255,0.04);
+  --quest-bg-card2: rgba(255,255,255,0.07);
+  --quest-line: rgba(255,255,255,0.1);
+  --quest-fg: rgba(244,239,230,0.95);
+  --quest-fg-muted: rgba(244,239,230,0.55);
+}
+
+.mkt-q-hero {
+  position: relative;
+  background: #0D1A1A;
+  padding: 100px 0 80px;
+  overflow: hidden;
+}
+
+.mkt-q-hero__inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 0 32px;
+  position: relative;
+  z-index: 1;
+}
+
+.mkt-q-hero__copy {
+  display: flex;
+  flex-direction: column;
+}
+
+.mkt-q-eyebrow {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--quest-electric);
+  margin-bottom: 20px;
+  display: block;
+}
+
+.mkt-q-title {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: clamp(32px, 4.5vw, 56px);
+  font-weight: 400;
+  line-height: 1.08;
+  color: var(--quest-fg);
+  margin: 0 0 24px;
+}
+
+.mkt-q-title em {
+  color: var(--quest-electric);
+  font-style: italic;
+}
+
+.mkt-q-sub {
+  font-family: 'Geist', system-ui, sans-serif;
   font-size: 18px;
   line-height: 1.6;
   color: var(--quest-fg-muted);
