@@ -20,7 +20,7 @@ import { importPatientsAction, ImportRow, ImportResult } from '@/app/patients/ac
  */
 
 type ParsedRow = ImportRow & { _id: number };
-type Step = 'upload' | 'preview' | 'results';
+type Step = 'select-product' | 'upload' | 'preview' | 'results';
 
 // --- CSV parser ---------------------------------------------------------------
 
@@ -57,7 +57,7 @@ function parseCSV(text: string): ParsedRow[] {
 // --- Component ----------------------------------------------------------------
 
 export function ImportForm() {
-  const [step, setStep] = useState<Step>('upload');
+  const [step, setStep] = useState<Step>('select-product');
   const [modality, setModality] = useState('glp1');
   const [rows, setRows] = useState<ParsedRow[]>([]);
   const [results, setResults] = useState<ImportResult[]>([]);
@@ -249,7 +249,7 @@ export function ImportForm() {
             <p className="import-preview-sub">Review and edit before confirming. Duplicates will be skipped automatically.</p>
           </div>
           <div style={{ display: 'flex', gap: 8 }}>
-            <button className="btn btn--ghost" onClick={() => { setStep('upload'); setRows([]); setError(''); }}>
+            <button className="btn btn--ghost" onClick={() => { setStep('select-product'); setRows([]); setError(''); }}>
               Start over
             </button>
             <button className="btn" onClick={confirm} disabled={loading || rows.length === 0}>
@@ -394,7 +394,7 @@ export function ImportForm() {
 
       <div style={{ marginTop: 24, display: 'flex', gap: 8 }}>
         <a href="/dashboard" className="btn">Back to dashboard</a>
-        <button className="btn btn--ghost" onClick={() => { setStep('upload'); setRows([]); setResults([]); }}>
+        <button className="btn btn--ghost" onClick={() => { setStep('select-product'); setRows([]); setResults([]); }}>
           Import more
         </button>
       </div>
