@@ -340,6 +340,15 @@ export async function POST(req: NextRequest) {
         })]
       );
 
+      // Level-up SMS - queue immediately, sender dispatches next tick
+      if (leveledUp) {
+        await query(
+          `insert into messages (patient_id, direction, template_key, body, scheduled_for, status)
+           values ($1, 'outbound', 'quest.level_up', $2, now(), 'pending')`,
+          [patient.id, `LEVEL UP. You just hit ${levelName}. Your XP total: ${newXp}. New challenges unlock this week.`]
+        );
+      }
+
       console.log(
         `[inbound] Quest check-in: patient ${patient.id}, ` +
         `streak=${streak}, xp+${totalXp}${leveledUp ? ` (leveled up to ${levelName})` : ''}`

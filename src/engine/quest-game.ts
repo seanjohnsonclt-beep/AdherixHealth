@@ -266,3 +266,87 @@ export async function handleBossOptIn(patientId: string): Promise<string> {
   if (leveledUp) msg += ` You just hit ${levelName}.`;
   return msg;
 }
+
+// ── Weekly recap SMS sender ───────────────────────────────────────────────────
+// Called Sunday after rebuildLeaderboard(). Sends each active Quest teen
+// a short rank/streak recap text queued as a pending outbound message.
+export async function sendWeeklyQuestRecap(clinicId: string): Promise<void> {
+  const { query: dbQuery } = await import('@/lib/db');
+
+  const patients = await dbQuery<{ id: string; first_name: string | null }>(
+    `SELECT id, first_name FROM patients
+     WHERE clinic_id = $1 AND modality = 'quest' AND status = 'active'`,
+    [clinicId]
+  );
+
+  for (const p of patients) {
+    const recap = await buildWeeklyRecap(clinicId, p.id);
+    if (!recap) continue;
+
+    const name = p.first_name ? `${p.first_name}, ` : '';
+    const body = `${name}weekly Quest recap:${recap}`;
+
+    await dbQuery(
+      `INSERT INTO messages (patient_id, direction, template_key, body, scheduled_for, status)
+       VALUES ($1, 'outbound', 'quest.weekly_recap', $2, now(), 'pending')`,
+      [p.id, body]
+    );
+  }
+}
+
+// ── Squad assignment ──────────────────────────────────────────────────────────
+// On enrollment: finds a squad with < 5 active members or creates a new one.
+// Squads are named Squad A, B, C... per clinic.
+export async function assignToSquad(patientId: string, clinicId: string): Promise<string> {
+  const { query: dbQuery, queryOne: dbQueryOne } = await import('@/lib/db');
+
+  // Find a squad with room
+  const existing = await dbQueryOne<{ id: string }>(
+    `SELECT qs.id FROM quest_squads qs
+     WHERE qs.clinic_id = $1
+       AND (SELECT COUNT(*) FROM patients WHERE quest_squad_id = qs.id AND status = 'active') < 5
+     ORDER BY qs.created_at ASC
+     LIMIT 1`,
+    [clinicId]
+  );
+
+  let squadId: string;
+  if (existing) {
+    squadId = existing.id;
+  } else {
+    const countRow = await dbQueryOne<{ count: number }>(
+      `SELECT COUNT(*)::int AS count FROM quest_squads WHERE clinic_id = $1`,
+      [clinicId]
+    );
+    const letter = String.fromCharCode(65 + (countRow?.count ?? 0)); // A, B, C...
+    const newSquad = await dbQueryOne<{ id: string }>(
+      `INSERT INTO quest_squads (clinic_id, name) VALUES ($1, $2) RETURNING id`,
+      [clinicId, `Squad ${letter}`]
+    );
+    squadId = newSquad!.id;
+  }
+
+  await dbQuery(
+    `UPDATE patients SET quest_squad_id = $1 WHERE id = $2`,
+    [squadId, patientId]
+  );
+
+  return squadId;
+}
+
+// ── Squad XP sync ─────────────────────────────────────────────────────────────
+// Called Sunday. Sums current quest_xp of all active squad members.
+export async function updateSquadXp(clinicId: string): Promise<void> {
+  const { query: dbQuery } = await import('@/lib/db');
+
+  await dbQuery(
+    `UPDATE quest_squads qs
+     SET week_xp = (
+       SELECT COALESCE(SUM(p.quest_xp), 0)
+       FROM patients p
+       WHERE p.quest_squad_id = qs.id AND p.status = 'active'
+     )
+     WHERE qs.clinic_id = $1`,
+    [clinicId]
+  );
+}

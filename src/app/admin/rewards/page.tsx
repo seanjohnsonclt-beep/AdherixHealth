@@ -171,7 +171,7 @@ export default async function RewardsPage() {
                       <input type="hidden" name="tier" value={r.tier!.label} />
                       <button
                         type="submit"
-                        className="btn btn--primary"
+                        className="btn"
                         style={{ fontSize: 12, padding: '4px 12px' }}
                       >
                         Mark fulfilled

@@ -454,3 +454,42 @@ function getMondayDate(d: Date): string {
   mon.setDate(d.getDate() + diff);
   return mon.toISOString().slice(0, 10);
 }
+
+// ── Power week activation ─────────────────────────────────────────────────────
+// Monday: activate power week (2x XP) for Quest patients with streak >= 10.
+// Sunday: deactivate for everyone after boss check resolves.
+// Power week is visible to patients via the check-in XP multiplier only -
+// no SMS sent here (boss-challenge message already mentions the stakes).
+
+export async function activatePowerWeek(): Promise<void> {
+  const tz = process.env.DEFAULT_TIMEZONE ?? 'America/New_York';
+  const now = new Date();
+  const day = new Date(now.toLocaleString('en-US', { timeZone: tz })).getDay();
+  if (day !== 1) return; // Monday only
+
+  await query(
+    `UPDATE patients
+     SET quest_power_week = TRUE
+     WHERE modality = 'quest'
+       AND status   = 'active'
+       AND COALESCE(quest_streak, 0) >= 10`,
+    []
+  );
+
+  console.log('[boss] power week activated for qualifying Quest patients');
+}
+
+export async function deactivatePowerWeek(): Promise<void> {
+  const tz = process.env.DEFAULT_TIMEZONE ?? 'America/New_York';
+  const now = new Date();
+  const day = new Date(now.toLocaleString('en-US', { timeZone: tz })).getDay();
+  if (day !== 0) return; // Sunday only
+
+  await query(
+    `UPDATE patients SET quest_power_week = FALSE
+     WHERE modality = 'quest' AND status = 'active'`,
+    []
+  );
+
+  console.log('[boss] power week deactivated (Sunday reset)');
+}

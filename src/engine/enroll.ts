@@ -5,6 +5,7 @@ import {
   computeTitrationSchedule,
   getNextTitrationDate,
 } from './medications';
+import { generateHandle, assignToSquad } from './quest-game';
 
 export type EnrollArgs = {
   clinicId: string;
@@ -78,15 +79,18 @@ export async function enrollPatient({
     consentType = getConsentType(age, state);
   }
 
+  // Quest: generate anonymous handle
+  const questHandle = modality === 'quest' ? generateHandle() : null;
+
     const row = await queryOne<{ id: string }>(
     `insert into patients (
        clinic_id, phone, first_name, current_phase, phase_started_at,
        medication, starting_dose, current_dose, injection_frequency,
        titration_schedule, next_titration_date, supply_quantity, modality,
        date_of_birth, state, guardian_name, guardian_phone, consent_type, consent_status,
-       quest_reward_category
+       quest_reward_category, quest_handle
      )
-     values ($1, $2, $3, 0, now(), $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)
+     values ($1, $2, $3, 0, now(), $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)
      returning id`,
     [
       clinicId,
@@ -107,6 +111,7 @@ export async function enrollPatient({
       consentType,
       consentType ? 'obtained' : null,
       modality === 'quest' ? (questRewardCategory ?? 'gamer') : null,
+      questHandle,
     ]
   );
   if (!row) throw new Error('Failed to insert patient');
@@ -119,6 +124,15 @@ export async function enrollPatient({
       starting_dose: currentDose ?? null,
     })]
   );
+
+  // Quest post-enrollment: assign to squad
+  if (modality === 'quest') {
+    try {
+      await assignToSquad(row.id, clinicId);
+    } catch (err) {
+      console.warn('[enroll] squad assignment failed (non-fatal):', err);
+    }
+  }
 
   await schedulePhaseMessages(row.id, 0);
   return row.id;
