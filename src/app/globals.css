@@ -8812,3 +8812,141 @@ a.mkt-btn--primary:hover,
   .mkt-q-dual__connector-label { writing-mode: horizontal-tb; }
   .mkt-q-phone { max-width: 100%; }
 }
+
+/* ======================================================
+   Quest: Stat block (animated counters)
+   ====================================================== */
+.mkt-q-stats-block {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+.mkt-q-stat-item__n {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 52px;
+  font-weight: 400;
+  color: #5CFFC8;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.mkt-q-stat-item__l {
+  font-size: 14px;
+  color: rgba(244,239,230,0.55);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+/* ======================================================
+   Quest: SMS contrast result row
+   ====================================================== */
+.mkt-q-contrast__result {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13px;
+  line-height: 1.45;
+}
+.mkt-q-contrast__result--bad { color: rgba(244,239,230,0.3); }
+.mkt-q-contrast__result--good { color: rgba(92,255,200,0.8); }
+
+/* ======================================================
+   Quest: Phone streak bar
+   ====================================================== */
+.mkt-q-phone__streak-bar {
+  margin-top: 6px;
+  padding: 10px 12px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 10px;
+  border: 1px solid rgba(92,255,200,0.1);
+}
+.mkt-q-phone__streak-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: rgba(244,239,230,0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 6px;
+}
+.mkt-q-phone__streak-track {
+  height: 4px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+.mkt-q-phone__streak-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #5CFFC8, rgba(92,255,200,0.6));
+  border-radius: 2px;
+}
+.mkt-q-phone__streak-val {
+  font-size: 11px;
+  color: #5CFFC8;
+  font-weight: 600;
+}
+.mkt-q-phone__guardian-tag {
+  font-size: 11px;
+  color: rgba(167,139,250,0.6);
+  font-style: italic;
+  margin-top: 4px;
+  padding: 6px 10px;
+  border: 1px solid rgba(167,139,250,0.12);
+  border-radius: 8px;
+  background: rgba(167,139,250,0.05);
+}
+
+/* ======================================================
+   Quest: Zero-lift grid
+   ====================================================== */
+.mkt-q-lift-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  margin-top: 40px;
+}
+.mkt-q-lift-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(92,255,200,0.12);
+  border-radius: 14px;
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: background 0.2s, border-color 0.2s;
+}
+.mkt-q-lift-card:hover {
+  background: rgba(92,255,200,0.04);
+  border-color: rgba(92,255,200,0.25);
+}
+.mkt-q-lift-card__title {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 20px;
+  font-weight: 400;
+  color: rgba(244,239,230,0.95);
+  margin: 0;
+  line-height: 1.2;
+}
+.mkt-q-lift-card__body {
+  font-size: 14px;
+  color: rgba(244,239,230,0.55);
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* ======================================================
+   Quest: Audience cards (add detail line)
+   ====================================================== */
+.mkt-q-audience-detail {
+  font-size: 14px;
+  color: rgba(244,239,230,0.45);
+  margin: 0;
+  line-height: 1.6;
+  border-top: 1px solid rgba(92,255,200,0.1);
+  padding-top: 12px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .mkt-q-lift-grid { grid-template-columns: 1fr; }
+  .mkt-q-stat-item__n { font-size: 40px; }
+}
