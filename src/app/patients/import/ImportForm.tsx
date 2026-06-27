@@ -170,12 +170,11 @@ export function ImportForm() {
           <label className="label" style={{ marginBottom: 10, display: 'block' }}>Product</label>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
             {[
-              { value: 'glp1',               label: 'Adherix Keep',     sub: 'GLP-1' },
-              { value: 'bariatric',           label: 'Adherix Bridge',   sub: 'Bariatric' },
-              { value: 'pharmacotherapy',     label: 'Adherix Rx',       sub: 'Pharmacotherapy' },
-              { value: 'behavioral_therapy',  label: 'Adherix IBT',      sub: 'Behavioral' },
-              { value: 'metabolic_health',    label: 'Adherix Metabolic',sub: 'Metabolic' },
-              { value: 'quest',              label: 'Adherix Quest',    sub: 'Pediatric' },
+              { value: 'glp1',            label: 'Adherix Keep',     sub: 'GLP-1' },
+              { value: 'bariatric',       label: 'Adherix Bridge',   sub: 'Bariatric' },
+              { value: 'metabolic_health',label: 'Adherix Metabolic',sub: 'Metabolic Health' },
+              { value: 'glp1_gauge',      label: 'Adherix Gauge',    sub: 'Scale Tracker' },
+              { value: 'quest',           label: 'Adherix Quest',    sub: 'Pediatric' },
             ].map(opt => (
               <button
                 key={opt.value}

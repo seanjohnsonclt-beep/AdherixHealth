@@ -7,12 +7,11 @@ import { enrollPatientAction } from '@/app/patients/actions';
 const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
 
 export const PRODUCT_TYPES = [
-  { value: 'glp1',                label: 'GLP-1 (Adherix Keep)',                available: true  },
-  { value: 'bariatric',           label: 'Bariatric Surgery (Adherix Bridge)',   available: true  },
-  { value: 'pharmacotherapy',     label: 'Pharmacotherapy (Adherix Rx)',         available: true  },
-  { value: 'behavioral_therapy',  label: 'Behavioral Therapy (Adherix IBT)',     available: true  },
-  { value: 'metabolic_health',    label: 'Metabolic Health (Adherix Metabolic)', available: true  },
-  { value: 'quest',               label: 'Pediatric / Adolescent (Adherix Quest)',  available: true  },
+  { value: 'glp1',            label: 'GLP-1 (Adherix Keep)',               available: true },
+  { value: 'bariatric',       label: 'Bariatric Surgery (Adherix Bridge)',  available: true },
+  { value: 'metabolic_health',label: 'Metabolic Health (Adherix Metabolic)',available: true },
+  { value: 'glp1_gauge',      label: 'Scale Tracker (Adherix Gauge)',       available: true },
+  { value: 'quest',           label: 'Pediatric / Adolescent (Adherix Quest)', available: true },
 ] as const;
 
 export function EnrollForm({ error, defaultModality = 'glp1' }: { error?: string; defaultModality?: string }) {
@@ -23,16 +22,12 @@ export function EnrollForm({ error, defaultModality = 'glp1' }: { error?: string
   const modalityProtocols = MEDICATION_PROTOCOLS.filter(p => p.modality === modality);
 
   // IBT is behavioral-only - auto-assign the placeholder, no picker needed
-  const isIbt = modality === 'behavioral_therapy';
-
   // For GLP-1: weekly injections have an injection day concept
   const isGlp1 = modality === 'glp1';
   const isQuest = modality === 'quest';
 
   // The active protocol (selected or first if IBT)
-  const protocol = isIbt
-    ? modalityProtocols[0]
-    : MEDICATION_PROTOCOLS.find(p => p.key === selectedMed);
+  const protocol = MEDICATION_PROTOCOLS.find(p => p.key === selectedMed);
 
   const firstDose = protocol?.titrationSteps[0]?.dose ?? '';
 
