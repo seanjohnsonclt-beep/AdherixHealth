@@ -243,42 +243,11 @@ export function ImportForm() {
           </button>
         </div>
 
-        <div
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-            {[
-              { value: 'glp1',            label: 'Adherix Keep',     sub: 'GLP-1' },
-              { value: 'bariatric',       label: 'Adherix Bridge',   sub: 'Bariatric' },
-              { value: 'metabolic_health',label: 'Adherix Metabolic',sub: 'Metabolic Health' },
-              { value: 'glp1_gauge',      label: 'Adherix Gauge',    sub: 'Scale Tracker' },
-              { value: 'quest',           label: 'Adherix Quest',    sub: 'Pediatric' },
-            ].map(opt => (
-              <button
-                key={opt.value}
-                type="button"
-                onClick={() => setModality(opt.value)}
-                style={{
-                  padding: '8px 16px',
-                  borderRadius: 6,
-                  border: modality === opt.value ? '2px solid #5B9B94' : '2px solid rgba(0,0,0,0.12)',
-                  background: modality === opt.value ? 'rgba(91,155,148,0.1)' : 'transparent',
-                  color: modality === opt.value ? '#3D7670' : 'var(--fg-muted, #555)',
-                  cursor: 'pointer',
-                  fontSize: 13,
-                  fontWeight: modality === opt.value ? 600 : 400,
-                  textAlign: 'left' as const,
-                }}
-              >
-                <div>{opt.label}</div>
-                <div style={{ fontSize: 11, opacity: 0.7, marginTop: 1 }}>{opt.sub}</div>
-              </button>
-            ))}
-          </div>
-          {isQuest && (
-            <p style={{ fontSize: 12, color: 'rgba(244,239,230,0.45)', marginTop: 10 }}>
-              Quest CSV must include: <code>first_name</code>, <code>phone</code>, <code>date_of_birth</code>, <code>state</code>, <code>guardian_name</code>, <code>guardian_phone</code>
-            </p>
-          )}
-        </div>
+        {isQuest && (
+          <p style={{ fontSize: 13, color: 'var(--fg-muted,#888)', marginBottom: 16, padding: '10px 14px', background: 'rgba(91,155,148,0.08)', borderRadius: 6, border: '1px solid rgba(91,155,148,0.2)' }}>
+            Quest CSV columns required: <code>first_name</code>, <code>phone</code>, <code>date_of_birth</code>, <code>state</code>, <code>guardian_name</code>, <code>guardian_phone</code>
+          </p>
+        )}
 
         <div
           className={`import-drop${loading ? ' import-drop--loading' : ''}`}
