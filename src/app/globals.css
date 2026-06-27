@@ -8950,3 +8950,112 @@ a.mkt-btn--primary:hover,
   .mkt-q-lift-grid { grid-template-columns: 1fr; }
   .mkt-q-stat-item__n { font-size: 40px; }
 }
+
+/* ======================================================
+   Quest: 4-phone scenario grid
+   ====================================================== */
+.mkt-q-phone-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+.mkt-q-phone-grid__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+.mkt-q-phone-grid__label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #5CFFC8;
+  background: rgba(92,255,200,0.1);
+  border: 1px solid rgba(92,255,200,0.18);
+  padding: 4px 14px;
+  border-radius: 20px;
+}
+/* Scale phones down in grid to fit */
+.mkt-q-phone-grid .mkt-iphone__frame {
+  width: 220px;
+}
+
+/* ======================================================
+   Quest: Dual phones (full-size, side by side)
+   ====================================================== */
+.mkt-q-dual-phones {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0;
+  max-width: 720px;
+  margin: 0 auto;
+}
+.mkt-q-dual-phones__col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+.mkt-q-dual-phones__badge {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #5CFFC8;
+  background: rgba(92,255,200,0.1);
+  border: 1px solid rgba(92,255,200,0.2);
+  padding: 4px 16px;
+  border-radius: 20px;
+}
+.mkt-q-dual-phones__badge--guardian {
+  color: #A78BFA;
+  background: rgba(167,139,250,0.1);
+  border-color: rgba(167,139,250,0.2);
+}
+.mkt-q-dual-phones__note {
+  font-size: 11px;
+  color: rgba(167,139,250,0.55);
+  font-style: italic;
+  text-align: center;
+  max-width: 240px;
+}
+.mkt-q-dual-phones__divider {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 60px 20px 0;
+  flex-shrink: 0;
+}
+.mkt-q-dual-phones__divider-line {
+  width: 1px;
+  height: 60px;
+  background: linear-gradient(to bottom, rgba(92,255,200,0.35), rgba(92,255,200,0.06));
+}
+.mkt-q-dual-phones__divider-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(92,255,200,0.4);
+  white-space: nowrap;
+  writing-mode: vertical-rl;
+}
+
+/* Responsive */
+@media (max-width: 1100px) {
+  .mkt-q-phone-grid { grid-template-columns: repeat(2, 1fr); }
+  .mkt-q-phone-grid .mkt-iphone__frame { width: 240px; }
+}
+@media (max-width: 680px) {
+  .mkt-q-phone-grid { grid-template-columns: 1fr 1fr; gap: 16px; }
+  .mkt-q-phone-grid .mkt-iphone__frame { width: 100%; max-width: 200px; }
+  .mkt-q-dual-phones { flex-direction: column; align-items: center; gap: 32px; }
+  .mkt-q-dual-phones__divider { flex-direction: row; writing-mode: horizontal-tb; padding: 0; }
+  .mkt-q-dual-phones__divider-line { width: 48px; height: 1px; }
+  .mkt-q-dual-phones__divider-label { writing-mode: horizontal-tb; }
+}

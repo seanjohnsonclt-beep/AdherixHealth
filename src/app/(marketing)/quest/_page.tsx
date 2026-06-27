@@ -28,14 +28,10 @@ function Counter({ to, suffix = '' }: { to: number; suffix?: string }) {
 /* ---- animated check icon ---- */
 function CheckMark({ color = '#5CFFC8' }: { color?: string }) {
   return (
-    <motion.svg
-      width="20" height="20" viewBox="0 0 20 20" fill="none"
-      initial={{ pathLength: 0, opacity: 0 }}
-      whileInView={{ pathLength: 1, opacity: 1 }}
+    <motion.svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+      initial={{ opacity: 0 }} whileInView={{ opacity: 1 }}
       viewport={{ once: true, margin: '-40px' }}
-      transition={{ duration: 0.5, ease: 'easeOut' }}
-      aria-hidden="true"
-    >
+      transition={{ duration: 0.4 }} aria-hidden="true">
       <motion.circle cx="10" cy="10" r="9" stroke={color} strokeWidth="1.5"
         initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }}
         viewport={{ once: true }} transition={{ duration: 0.4 }} />
@@ -47,12 +43,96 @@ function CheckMark({ color = '#5CFFC8' }: { color?: string }) {
   );
 }
 
+/* ---- reusable iPhone mockup ---- */
+interface Bubble { dir: 'in' | 'out'; text: string; bold?: boolean; }
+interface IPhoneProps {
+  contact: string;
+  avatar: string;
+  avatarBg?: string;
+  date?: string;
+  bubbles: Bubble[];
+  delivered?: boolean;
+  animateFrom?: number;
+}
+
+function QuestIPhone({ contact, avatar, avatarBg = '#2d5c58', date, bubbles, delivered, animateFrom }: IPhoneProps) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: '-60px' });
+  const [visCount, setVisCount] = useState(animateFrom !== undefined ? animateFrom : bubbles.length);
+
+  useEffect(() => {
+    if (!inView || animateFrom === undefined) return;
+    let i = animateFrom;
+    const id = setInterval(() => {
+      i++;
+      setVisCount(i);
+      if (i >= bubbles.length) clearInterval(id);
+    }, 700);
+    return () => clearInterval(id);
+  }, [inView, animateFrom, bubbles.length]);
+
+  return (
+    <div ref={ref} className="mkt-iphone">
+      <div className="mkt-iphone__frame">
+        <div className="mkt-iphone__island" />
+        <div className="mkt-iphone__status">
+          <span className="mkt-iphone__time">9:41</span>
+          <span className="mkt-iphone__status-icons">
+            <svg width="17" height="12" viewBox="0 0 17 12" fill="currentColor" aria-hidden="true">
+              <rect x="0" y="8" width="3" height="4" rx="0.6" opacity="0.35"/>
+              <rect x="4.7" y="5" width="3" height="7" rx="0.6" opacity="0.35"/>
+              <rect x="9.4" y="2" width="3" height="10" rx="0.6"/>
+              <rect x="14.1" y="0" width="3" height="12" rx="0.6"/>
+            </svg>
+            <svg width="15" height="12" viewBox="0 0 15 12" fill="none" aria-hidden="true">
+              <path d="M7.5 10a1 1 0 110-2 1 1 0 010 2z" fill="currentColor"/>
+              <path d="M5.1 7.8C5.9 6.9 6.7 6.4 7.5 6.4s1.6.5 2.4 1.4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" opacity="0.4"/>
+              <path d="M2.8 5.5C4.2 3.9 5.8 3 7.5 3s3.3.9 4.7 2.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" opacity="0.4"/>
+            </svg>
+            <svg width="25" height="12" viewBox="0 0 25 12" fill="none" aria-hidden="true">
+              <rect x="0.5" y="0.5" width="21" height="11" rx="3.5" stroke="currentColor" strokeOpacity="0.35"/>
+              <rect x="22.5" y="3.5" width="2" height="5" rx="1" fill="currentColor" fillOpacity="0.4"/>
+              <rect x="2" y="2" width="14" height="8" rx="2" fill="currentColor"/>
+            </svg>
+          </span>
+        </div>
+        <div className="mkt-iphone__header">
+          <div className="mkt-iphone__avatar" style={{ background: avatarBg }}>{avatar}</div>
+          <div>
+            <div className="mkt-iphone__contact">{contact}</div>
+            <div className="mkt-iphone__contact-sub">text message</div>
+          </div>
+        </div>
+        <div className="mkt-iphone__thread">
+          {date && <div className="mkt-iphone__thread-date">{date}</div>}
+          {bubbles.slice(0, visCount).map((b, i) => (
+            <motion.div key={i}
+              className={`mkt-iphone__bubble mkt-iphone__bubble--${b.dir}`}
+              initial={animateFrom !== undefined && i >= animateFrom ? { opacity: 0, y: 6 } : false}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}>
+              {b.bold ? <><strong>{b.text.split(':')[0]}:</strong>{b.text.slice(b.text.indexOf(':') + 1)}</> : b.text}
+            </motion.div>
+          ))}
+          {delivered && visCount >= bubbles.length && (
+            <div className="mkt-iphone__delivered">Delivered</div>
+          )}
+        </div>
+        <div className="mkt-iphone__bar">
+          <div className="mkt-iphone__field">iMessage</div>
+        </div>
+        <div className="mkt-iphone__indicator" />
+      </div>
+    </div>
+  );
+}
+
 /* ---- SMS contrast visual ---- */
 function SmsContrast() {
   return (
     <div className="mkt-q-contrast">
       <div className="mkt-q-contrast__col">
-        <div className="mkt-q-contrast__label mkt-q-contrast__label--muted">Standard check-in</div>
+        <div className="mkt-q-contrast__label mkt-q-contrast__label--muted">Standard program</div>
         <div className="mkt-q-contrast__bubble mkt-q-contrast__bubble--plain">
           <p>Hi, this is your weekly check-in reminder. Please complete your behavioral health survey at your earliest convenience.</p>
         </div>
@@ -65,7 +145,7 @@ function SmsContrast() {
       <div className="mkt-q-contrast__col">
         <div className="mkt-q-contrast__label mkt-q-contrast__label--electric">Quest</div>
         <div className="mkt-q-contrast__bubble mkt-q-contrast__bubble--quest">
-          <p>Jordan - Week 3. You have been showing up. Reply YES to log today and keep your streak going. Your squad is tracking with you.</p>
+          <p>Jordan - Week 3. You have been showing up. Reply YES to log today and keep your streak going. Your squad is watching the board.</p>
         </div>
         <div className="mkt-q-contrast__result mkt-q-contrast__result--good">
           <CheckMark color="#5CFFC8" />
@@ -76,84 +156,60 @@ function SmsContrast() {
   );
 }
 
-/* ---- dual phone mockup ---- */
-function DualPhones() {
-  const [show, setShow] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: '-80px' });
-  useEffect(() => {
-    if (inView) { const t = setTimeout(() => setShow(true), 600); return () => clearTimeout(t); }
-  }, [inView]);
-
-  return (
-    <div ref={ref} className="mkt-q-dual">
-      <div className="mkt-q-dual__phone">
-        <div className="mkt-q-dual__badge">Patient</div>
-        <div className="mkt-q-phone">
-          <div className="mkt-q-phone__notch" />
-          <div className="mkt-q-phone__thread">
-            <div className="mkt-q-phone__from">Quest Health</div>
-            <div className="mkt-q-phone__bubble mkt-q-phone__bubble--in">
-              Jordan - this is your Week 5 check-in. How are you tracking with this week's goal? Reply YES to log it.
-            </div>
-            {show && (
-              <motion.div className="mkt-q-phone__bubble mkt-q-phone__bubble--out"
-                initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.35 }}>
-                YES
-              </motion.div>
-            )}
-            {show && (
-              <motion.div className="mkt-q-phone__bubble mkt-q-phone__bubble--in"
-                initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.35, delay: 0.5 }}>
-                Logged. 9-day streak. Keep it going - your next milestone is close.
-              </motion.div>
-            )}
-            {show && (
-              <motion.div className="mkt-q-phone__streak-bar"
-                initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                transition={{ delay: 0.9 }}>
-                <div className="mkt-q-phone__streak-label">Habit streak</div>
-                <div className="mkt-q-phone__streak-track">
-                  <motion.div className="mkt-q-phone__streak-fill"
-                    initial={{ width: '0%' }} animate={{ width: '72%' }}
-                    transition={{ duration: 0.6, delay: 1.0, ease: 'easeOut' }} />
-                </div>
-                <div className="mkt-q-phone__streak-val">9 / 12 days</div>
-              </motion.div>
-            )}
-          </div>
-        </div>
-      </div>
-
-      <div className="mkt-q-dual__connector" aria-hidden="true">
-        <div className="mkt-q-dual__connector-line" />
-        <span className="mkt-q-dual__connector-label">parallel</span>
-        <div className="mkt-q-dual__connector-line" />
-      </div>
-
-      <div className="mkt-q-dual__phone">
-        <div className="mkt-q-dual__badge mkt-q-dual__badge--guardian">Guardian</div>
-        <div className="mkt-q-phone mkt-q-phone--guardian">
-          <div className="mkt-q-phone__notch" />
-          <div className="mkt-q-phone__thread">
-            <div className="mkt-q-phone__from">Quest Health</div>
-            <div className="mkt-q-phone__bubble mkt-q-phone__bubble--in">
-              Weekly summary for Jordan: 4 of 5 check-ins completed. Habit streak: 9 days. Engagement: strong.
-            </div>
-            <div className="mkt-q-phone__bubble mkt-q-phone__bubble--in">
-              This week: focus on routine over results. Consistency at this stage matters more than any single number.
-            </div>
-            <div className="mkt-q-phone__guardian-tag">
-              No clinical data shared. No action required.
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
+/* ---- scenario data ---- */
+const scenarios = [
+  {
+    label: 'Daily check-in',
+    contact: 'Quest Health',
+    avatar: 'Q',
+    avatarBg: '#1a4a46',
+    date: 'Today 4:00 PM',
+    animateFrom: 1,
+    delivered: true,
+    bubbles: [
+      { dir: 'in' as const, text: 'Jordan - check-in time. Movement goal today? Reply YES or NO. You are on a 9-day streak.' },
+      { dir: 'out' as const, text: 'YES' },
+    ],
+  },
+  {
+    label: 'Boss challenge',
+    contact: 'Quest Health',
+    avatar: 'Q',
+    avatarBg: '#1a4a46',
+    date: 'Monday 9:00 AM',
+    animateFrom: 1,
+    delivered: true,
+    bubbles: [
+      { dir: 'in' as const, text: 'WEEK 5 BOSS: 5 consecutive check-ins. Alpha Squad needs every member. Reply BOSS to accept. Worth 3x XP.', bold: true },
+      { dir: 'out' as const, text: 'BOSS' },
+    ],
+  },
+  {
+    label: 'Level up',
+    contact: 'Quest Health',
+    avatar: 'Q',
+    avatarBg: '#1a4a46',
+    date: 'Today 4:01 PM',
+    animateFrom: 0,
+    delivered: false,
+    bubbles: [
+      { dir: 'in' as const, text: 'LEVEL UP: You just hit Beast Mode. XP total: 520. New challenges unlock this week. The squad noticed.', bold: true },
+    ],
+  },
+  {
+    label: 'Guardian weekly brief',
+    contact: 'Quest Health',
+    avatar: 'Q',
+    avatarBg: '#3d2d6e',
+    date: 'Sunday 10:00 AM',
+    animateFrom: 0,
+    delivered: false,
+    bubbles: [
+      { dir: 'in' as const, text: 'Weekly update for Jordan: 5 of 5 check-ins this week. Streak: 12 days. Habit consistency is strong.' },
+      { dir: 'in' as const, text: 'Tip: this is the window where habits become identity. Keep reinforcing effort over outcomes.' },
+    ],
+  },
+];
 
 /* ---- zero lift cards ---- */
 const lifts = [
@@ -163,7 +219,6 @@ const lifts = [
   { label: 'Guardian loop included', sub: 'Weekly parent summaries run automatically. No coordinator needed.' },
 ];
 
-/* ---- audience cards ---- */
 const audience = [
   {
     type: 'Pediatric practices',
@@ -234,7 +289,7 @@ export function QuestPage() {
             </FadeRise>
             <FadeRise as="p" delay={0.1} style={{ color: 'rgba(244,239,230,0.7)', maxWidth: 520, margin: '0 auto 48px', textAlign: 'center', fontSize: 16 }}>
               Quest does not replace your behavioral protocol. It translates it
-              into a format adolescents respond to.
+              into a format adolescents actually respond to.
             </FadeRise>
           </div>
           <FadeRise delay={0.1}>
@@ -243,8 +298,40 @@ export function QuestPage() {
         </div>
       </section>
 
+      {/* 4-phone scenario grid */}
+      <section className="mkt-v2-section mkt-v2-section--alt" id="quest-moments">
+        <div className="mkt-container">
+          <div className="mkt-v2-section__head">
+            <FadeRise as="span" className="mkt-eyebrow">What lands on their phone</FadeRise>
+            <FadeRise as="h2" className="mkt-h2" delay={0.05}>
+              Four moments. All automated.
+            </FadeRise>
+            <FadeRise as="p" delay={0.1} style={{ color: 'rgba(244,239,230,0.7)', maxWidth: 500, margin: '0 auto 48px', textAlign: 'center', fontSize: 16 }}>
+              Every message runs automatically based on where the patient is in their program.
+              No coordinator triggers these. No staff writes them.
+            </FadeRise>
+          </div>
+          <StaggerGroup className="mkt-q-phone-grid" stagger={0.1} amount={0.2}>
+            {scenarios.map((s) => (
+              <div key={s.label} className="mkt-q-phone-grid__item">
+                <div className="mkt-q-phone-grid__label">{s.label}</div>
+                <QuestIPhone
+                  contact={s.contact}
+                  avatar={s.avatar}
+                  avatarBg={s.avatarBg}
+                  date={s.date}
+                  bubbles={s.bubbles}
+                  delivered={s.delivered}
+                  animateFrom={s.animateFrom}
+                />
+              </div>
+            ))}
+          </StaggerGroup>
+        </div>
+      </section>
+
       {/* Dual track */}
-      <section className="mkt-v2-section mkt-v2-section--alt" id="quest-dual">
+      <section className="mkt-v2-section" id="quest-dual">
         <div className="mkt-container">
           <div className="mkt-v2-section__head">
             <FadeRise as="span" className="mkt-eyebrow">Dual-channel outreach</FadeRise>
@@ -252,19 +339,57 @@ export function QuestPage() {
               The patient gets engaged. The parent stays informed.
             </FadeRise>
             <FadeRise as="p" delay={0.1} style={{ color: 'rgba(244,239,230,0.7)', maxWidth: 520, margin: '0 auto 48px', textAlign: 'center', fontSize: 16 }}>
-              Two parallel SMS streams run automatically. Behavioral engagement
-              for the teen. A weekly clinical summary for the guardian.
-              No PHI on either channel.
+              Two parallel SMS streams. Behavioral engagement for the teen.
+              A weekly clinical summary for the guardian. No PHI on either channel.
             </FadeRise>
           </div>
-          <FadeRise delay={0.12}>
-            <DualPhones />
-          </FadeRise>
+          <div className="mkt-q-dual-phones">
+            <FadeRise delay={0.05}>
+              <div className="mkt-q-dual-phones__col">
+                <div className="mkt-q-dual-phones__badge">Patient</div>
+                <QuestIPhone
+                  contact="Quest Health"
+                  avatar="Q"
+                  avatarBg="#1a4a46"
+                  date="Today 4:00 PM"
+                  animateFrom={1}
+                  delivered={true}
+                  bubbles={[
+                    { dir: 'in', text: 'Jordan - Week 5. You have been showing up. Reply YES to log today and keep your streak going.' },
+                    { dir: 'out', text: 'YES' },
+                    { dir: 'in', text: 'Logged. 12-day streak. Squad check is Sunday.' },
+                  ]}
+                />
+              </div>
+            </FadeRise>
+            <div className="mkt-q-dual-phones__divider" aria-hidden="true">
+              <div className="mkt-q-dual-phones__divider-line" />
+              <span className="mkt-q-dual-phones__divider-label">parallel track</span>
+              <div className="mkt-q-dual-phones__divider-line" />
+            </div>
+            <FadeRise delay={0.12}>
+              <div className="mkt-q-dual-phones__col">
+                <div className="mkt-q-dual-phones__badge mkt-q-dual-phones__badge--guardian">Guardian</div>
+                <QuestIPhone
+                  contact="Quest Health"
+                  avatar="Q"
+                  avatarBg="#3d2d6e"
+                  date="Sunday 10:00 AM"
+                  animateFrom={0}
+                  bubbles={[
+                    { dir: 'in', text: 'Weekly update for Jordan: 5 of 5 check-ins. Streak: 12 days. Engagement is strong.' },
+                    { dir: 'in', text: 'Tip: this is the window where habits become identity. Reinforce effort over outcomes.' },
+                  ]}
+                />
+                <div className="mkt-q-dual-phones__note">No clinical data shared. No action required.</div>
+              </div>
+            </FadeRise>
+          </div>
         </div>
       </section>
 
       {/* Zero lift */}
-      <section className="mkt-v2-section" id="quest-lift">
+      <section className="mkt-v2-section mkt-v2-section--alt" id="quest-lift">
         <div className="mkt-container">
           <div className="mkt-v2-section__head">
             <FadeRise as="span" className="mkt-eyebrow">For your team</FadeRise>
@@ -285,7 +410,7 @@ export function QuestPage() {
       </section>
 
       {/* Audience */}
-      <section className="mkt-v2-section mkt-v2-section--alt" id="quest-audience">
+      <section className="mkt-v2-section" id="quest-audience">
         <div className="mkt-container">
           <div className="mkt-v2-section__head">
             <FadeRise as="span" className="mkt-eyebrow">Built for</FadeRise>
@@ -308,31 +433,20 @@ export function QuestPage() {
       {/* CTA */}
       <section className="mkt-v2-section mkt-v2-section--ink">
         <div className="mkt-container mkt-v2-trust">
-          <FadeRise
-            as="h2"
-            className="mkt-v2-trust__title"
-            style={{
-              fontFamily: 'Fraunces, Georgia, serif',
-              fontSize: 'clamp(28px, 4vw, 44px)',
-              fontWeight: 400,
-              color: 'var(--mkt-paper)',
-              lineHeight: 1.1,
-              marginBottom: 20,
-            }}
-          >
+          <FadeRise as="h2" className="mkt-v2-trust__title" style={{
+            fontFamily: 'Fraunces, Georgia, serif',
+            fontSize: 'clamp(28px, 4vw, 44px)',
+            fontWeight: 400, color: 'var(--mkt-paper)',
+            lineHeight: 1.1, marginBottom: 20,
+          }}>
             Your patients stay in program. Your team gets alerted when they don't.
           </FadeRise>
           <FadeRise as="p" className="mkt-subhead mkt-v2-trust__sub" delay={0.08}>
-            Quest runs automatically between visits. No new staff. No portal.
-            No workflow changes. Book a demo to see a live program.
+            Quest runs automatically between visits. No new staff. No portal. No workflow changes.
           </FadeRise>
           <FadeRise className="mkt-v2-trust__cta" delay={0.15}>
-            <Link href="/pilot" className="mkt-btn mkt-btn--primary mkt-btn--lg">
-              Book a demo
-            </Link>
-            <Link href="/platform" className="mkt-btn mkt-btn--ghost mkt-btn--ghost-on-dark mkt-btn--lg">
-              See the platform
-            </Link>
+            <Link href="/pilot" className="mkt-btn mkt-btn--primary mkt-btn--lg">Book a demo</Link>
+            <Link href="/platform" className="mkt-btn mkt-btn--ghost mkt-btn--ghost-on-dark mkt-btn--lg">See the platform</Link>
           </FadeRise>
         </div>
       </section>
