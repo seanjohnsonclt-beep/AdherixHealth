@@ -322,18 +322,3 @@ export async function POST(req: NextRequest) {
 
   return twiml();
 }
-ndingGaugeCheckin(patient.id);
-      if (pending) {
-        await handleWeightReply(patient.id, weightLbs);
-      }
-    } catch (err) {
-      console.warn('[inbound] gauge weight handler failed (migration pending?):', err);
-    }
-  }
-
-  // Reply gate: queue any templates waiting on this reply
-  await handleReplyGate(patient.id, body);
-
-  // Empty TwiML = no auto-reply. Engine handles all outbound messages.
-  return twiml();
-}
