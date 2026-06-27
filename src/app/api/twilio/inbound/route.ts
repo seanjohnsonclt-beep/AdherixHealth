@@ -183,9 +183,11 @@ export async function POST(req: NextRequest) {
     medication:             string | null;
     modality:               string | null;
     boss_challenge_pending: boolean;
+    quest_intensity:        string | null;
   }>(
     `select id, status, clinic_id, medication, modality,
-            coalesce(boss_challenge_pending, false) as boss_challenge_pending
+            coalesce(boss_challenge_pending, false) as boss_challenge_pending,
+            quest_intensity
      from patients where phone = $1 limit 1`,
     [from]
   );
@@ -301,6 +303,49 @@ export async function POST(req: NextRequest) {
       } catch (err) {
         console.warn('[inbound] Quest intensity update failed:', err);
       }
+    }
+  }
+  // Quest: check-in reply - award XP + update streak on YES
+  // Only fires when boss_challenge_pending is false (boss YES handled above and returns early).
+  // Any YES from a Quest patient counts as a check-in.
+  if (patient.modality === 'quest' && replyClass === 'yes') {
+    try {
+      const { awardXp, recordCheckin, XP } = await import('@/engine/quest-game');
+      const { streak, streakBonus, powerWeek } = await recordCheckin(patient.id);
+
+      const baseXp  = XP.CHECKIN_REPLY;
+      const totalXp = baseXp + (streakBonus ?? 0);
+
+      const { newXp, leveledUp, levelName } = await awardXp(patient.id, totalXp, {
+        powerWeek,
+        intensity: patient.quest_intensity ?? 'standard',
+      });
+
+      // Mirror XP to monthly ledger (drives reward fulfillment)
+      await query(
+        `update patients set quest_monthly_xp = coalesce(quest_monthly_xp, 0) + $1 where id = $2`,
+        [totalXp, patient.id]
+      );
+
+      await query(
+        `insert into events (patient_id, kind, payload) values ($1, 'quest_checkin', $2)`,
+        [patient.id, JSON.stringify({
+          xp_earned:    totalXp,
+          streak,
+          streak_bonus: streakBonus,
+          power_week:   powerWeek,
+          new_xp:       newXp,
+          leveled_up:   leveledUp,
+          level_name:   leveledUp ? levelName : null,
+        })]
+      );
+
+      console.log(
+        `[inbound] Quest check-in: patient ${patient.id}, ` +
+        `streak=${streak}, xp+${totalXp}${leveledUp ? ` (leveled up to ${levelName})` : ''}`
+      );
+    } catch (err) {
+      console.warn('[inbound] Quest check-in handler failed:', err);
     }
   }
 

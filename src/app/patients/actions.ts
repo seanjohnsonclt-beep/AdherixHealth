@@ -32,12 +32,13 @@ export async function enrollPatientAction(formData: FormData) {
   const modality       = String(formData.get('modality') || '').trim() || undefined;
 
   // Quest fields
-  const dateOfBirth  = String(formData.get('date_of_birth') || '').trim() || undefined;
-  const state        = String(formData.get('state') || '').trim() || undefined;
-  const guardianName = String(formData.get('guardian_name') || '').trim() || undefined;
-  const guardianPhone = formData.get('guardian_phone')
+  const dateOfBirth         = String(formData.get('date_of_birth') || '').trim() || undefined;
+  const state               = String(formData.get('state') || '').trim() || undefined;
+  const guardianName        = String(formData.get('guardian_name') || '').trim() || undefined;
+  const guardianPhone       = formData.get('guardian_phone')
     ? normalizePhone(String(formData.get('guardian_phone') || ''))
     : undefined;
+  const questRewardCategory = String(formData.get('quest_reward_category') || '').trim() || undefined;
 
   const id = await enrollPatient({
     clinicId: user.clinicId,
@@ -51,6 +52,7 @@ export async function enrollPatientAction(formData: FormData) {
     state,
     guardianName,
     guardianPhone,
+    questRewardCategory,
   });
 
   // Set next_dose_day if provided (column added in 0006 migration)
@@ -292,7 +294,6 @@ export async function removePatientAction(formData: FormData) {
   const user = await requireUser();
   const id = String(formData.get('patient_id') || '');
   await assertPatientInClinic(id, user.clinicId);
-
   // Cascade handles messages, events, trigger_firings
   await query(`delete from patients where id = $1 and clinic_id = $2`, [id, user.clinicId]);
 

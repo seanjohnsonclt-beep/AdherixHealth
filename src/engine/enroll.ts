@@ -16,10 +16,11 @@ export type EnrollArgs = {
   startingDose?: string;  // override first titration step dose (rare)
   supplyQuantity?: number; // number of doses in current pen/pack
   // Quest (pediatric) fields
-  dateOfBirth?: string;   // YYYY-MM-DD
-  state?: string;         // 2-letter state code for minor consent routing
+  dateOfBirth?: string;          // YYYY-MM-DD
+  state?: string;                // 2-letter state code for minor consent routing
   guardianName?: string;
-  guardianPhone?: string; // E.164 - receives separate guardian message track
+  guardianPhone?: string;        // E.164 - receives separate guardian message track
+  questRewardCategory?: string;  // 'gamer' | 'wellness' | 'reader'
 };
 
 export async function enrollPatient({
@@ -28,6 +29,7 @@ export async function enrollPatient({
   firstName,
   modality: explicitModality,
   medication,
+  questRewardCategory,
   startingDose,
   supplyQuantity,
   dateOfBirth,
@@ -81,9 +83,10 @@ export async function enrollPatient({
        clinic_id, phone, first_name, current_phase, phase_started_at,
        medication, starting_dose, current_dose, injection_frequency,
        titration_schedule, next_titration_date, supply_quantity, modality,
-       date_of_birth, state, guardian_name, guardian_phone, consent_type, consent_status
+       date_of_birth, state, guardian_name, guardian_phone, consent_type, consent_status,
+       quest_reward_category
      )
-     values ($1, $2, $3, 0, now(), $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
+     values ($1, $2, $3, 0, now(), $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)
      returning id`,
     [
       clinicId,
@@ -103,6 +106,7 @@ export async function enrollPatient({
       guardianPhone ?? null,
       consentType,
       consentType ? 'obtained' : null,
+      modality === 'quest' ? (questRewardCategory ?? 'gamer') : null,
     ]
   );
   if (!row) throw new Error('Failed to insert patient');

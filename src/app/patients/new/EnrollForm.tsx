@@ -25,6 +25,7 @@ export function EnrollForm({ error, defaultModality = 'glp1' }: { error?: string
   // For GLP-1: weekly injections have an injection day concept
   const isGlp1 = modality === 'glp1';
   const isQuest = modality === 'quest';
+  const isIbt   = modality === 'ibt';
 
   // The active protocol (selected or first if IBT)
   const protocol = MEDICATION_PROTOCOLS.find(p => p.key === selectedMed);
@@ -93,6 +94,45 @@ export function EnrollForm({ error, defaultModality = 'glp1' }: { error?: string
               Guardian receives a separate message track from the teen.
             </div>
           </div>
+          <div style={{ marginBottom: 16 }}>
+            <label className="label">Reward preference</label>
+            <p style={{ fontSize: 12, color: 'rgba(244,239,230,0.45)', marginBottom: 10 }}>
+              Choose the gift card type the teen will earn toward. Used when they hit monthly XP thresholds.
+            </p>
+            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+              {[
+                { value: 'gamer',    label: '🎮 Gamer',    hint: 'Roblox / Fortnite / PSN / Xbox' },
+                { value: 'wellness', label: '🥤 Wellness',  hint: 'Smoothie King' },
+                { value: 'reader',   label: '📚 Reader',    hint: 'Barnes & Noble' },
+              ].map(opt => (
+                <label key={opt.value} style={{
+                  flex: '1 1 140px',
+                  border: '1px solid rgba(244,239,230,0.2)',
+                  borderRadius: 8,
+                  padding: '10px 14px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  gap: 8,
+                }}>
+                  <input
+                    type="radio"
+                    name="quest_reward_category"
+                    value={opt.value}
+                    defaultChecked={opt.value === 'gamer'}
+                    style={{ marginTop: 2 }}
+                  />
+                  <span>
+                    <span style={{ fontWeight: 600, fontSize: 14 }}>{opt.label}</span>
+                    <br />
+                    <span style={{ fontSize: 11, color: 'rgba(244,239,230,0.45)' }}>{opt.hint}</span>
+                  </span>
+                </label>
+              ))}
+            </div>
+            <input type="hidden" name="quest_reward_category" value="gamer" />
+          </div>
+
           <div style={{ marginBottom: 24 }}>
             <label className="label">Consent confirmation</label>
             <label style={{ display: 'flex', alignItems: 'flex-start', gap: 10, cursor: 'pointer' }}>

@@ -66,31 +66,21 @@ export async function tick() {
       console.error('[tick] weekly digest failed (non-fatal):', err);
     }
 
-    // Step 7: Quest Boss Challenge - Monday send
-    // Short-circuits immediately on non-Monday. Idempotent via UNIQUE(patient_id, week_start).
+    // Step 7: Monday - send weekly boss challenge to Quest patients (phase 2+)
     try {
       await sendWeeklyBossChallenge();
     } catch (err) {
       console.error('[tick] boss challenge send failed (non-fatal):', err);
     }
 
-    // Step 8: Quest Boss Challenge - Sunday completion check
-    // Short-circuits immediately on non-Sunday. Marks completed/failed, awards/deducts XP.
+    // Step 8: Sunday - complete/fail boss challenges, award/deduct XP
     try {
       await runSundayBossCheck();
     } catch (err) {
-      console.error('[tick] boss challenge Sunday check failed (non-fatal):', err);
+      console.error('[tick] Sunday boss check failed (non-fatal):', err);
     }
 
-    console.log(`[tick] ok in ${Date.now() - start}ms`);
-
-  } catch (err) {
-    console.error('[tick] failed:', err);
-    throw err;
+  } finally {
+    console.log(`[tick] completed in ${Date.now() - start}ms`);
   }
-}
-
-// CLI entry
-if (require.main === module) {
-  tick().then(() => process.exit(0)).catch(() => process.exit(1));
 }

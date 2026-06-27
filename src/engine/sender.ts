@@ -181,26 +181,30 @@ export async function sendDueMessages() {
       if (msg.clinic_admin_email) {
         const existing = failuresByClinic.get(msg.clinic_id);
         const record: FailureRecord = {
-          messageId: msg.id,
-          patientId: msg.patient_id,
-          firstName: msg.first_name,
-          templateKey: msg.template_key,
-          error: errMsg,
+          messageId:   msg.id,
+          patientPhone: msg.phone,
+          errorMessage: errMsg,
+          templateKey:  msg.template_key ?? undefined,
         };
         if (existing) {
           existing.failures.push(record);
         } else {
           failuresByClinic.set(msg.clinic_id, {
-            email: msg.clinic_admin_email,
+            email:      msg.clinic_admin_email,
             clinicName: msg.clinic_name,
-            failures: [record],
+            failures:   [record],
           });
         }
       }
     }
   }
 
-  for (const { email, clinicName, failures } of failuresByClinic.values()) {
-    await sendDeliveryFailureAlert({ to: email, clinicName, failures });
+  // Send one failure summary email per affected clinic
+  for (const [, { email, clinicName, failures }] of failuresByClinic) {
+    try {
+      await sendDeliveryFailureAlert({ email, clinicName, failures });
+    } catch (emailErr) {
+      console.error('[sender] failure alert email itself failed:', emailErr);
+    }
   }
 }

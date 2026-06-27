@@ -70,30 +70,29 @@ function maskPhone(p: string): string {
 
 const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
 const TEMPLATE_LABELS: Record<string, string> = {
-  'phase0.welcome':         'Welcome',
-  'phase1.day1.morning':    'Day 1 check-in',
-  'phase1.day3.checkin':    'Day 3 check-in',
-  'phase1.day5.hydrate':    'Hydration reminder',
-  'phase2.day1.habit':      'Habit builder',
-  'phase2.day4.log':        'Meal log prompt',
-  'phase2.day7.review':     'Week 2 review',
-  'phase3.day3.mov':        'Movement check',
-  'phase3.day10.streak':    'Streak check',
-  'phase3.day20.plateau':   'Plateau alert',
-  'phase4.day5.taper':      'Taper start',
-  'phase4.day15.anchor':    'Anchor habit check',
-  'phase5.weekly_checkin':  'Weekly check-in',
-  'phase5.weekly_rate':     'Weekly rating',
+  'phase0.welcome':          'Welcome',
+  'phase1.day1.morning':     'Day 1 check-in',
+  'phase1.day3.checkin':     'Day 3 check-in',
+  'phase1.day5.hydrate':     'Hydration reminder',
+  'phase2.day1.habit':       'Habit builder',
+  'phase2.day4.log':         'Meal log prompt',
+  'phase2.day7.review':      'Week 2 review',
+  'phase3.day3.mov':         'Movement check',
+  'phase3.day10.streak':     'Streak check',
+  'phase3.day20.plateau':    'Plateau alert',
+  'phase4.day5.taper':       'Taper start',
+  'phase4.day15.anchor':     'Anchor habit check',
+  'phase5.weekly_checkin':   'Weekly check-in',
+  'phase5.weekly_rate':      'Weekly rating',
   'trigger.no_response_48h': 'Auto follow-up',
   'trigger.no_response_5d':  'Escalation nudge',
-  'gauge.weekly_checkin':   'Weight check-in',
+  'gauge.weekly_checkin':    'Weight check-in',
 };
 
 function templateLabel(key: string | null): string | null {
   if (!key) return null;
   return TEMPLATE_LABELS[key] ?? key.replace(/[._]/g, ' ');
 }
-
 
 const PATTERN_LABELS: Record<string, string> = {
   uncertainty: 'Side effect',
@@ -114,13 +113,41 @@ const TRAJECTORY_LABELS: Record<string, string> = {
   declining:    'Declining',
 };
 
+const REWARD_TIER_LABEL = (xp: number) => {
+  if (xp >= 2500) return { label: '$25 gift card earned', color: 'var(--good)' };
+  if (xp >= 1000) return { label: '$10 gift card earned', color: 'var(--good)' };
+  if (xp >= 500)  return { label: '$5 gift card earned',  color: 'var(--good)' };
+  const next = xp >= 0 ? 500 : 0;
+  return null;
+};
+
+const NEXT_TIER = (xp: number) => {
+  if (xp < 500)  return { xp: 500,  label: '$5'  };
+  if (xp < 1000) return { xp: 1000, label: '$10' };
+  if (xp < 2500) return { xp: 2500, label: '$25' };
+  return null;
+};
+
 export default async function PatientPage({ params }: { params: { id: string } }) {
   const user = await requireUser();
 
-  const patient = await queryOne<Patient>(
+  const patient = await queryOne<Patient & {
+    modality: string;
+    quest_xp: number | null;
+    quest_level: number | null;
+    quest_streak: number | null;
+    quest_monthly_xp: number | null;
+    quest_reward_category: string | null;
+    quest_handle: string | null;
+    quest_intensity: string | null;
+  }>(
     `select id, first_name, phone, current_phase, phase_started_at, status,
             enrolled_at, last_inbound_at, engagement_trajectory,
-            drift_pattern, dc_resolution_status, next_dose_day
+            drift_pattern, dc_resolution_status, next_dose_day,
+            coalesce(modality, 'glp1') as modality,
+            quest_xp, quest_level, quest_streak,
+            quest_monthly_xp, quest_reward_category,
+            quest_handle, quest_intensity
      from patients where id = $1 and clinic_id = $2`,
     [params.id, user.clinicId]
   );
@@ -147,16 +174,38 @@ export default async function PatientPage({ params }: { params: { id: string } }
       [patient.id]
     );
   } catch {
-    // Migration not yet applied  -  degrade gracefully
+    // Migration not yet applied - degrade gracefully
   }
 
-  const failedCount  = messages.filter(m => m.status === 'failed').length;
-  const phase        = findPhase(patient.current_phase);
-  const isFlagged    = patient.status === 'flagged';
-  const isLastPhase  = patient.current_phase >= 5;
-  const trajectory   = patient.engagement_trajectory ?? 'responsive';
-  const hasDcEvents  = dcEvents.length > 0;
-  const openDcEvent  = dcEvents.find(e => e.resolution_status === 'monitoring' || e.resolution_status === 'escalated');
+  // Quest: boss challenge history
+  let bossHistory: Array<{
+    id: string;
+    week_start: string;
+    challenge_text: string;
+    target_checkins: number;
+    xp_stake: number;
+    status: string;
+  }> = [];
+  if (patient.modality === 'quest') {
+    try {
+      bossHistory = await query(
+        `select id, week_start::text, challenge_text, target_checkins, xp_stake, status
+         from quest_boss_challenges
+         where patient_id = $1
+         order by week_start desc
+         limit 8`,
+        [patient.id]
+      );
+    } catch { /* migration not yet applied */ }
+  }
+
+  const failedCount = messages.filter(m => m.status === 'failed').length;
+  const phase       = findPhase(patient.current_phase);
+  const isFlagged   = patient.status === 'flagged';
+  const isLastPhase = patient.current_phase >= 5;
+  const trajectory  = patient.engagement_trajectory ?? 'responsive';
+  const hasDcEvents = dcEvents.length > 0;
+  const openDcEvent = dcEvents.find(e => e.resolution_status === 'monitoring' || e.resolution_status === 'escalated');
 
   return (
     <div className="shell">
@@ -226,14 +275,10 @@ export default async function PatientPage({ params }: { params: { id: string } }
                   defaultValue={patient.next_dose_day ?? ''}
                   style={{ fontSize: 12, padding: '3px 6px', height: 'auto', minWidth: 120 }}
                 >
-                  <option value=""> -  not set  - </option>
+                  <option value=""> - not set - </option>
                   {DAYS.map(d => <option key={d} value={d}>{d}</option>)}
                 </select>
-                <button
-                  type="submit"
-                  className="btn ghost"
-                  style={{ fontSize: 11, padding: '3px 8px' }}
-                >
+                <button type="submit" className="btn ghost" style={{ fontSize: 11, padding: '3px 8px' }}>
                   Save
                 </button>
               </form>
@@ -265,7 +310,7 @@ export default async function PatientPage({ params }: { params: { id: string } }
             <div className="failure-banner failure-banner--soft" style={{ marginBottom: 12 }}>
               <span className="failure-banner__icon">●</span>
               <span>
-                <strong>No response  -  call this patient today.</strong>
+                <strong>No response - call this patient today.</strong>
                 {' '}Did not respond to the {PATTERN_LABELS[openDcEvent.drift_pattern] ?? openDcEvent.drift_pattern} check-in.
               </span>
             </div>
@@ -314,6 +359,104 @@ export default async function PatientPage({ params }: { params: { id: string } }
         </div>
       )}
 
+      {/* Quest gamification section */}
+      {patient.modality === 'quest' && (
+        <div className="section">
+          <div className="section-head">
+            <h2>Quest</h2>
+            <span className="small faint">
+              {patient.quest_handle ?? 'handle not set'}
+              {patient.quest_intensity ? ` · ${patient.quest_intensity} mode` : ''}
+            </span>
+          </div>
+
+          {/* XP stats */}
+          <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', marginBottom: 20 }}>
+            <div style={{ flex: '1 1 110px', padding: '14px 18px', background: 'var(--bg-card)', border: '1px solid var(--line)', borderRadius: 8 }}>
+              <div className="label" style={{ marginBottom: 6 }}>Total XP</div>
+              <div style={{ fontSize: 24, fontWeight: 700, fontFamily: 'var(--mono)' }}>{patient.quest_xp ?? 0}</div>
+              <div className="small faint" style={{ marginTop: 4 }}>Level {patient.quest_level ?? 1}</div>
+            </div>
+            <div style={{ flex: '1 1 110px', padding: '14px 18px', background: 'var(--bg-card)', border: '1px solid var(--line)', borderRadius: 8 }}>
+              <div className="label" style={{ marginBottom: 6 }}>Streak</div>
+              <div style={{ fontSize: 24, fontWeight: 700, fontFamily: 'var(--mono)' }}>{patient.quest_streak ?? 0}d</div>
+              <div className="small faint" style={{ marginTop: 4 }}>consecutive</div>
+            </div>
+            <div style={{ flex: '1 1 110px', padding: '14px 18px', background: 'var(--bg-card)', border: '1px solid var(--line)', borderRadius: 8 }}>
+              <div className="label" style={{ marginBottom: 6 }}>Monthly XP</div>
+              <div style={{ fontSize: 24, fontWeight: 700, fontFamily: 'var(--mono)' }}>{patient.quest_monthly_xp ?? 0}</div>
+              <div className="small faint" style={{ marginTop: 4 }}>toward reward</div>
+            </div>
+            <div style={{ flex: '2 1 200px', padding: '14px 18px', background: 'var(--bg-card)', border: '1px solid var(--line)', borderRadius: 8 }}>
+              <div className="label" style={{ marginBottom: 6 }}>Reward progress</div>
+              <div className="small" style={{ marginBottom: 8 }}>
+                {patient.quest_reward_category === 'wellness' ? 'Smoothie King'
+                 : patient.quest_reward_category === 'reader' ? 'Barnes & Noble'
+                 : 'Gamer (Roblox / Fortnite / PSN / Xbox)'}
+              </div>
+              {(() => {
+                const mxp = patient.quest_monthly_xp ?? 0;
+                const earned = REWARD_TIER_LABEL(mxp);
+                const next   = NEXT_TIER(mxp);
+                if (earned && !next) {
+                  return <div style={{ color: 'var(--good)', fontWeight: 600, fontSize: 13 }}>$25 gift card earned</div>;
+                }
+                if (earned) {
+                  return <div style={{ color: 'var(--good)', fontWeight: 600, fontSize: 13 }}>{earned.label} - pending fulfillment</div>;
+                }
+                if (next) {
+                  const pct = Math.min(100, Math.round((mxp / next.xp) * 100));
+                  return (
+                    <>
+                      <div style={{ height: 6, background: 'var(--line)', borderRadius: 3, marginBottom: 6, overflow: 'hidden' }}>
+                        <div style={{ height: '100%', width: `${pct}%`, background: 'var(--accent)', borderRadius: 3 }} />
+                      </div>
+                      <div className="small faint">{mxp} / {next.xp} XP toward {next.label} card</div>
+                    </>
+                  );
+                }
+                return <div className="small faint">No XP yet this month</div>;
+              })()}
+            </div>
+          </div>
+
+          {/* Boss challenge history */}
+          {bossHistory.length > 0 && (
+            <>
+              <div className="label" style={{ marginBottom: 10 }}>Boss challenges</div>
+              <div style={{ border: '1px solid var(--line)', borderRadius: 6, overflow: 'hidden' }}>
+                {bossHistory.map((b, i) => {
+                  const statusColor =
+                    b.status === 'completed' ? 'var(--green)' :
+                    b.status === 'failed'    ? 'var(--amber)' :
+                    b.status === 'accepted'  ? 'var(--accent)' : 'var(--fg-muted)';
+                  return (
+                    <div key={b.id} style={{
+                      padding: '12px 16px',
+                      borderBottom: i < bossHistory.length - 1 ? '1px solid var(--line)' : undefined,
+                      display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12,
+                    }}>
+                      <div style={{ flex: 1 }}>
+                        <div className="small muted" style={{ marginBottom: 3 }}>Week of {b.week_start}</div>
+                        <div style={{ fontSize: 13, fontStyle: 'italic', color: 'var(--fg-muted)' }}>
+                          &ldquo;{b.challenge_text}&rdquo;
+                        </div>
+                      </div>
+                      <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                        <span style={{ fontWeight: 600, fontSize: 12, color: statusColor, textTransform: 'capitalize' }}>
+                          {b.status.replace('_', ' ')}
+                        </span>
+                        <div className="small faint" style={{ marginTop: 2 }}>{b.xp_stake} XP stake</div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </>
+          )}
+        </div>
+      )}
+
       {/* Message timeline */}
       <div className="section">
         <div className="section-head">
@@ -326,7 +469,7 @@ export default async function PatientPage({ params }: { params: { id: string } }
             <span className="failure-banner__icon">●</span>
             <span>
               <strong>{failedCount} message{failedCount > 1 ? 's' : ''} pending carrier retry.</strong>
-              {' '}We'll retry automatically. If the issue persists, verify the patient's number.
+              {' '}We will retry automatically. If the issue persists, verify the patient number.
             </span>
           </div>
         )}
@@ -336,12 +479,12 @@ export default async function PatientPage({ params }: { params: { id: string } }
         ) : (
           <div className="timeline">
             {messages.map((m) => {
-              const isFailed = m.status === 'failed';
+              const isFailed    = m.status === 'failed';
               const statusLabel = isFailed ? 'Retry pending' : m.status;
               return (
                 <div key={m.id} className={`timeline-item ${m.direction}${isFailed ? ' failed' : ''}`}>
                   <div className="ts">
-                    {m.direction === 'outbound' ? '→' : '←'}{' '}
+                    {m.direction === 'outbound' ? '->' : '<-'}{' '}
                     {fmtTime(m.sent_at || m.scheduled_for || m.created_at)}
                   </div>
                   <div className="body">{m.body}</div>
@@ -349,18 +492,13 @@ export default async function PatientPage({ params }: { params: { id: string } }
                     {templateLabel(m.template_key) ? `${templateLabel(m.template_key)} · ` : ''}{statusLabel}
                     {m.ai_personalized && (
                       <span style={{
-                        marginLeft: 6,
-                        fontSize: 10,
-                        fontWeight: 600,
-                        color: 'var(--green)',
-                        border: '1px solid var(--green)',
-                        borderRadius: 3,
-                        padding: '1px 5px',
-                        letterSpacing: '0.04em',
+                        marginLeft: 6, fontSize: 10, fontWeight: 600, color: 'var(--green)',
+                        border: '1px solid var(--green)', borderRadius: 3,
+                        padding: '1px 5px', letterSpacing: '0.04em',
                       }}>AI</span>
                     )}
                     {isFailed && m.error && (
-                      <span className="error-detail">  -  carrier held</span>
+                      <span className="error-detail"> - carrier held</span>
                     )}
                   </div>
                 </div>
