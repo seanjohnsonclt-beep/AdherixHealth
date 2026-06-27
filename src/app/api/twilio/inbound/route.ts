@@ -17,6 +17,7 @@ import { query, queryOne } from '@/lib/db';
 import { handleReplyGate } from '@/engine/replyGate';
 import { scanInbound, isEscalationKeyword } from '@/engine/keyword-scanner';
 import { parseWeightReply, hasPendingGaugeCheckin, handleWeightReply } from '@/engine/gauge';
+import { parseYesNo, parseQuestIntensity } from '@/engine/response-parser';
 
 function twiml(body = '') {
   return new NextResponse(`<Response>${body}</Response>`, {
@@ -30,13 +31,7 @@ function twiml(body = '') {
 const STOP_WORDS = new Set(['STOP', 'STOPALL', 'UNSUBSCRIBE', 'CANCEL', 'END', 'QUIT', 'HELP']);
 
 function classifyReply(raw: string): 'yes' | 'no' | 'other' {
-  const first = raw.trim().split(/\s+/)[0]?.toUpperCase() ?? '';
-  if (!first || STOP_WORDS.has(first)) return 'other';
-
-  if (/^(YES|YEP|YUP|YA|YEAH|DONE|CONFIRMED|TOOK|DID|INJECTED|Y)$/.test(first)) return 'yes';
-  if (/^(NO|NOPE|MISSED|SKIP|SKIPPED|DIDNT|DIDN|N)$/.test(first)) return 'no';
-
-  return 'other';
+  return parseYesNo(raw);
 }
 
 // --- Injection confirmation handler ---------------------------------------
@@ -185,14 +180,46 @@ export async function POST(req: NextRequest) {
     status:     string;
     clinic_id:  string;
     medication: string | null;
+    modality:   string | null;
   }>(
-    `select id, status, clinic_id, medication
+    `select id, status, clinic_id, medication, modality
      from patients where phone = $1 limit 1`,
     [from]
   );
 
+  // --- Guardian inbound (Quest) --------------------------------------------
+  // If no patient matched on phone, check if this is a guardian replying.
   if (!patient) {
-    console.warn(`[inbound] unknown sender: ...${from.slice(-4)}`);
+    const guardianPatient = await queryOne<{
+      id:           string;
+      first_name:   string | null;
+      guardian_name: string | null;
+      clinic_id:    string;
+    }>(
+      `select id, first_name, guardian_name, clinic_id
+       from patients
+       where guardian_phone = $1 and modality = 'quest'
+       limit 1`,
+      [from]
+    );
+
+    if (guardianPatient) {
+      // Log the guardian reply - template_key 'guardian.inbound' distinguishes it in /replies
+      await query(
+        `insert into messages (patient_id, direction, template_key, body, twilio_sid, status)
+         values ($1, 'inbound', 'guardian.inbound', $2, $3, 'received')`,
+        [guardianPatient.id, body, sid]
+      );
+      await query(
+        `insert into events (patient_id, kind, payload)
+         values ($1, 'guardian_reply_received', $2)`,
+        [guardianPatient.id, JSON.stringify({ length: body.length })]
+      );
+      console.log(`[inbound] guardian reply for patient ${guardianPatient.id}: "${body.slice(0, 40)}"`);
+    } else {
+      console.warn(`[inbound] unknown sender: ...${from.slice(-4)}`);
+    }
+
     return twiml();
   }
 
@@ -239,9 +266,29 @@ export async function POST(req: NextRequest) {
     }
   }
 
+  // Quest: intensity selection (CHILL/STANDARD/BEAST or 1/2/3)
+  // Only runs for Quest patients during onboarding phase (phase 1).
+  if (patient.modality === 'quest') {
+    const intensity = parseQuestIntensity(body);
+    if (intensity) {
+      try {
+        await query(
+          `update patients set quest_intensity = $1 where id = $2`,
+          [intensity, patient.id]
+         );
+        await query(
+          `insert into events (patient_id, kind, payload)
+           values ($1, 'quest_intensity_set', $2)`,
+          [patient.id, JSON.stringify({ intensity })]
+        );
+        console.log(`[inbound] Quest intensity set to ${intensity} for patient ${patient.id}`);
+      } catch (err) {
+        console.warn('[inbound] Quest intensity update failed:', err);
+      }
+    }
+  }
+
   // Drift Correction: keyword scan
-  // Sets side_effect_flag / dose_missed_flag on patient row for next tick.
-  // Wrapped in try/catch -- 0006 migration may not be applied yet.
   try {
     await scanInbound(patient.id, patient.clinic_id, body);
   } catch (err) {
@@ -249,8 +296,6 @@ export async function POST(req: NextRequest) {
   }
 
   // Drift Correction: immediate CALL/HELP escalation
-  // If patient replies CALL or HELP, escalate the open DC event now rather
-  // than waiting for the time-based resolution tracker.
   if (isEscalationKeyword(body)) {
     try {
       await handleDcEscalation(patient.id);
@@ -259,12 +304,25 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  // Adherix Gauge: detect weight reply and log it
-  // Only fires if there's a pending gauge check-in from the last 48h.
+  // Adherix Gauge: detect weight reply
   const weightLbs = parseWeightReply(body);
   if (weightLbs !== null) {
     try {
       const pending = await hasPendingGaugeCheckin(patient.id);
+      if (pending) {
+        await handleWeightReply(patient.id, weightLbs);
+      }
+    } catch (err) {
+      console.warn('[inbound] gauge weight handler failed (migration pending?):', err);
+    }
+  }
+
+  // Reply gate: queue any templates waiting on this reply
+  await handleReplyGate(patient.id, body);
+
+  return twiml();
+}
+ndingGaugeCheckin(patient.id);
       if (pending) {
         await handleWeightReply(patient.id, weightLbs);
       }
