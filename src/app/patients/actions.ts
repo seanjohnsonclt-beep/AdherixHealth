@@ -31,6 +31,14 @@ export async function enrollPatientAction(formData: FormData) {
   const nextDoseDay    = String(formData.get('next_dose_day') || '').trim() || undefined;
   const modality       = String(formData.get('modality') || '').trim() || undefined;
 
+  // Quest fields
+  const dateOfBirth  = String(formData.get('date_of_birth') || '').trim() || undefined;
+  const state        = String(formData.get('state') || '').trim() || undefined;
+  const guardianName = String(formData.get('guardian_name') || '').trim() || undefined;
+  const guardianPhone = formData.get('guardian_phone')
+    ? normalizePhone(String(formData.get('guardian_phone') || ''))
+    : undefined;
+
   const id = await enrollPatient({
     clinicId: user.clinicId,
     phone,
@@ -39,6 +47,10 @@ export async function enrollPatientAction(formData: FormData) {
     startingDose,
     supplyQuantity,
     modality,
+    dateOfBirth,
+    state,
+    guardianName,
+    guardianPhone,
   });
 
   // Set next_dose_day if provided (column added in 0006 migration)
@@ -194,6 +206,11 @@ export type ImportRow = {
   medication?: string;
   starting_dose?: string;
   supply_quantity?: number;
+  // Quest fields
+  date_of_birth?: string;
+  state?: string;
+  guardian_name?: string;
+  guardian_phone?: string;
 };
 
 export type ImportResult = {
@@ -203,7 +220,7 @@ export type ImportResult = {
   patientId?: string;
 };
 
-export async function importPatientsAction(rows: ImportRow[]): Promise<ImportResult[]> {
+export async function importPatientsAction(rows: ImportRow[], modality = 'glp1'): Promise<ImportResult[]> {
   const user = await requireUser();
   const results: ImportResult[] = [];
 
@@ -229,9 +246,14 @@ export async function importPatientsAction(rows: ImportRow[]): Promise<ImportRes
         clinicId: user.clinicId,
         phone,
         firstName: row.first_name || undefined,
+        modality,
         medication: row.medication || undefined,
         startingDose: row.starting_dose || undefined,
         supplyQuantity: row.supply_quantity || undefined,
+        dateOfBirth: row.date_of_birth || undefined,
+        state: row.state || undefined,
+        guardianName: row.guardian_name || undefined,
+        guardianPhone: row.guardian_phone || undefined,
       });
       results.push({ row, status: 'enrolled', patientId: id });
     } catch (err: unknown) {

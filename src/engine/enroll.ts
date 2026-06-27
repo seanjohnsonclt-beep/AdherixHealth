@@ -10,11 +10,16 @@ export type EnrollArgs = {
   clinicId: string;
   phone: string;          // E.164
   firstName?: string;
-  modality?: string;      // 'glp1' | 'bariatric' - defaults to clinic modality
+  modality?: string;      // 'glp1' | 'bariatric' | 'quest' etc - defaults to clinic modality
   // Adherence fields (optional  -  legacy enrollment without medication is still valid)
   medication?: string;    // MEDICATION_PROTOCOLS key
   startingDose?: string;  // override first titration step dose (rare)
   supplyQuantity?: number; // number of doses in current pen/pack
+  // Quest (pediatric) fields
+  dateOfBirth?: string;   // YYYY-MM-DD
+  state?: string;         // 2-letter state code for minor consent routing
+  guardianName?: string;
+  guardianPhone?: string; // E.164 - receives separate guardian message track
 };
 
 export async function enrollPatient({
@@ -25,6 +30,10 @@ export async function enrollPatient({
   medication,
   startingDose,
   supplyQuantity,
+  dateOfBirth,
+  state,
+  guardianName,
+  guardianPhone,
 }: EnrollArgs): Promise<string> {
   // Idempotent on (clinic_id, phone)
   const existing = await queryOne<{ id: string }>(
@@ -59,13 +68,22 @@ export async function enrollPatient({
     nextTitrationDate = nextStep?.date ?? null;
   }
 
-  const row = await queryOne<{ id: string }>(
+  // Quest: compute consent_type from age + state
+  let consentType: string | null = null;
+  if (modality === 'quest' && dateOfBirth && state) {
+    const { getConsentType, getPatientAge } = await import('./quest-consent');
+    const age = getPatientAge(dateOfBirth);
+    consentType = getConsentType(age, state);
+  }
+
+    const row = await queryOne<{ id: string }>(
     `insert into patients (
        clinic_id, phone, first_name, current_phase, phase_started_at,
        medication, starting_dose, current_dose, injection_frequency,
-       titration_schedule, next_titration_date, supply_quantity, modality
+       titration_schedule, next_titration_date, supply_quantity, modality,
+       date_of_birth, state, guardian_name, guardian_phone, consent_type, consent_status
      )
-     values ($1, $2, $3, 0, now(), $4, $5, $6, $7, $8, $9, $10, $11)
+     values ($1, $2, $3, 0, now(), $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
      returning id`,
     [
       clinicId,
@@ -79,6 +97,12 @@ export async function enrollPatient({
       nextTitrationDate,
       supplyQuantity ?? null,
       modality,
+      dateOfBirth ?? null,
+      state ?? null,
+      guardianName ?? null,
+      guardianPhone ?? null,
+      consentType,
+      consentType ? 'obtained' : null,
     ]
   );
   if (!row) throw new Error('Failed to insert patient');

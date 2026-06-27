@@ -46,6 +46,10 @@ function parseCSV(text: string): ParsedRow[] {
       medication: col(cells, 'medication') || undefined,
       starting_dose: col(cells, 'starting_dose') || col(cells, 'dose') || undefined,
       supply_quantity: supplyRaw ? parseInt(supplyRaw, 10) || undefined : undefined,
+      date_of_birth: col(cells, 'date_of_birth') || col(cells, 'dob') || undefined,
+      state: col(cells, 'state') || undefined,
+      guardian_name: col(cells, 'guardian_name') || col(cells, 'parent_name') || undefined,
+      guardian_phone: col(cells, 'guardian_phone') || col(cells, 'parent_phone') || undefined,
     };
   }).filter(r => r.phone);
 }
@@ -54,6 +58,7 @@ function parseCSV(text: string): ParsedRow[] {
 
 export function ImportForm() {
   const [step, setStep] = useState<Step>('upload');
+  const [modality, setModality] = useState('glp1');
   const [rows, setRows] = useState<ParsedRow[]>([]);
   const [results, setResults] = useState<ImportResult[]>([]);
   const [loading, setLoading] = useState(false);
@@ -130,7 +135,7 @@ export function ImportForm() {
         starting_dose: r.starting_dose || undefined,
         supply_quantity: r.supply_quantity || undefined,
       }));
-      const res = await importPatientsAction(clean);
+      const res = await importPatientsAction(clean, modality);
       setResults(res);
       setStep('results');
     } catch {
@@ -143,18 +148,63 @@ export function ImportForm() {
   // -- Download template ------------------------------------------------------
 
   function downloadTemplate() {
-    const csv = 'first_name,phone,medication,starting_dose,supply_quantity\nJane Smith,5551234567,semaglutide,0.25mg,4\nJohn Doe,5559876543,,,\n';
+    const isQuest = modality === 'quest';
+    const csv = isQuest
+      ? 'first_name,phone,date_of_birth,state,guardian_name,guardian_phone\nJane Smith,5551234567,2012-03-15,WA,Mary Smith,5557654321\n'
+      : 'first_name,phone,medication,starting_dose,supply_quantity\nJane Smith,5551234567,semaglutide,0.25mg,4\nJohn Doe,5559876543,,,\n';
     const a = document.createElement('a');
     a.href = `data:text/csv;charset=utf-8,${encodeURIComponent(csv)}`;
-    a.download = 'adherix-import-template.csv';
+    a.download = `adherix-${modality}-import-template.csv`;
     a.click();
   }
 
   // --- Render ---------------------------------------------------------------
 
   if (step === 'upload') {
+    const isQuest = modality === 'quest';
     return (
       <div className="import-wrap">
+
+        {/* -- Product selector ------------------------------------------- */}
+        <div className="import-product-select">
+          <label className="label" style={{ marginBottom: 10, display: 'block' }}>Product</label>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+            {[
+              { value: 'glp1',               label: 'Adherix Keep',     sub: 'GLP-1' },
+              { value: 'bariatric',           label: 'Adherix Bridge',   sub: 'Bariatric' },
+              { value: 'pharmacotherapy',     label: 'Adherix Rx',       sub: 'Pharmacotherapy' },
+              { value: 'behavioral_therapy',  label: 'Adherix IBT',      sub: 'Behavioral' },
+              { value: 'metabolic_health',    label: 'Adherix Metabolic',sub: 'Metabolic' },
+              { value: 'quest',              label: 'Adherix Quest',    sub: 'Pediatric' },
+            ].map(opt => (
+              <button
+                key={opt.value}
+                type="button"
+                onClick={() => setModality(opt.value)}
+                style={{
+                  padding: '8px 16px',
+                  borderRadius: 6,
+                  border: modality === opt.value ? '2px solid #5B9B94' : '2px solid rgba(91,155,148,0.25)',
+                  background: modality === opt.value ? 'rgba(91,155,148,0.12)' : 'transparent',
+                  color: modality === opt.value ? '#5B9B94' : 'rgba(244,239,230,0.55)',
+                  cursor: 'pointer',
+                  fontSize: 13,
+                  fontWeight: modality === opt.value ? 600 : 400,
+                  textAlign: 'left' as const,
+                }}
+              >
+                <div>{opt.label}</div>
+                <div style={{ fontSize: 11, opacity: 0.7, marginTop: 1 }}>{opt.sub}</div>
+              </button>
+            ))}
+          </div>
+          {isQuest && (
+            <p style={{ fontSize: 12, color: 'rgba(244,239,230,0.45)', marginTop: 10 }}>
+              Quest CSV must include: <code>first_name</code>, <code>phone</code>, <code>date_of_birth</code>, <code>state</code>, <code>guardian_name</code>, <code>guardian_phone</code>
+            </p>
+          )}
+        </div>
+
         <div
           className={`import-drop${loading ? ' import-drop--loading' : ''}`}
           onDrop={onDrop}
@@ -217,8 +267,8 @@ export function ImportForm() {
               <tr>
                 <th>First name</th>
                 <th>Phone</th>
-                <th>Medication</th>
-                <th>Starting dose</th>
+                {modality !== 'quest' && <><th>Medication</th><th>Starting dose</th></>}
+                {modality === 'quest' && <><th>DOB</th><th>State</th><th>Guardian name</th><th>Guardian phone</th></>}
                 <th></th>
               </tr>
             </thead>
@@ -241,22 +291,38 @@ export function ImportForm() {
                       onChange={e => updateRow(r._id, 'phone', e.target.value)}
                     />
                   </td>
-                  <td>
-                    <input
-                      className="import-cell-input"
-                      value={r.medication || ''}
-                      placeholder="e.g. semaglutide"
-                      onChange={e => updateRow(r._id, 'medication', e.target.value)}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      className="import-cell-input"
-                      value={r.starting_dose || ''}
-                      placeholder="e.g. 0.25mg"
-                      onChange={e => updateRow(r._id, 'starting_dose', e.target.value)}
-                    />
-                  </td>
+                  {modality !== 'quest' && (
+                    <>
+                      <td>
+                        <input className="import-cell-input" value={r.medication || ''} placeholder="e.g. semaglutide"
+                          onChange={e => updateRow(r._id, 'medication', e.target.value)} />
+                      </td>
+                      <td>
+                        <input className="import-cell-input" value={r.starting_dose || ''} placeholder="e.g. 0.25mg"
+                          onChange={e => updateRow(r._id, 'starting_dose', e.target.value)} />
+                      </td>
+                    </>
+                  )}
+                  {modality === 'quest' && (
+                    <>
+                      <td>
+                        <input className="import-cell-input" value={(r as any).date_of_birth || ''} placeholder="YYYY-MM-DD"
+                          onChange={e => updateRow(r._id, 'date_of_birth' as any, e.target.value)} />
+                      </td>
+                      <td>
+                        <input className="import-cell-input" value={(r as any).state || ''} placeholder="WA" maxLength={2}
+                          onChange={e => updateRow(r._id, 'state' as any, e.target.value)} />
+                      </td>
+                      <td>
+                        <input className="import-cell-input" value={(r as any).guardian_name || ''} placeholder="Guardian name"
+                          onChange={e => updateRow(r._id, 'guardian_name' as any, e.target.value)} />
+                      </td>
+                      <td>
+                        <input className="import-cell-input" value={(r as any).guardian_phone || ''} placeholder="(555) 123-4567"
+                          onChange={e => updateRow(r._id, 'guardian_phone' as any, e.target.value)} />
+                      </td>
+                    </>
+                  )}
                   <td>
                     <button className="import-remove-btn" onClick={() => removeRow(r._id)} title="Remove row">✕</button>
                   </td>
