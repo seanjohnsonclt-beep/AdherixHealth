@@ -8204,72 +8204,36 @@ a.mkt-btn--primary:hover,
   .gauge-clinic-grid { grid-template-columns: 1fr; }
 }
 
-/* =========================================================================
-   Quest Theme - /quest marketing page
-   Dark editorial variant of the Adherix brand.
-   All classes prefixed mkt-q- to avoid collision with existing mkt- classes.
-   ========================================================================= */
 
-:root {
-  --quest-bg:       #0D1A1A;
-  --quest-bg-card:  #121F1F;
-  --quest-bg-card2: #162424;
-  --quest-electric: #5CFFC8;
-  --quest-violet:   #A78BFA;
-  --quest-fg:       #F0FFF9;
-  --quest-fg-muted: #7BA89A;
-  --quest-line:     rgba(92, 255, 200, 0.12);
+/* ── Quest page: dark theme scoped to .mkt-q-page ───────────────────────── */
+.mkt-q-page .mkt-v2-section          { background: #0D1A1A; }
+.mkt-q-page .mkt-v2-section--alt     { background: #0a1515; }
+.mkt-q-page .mkt-v2-section--ink     { background: #060f0f; }
+.mkt-q-page .mkt-eyebrow             { color: #5CFFC8; }
+.mkt-q-page .mkt-h2                  { color: var(--mkt-paper); }
+.mkt-q-page .mkt-subhead             { color: rgba(244,239,230,0.75); }
+.mkt-q-page .mkt-v2-section__head    { text-align: center; margin-bottom: 48px; }
+.mkt-q-page .mkt-v2-problem__body p  { color: rgba(244,239,230,0.75); }
+.mkt-q-page .mkt-v2-problem__pull    {
+  background: rgba(92,255,200,0.07);
+  border: 1px solid rgba(92,255,200,0.2);
 }
-
-.mkt-q-hero {
-  position: relative;
-  padding: 100px 0 96px;
-  background: var(--quest-bg);
-  overflow: hidden;
+.mkt-q-page .mkt-v2-problem__pull-num  { color: #5CFFC8; }
+.mkt-q-page .mkt-v2-problem__pull-text { color: rgba(244,239,230,0.78); }
+.mkt-q-page .prod-step-card {
+  background: rgba(255,255,255,0.03);
+  border-color: rgba(92,255,200,0.15);
 }
-
-.mkt-q-hero__inner {
-  position: relative;
-  z-index: 1;
-  max-width: 1120px;
-  margin: 0 auto;
-  padding: 0 32px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 72px;
-  align-items: center;
+.mkt-q-page .prod-step-card:hover {
+  background: rgba(92,255,200,0.06);
+  border-color: rgba(92,255,200,0.35);
 }
-
-.mkt-q-hero__copy { text-align: left; }
-
-.mkt-q-eyebrow {
-  display: inline-block;
-  font-family: 'Geist', system-ui, sans-serif;
-  font-size: 12px;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--quest-electric);
-  margin-bottom: 22px;
-}
-
-.mkt-q-title {
-  font-family: 'Fraunces', Georgia, serif;
-  font-size: 52px;
-  font-weight: 500;
-  line-height: 1.02;
-  letter-spacing: -0.02em;
-  color: var(--quest-fg);
-  margin-bottom: 28px;
-}
-
-.mkt-q-title em {
-  font-style: normal;
-  color: var(--quest-electric);
-}
-
-.mkt-q-sub {
-  font-family: 'Geist', system-ui, sans-serif;
+.mkt-q-page .prod-step-card__n     { color: #5CFFC8; }
+.mkt-q-page .prod-step-card__title { color: var(--mkt-paper); }
+.mkt-q-page .prod-step-card__body  { color: rgba(244,239,230,0.7); }
+.mkt-q-page .mkt-v2-trust__title   { color: var(--mkt-paper) !important; }
+.mkt-q-page .mkt-v2-trust__sub     { color: rgba(244,239,230,0.75) !important; }
+', system-ui, sans-serif;
   font-size: 18px;
   line-height: 1.6;
   color: var(--quest-fg-muted);

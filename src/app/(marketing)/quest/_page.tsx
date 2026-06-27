@@ -22,9 +22,27 @@ const steps = [
   },
 ];
 
+const audience = [
+  {
+    n: 'Pediatric practices',
+    title: 'Weight management programs for teens 13-18',
+    body: 'Clinics running structured pediatric obesity programs that need behavioral support between visits. Quest wraps around your existing clinical protocol without replacing it.',
+  },
+  {
+    n: "Children's hospitals",
+    title: 'Multi-disciplinary obesity medicine departments',
+    body: 'Large programs with dedicated dietitians, psychologists, and care coordinators. Quest handles the between-visit behavioral engagement layer so your clinical team can focus on high-complexity cases.',
+  },
+  {
+    n: 'Health systems',
+    title: 'Adolescent medicine and endocrinology programs',
+    body: 'Systems running GLP-1 programs for adolescents alongside adult cohorts. Quest is a modality within the Adherix engine - the same infrastructure, a completely different patient experience.',
+  },
+];
+
 export function QuestPage() {
   return (
-    <>
+    <div className="mkt-q-page">
       <QuestHero />
 
       <section className="mkt-v2-section mkt-v2-section--alt" id="quest-problem">
@@ -93,23 +111,7 @@ export function QuestPage() {
             </FadeRise>
           </div>
           <StaggerGroup className="prod-step-grid" stagger={0.07} amount={0.2}>
-            {[
-              {
-                n: 'Pediatric practices',
-                title: 'Weight management programs for teens 13-18',
-                body: 'Clinics running structured pediatric obesity programs that need behavioral support between visits. Quest wraps around your existing clinical protocol without replacing it.',
-              },
-              {
-                n: "Children's hospitals",
-                title: 'Multi-disciplinary obesity medicine departments',
-                body: 'Large programs with dedicated dietitians, psychologists, and care coordinators. Quest handles the between-visit behavioral engagement layer so your clinical team can focus on high-complexity cases.',
-              },
-              {
-                n: 'Health systems',
-                title: 'Adolescent medicine and endocrinology programs',
-                body: 'Systems running GLP-1 programs for adolescents alongside adult cohorts. Quest is a modality within the Adherix engine - the same infrastructure, a completely different patient experience.',
-              },
-            ].map(s => (
+            {audience.map(s => (
               <div key={s.n} className="prod-step-card">
                 <span className="prod-step-card__n">{s.n}</span>
                 <h3 className="prod-step-card__title">{s.title}</h3>
@@ -154,6 +156,6 @@ export function QuestPage() {
           </FadeRise>
         </div>
       </section>
-    </>
+    </div>
   );
 }
