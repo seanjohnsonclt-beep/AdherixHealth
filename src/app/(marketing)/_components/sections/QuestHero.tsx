@@ -68,11 +68,9 @@ export function QuestHero() {
           </motion.span>
 
           <motion.h1 className="mkt-q-title" {...seq(0.08)}>
-            Your patients&rsquo; kids are losing
+            Teen patients don&rsquo;t fail treatment.
             <br />
-            a fight they didn&rsquo;t choose.
-            <br />
-            <em>Give them a reason to stay.</em>
+            <em>Treatment fails to keep them.</em>
           </motion.h1>
 
           <motion.p className="mkt-q-sub" {...seq(0.18)}>
@@ -88,7 +86,7 @@ export function QuestHero() {
               </Link>
             </TapButton>
             <TapButton>
-              <Link href="#quest-how" className="mkt-q-btn--ghost">
+              <Link href="#quest-experience" className="mkt-q-btn--ghost">
                 See how it works
               </Link>
             </TapButton>

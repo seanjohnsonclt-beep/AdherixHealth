@@ -373,7 +373,7 @@ export function QuestPage() {
           </FadeRise>
           <FadeRise className="mkt-v2-trust__cta" delay={0.15}>
             <Link href="/pilot" className="mkt-btn mkt-btn--primary mkt-btn--lg">Book a demo</Link>
-            <Link href="/platform" className="mkt-btn mkt-btn--ghost mkt-btn--ghost-on-dark mkt-btn--lg">See the platform</Link>
+            <Link href="/pilot" className="mkt-btn mkt-btn--ghost mkt-btn--ghost-on-dark mkt-btn--lg">Request pricing</Link>
           </FadeRise>
         </div>
       </section>
