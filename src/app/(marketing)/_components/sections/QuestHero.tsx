@@ -72,13 +72,13 @@ export function QuestHero() {
             <br />
             a fight they didn&rsquo;t choose.
             <br />
-            <em>Give them a squad.</em>
+            <em>Give them a reason to stay.</em>
           </motion.h1>
 
           <motion.p className="mkt-q-sub" {...seq(0.18)}>
-            Quest turns clinical behavioral protocols into a game world teens
-            actually inhabit. XP, squads, boss challenges, weekly missions.
-            Same clinical rigor. A completely different experience.
+            Quest keeps adolescent patients in treatment longer - by turning
+            behavioral check-ins into something they actually respond to.
+            Same clinical protocol. Completely different retention.
           </motion.p>
 
           <motion.div className="mkt-q-ctas" {...seq(0.28)}>
