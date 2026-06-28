@@ -440,9 +440,43 @@ export function getRewardTier(monthlyXp: number) {
 }
 
 export const REWARD_CATEGORY_LABELS: Record<string, string> = {
-  gamer:    'Gamer (Roblox / Fortnite / PSN / Xbox / 2K)',
-  wellness: 'Wellness (Smoothie King)',
-  reader:   'Reader (Barnes & Noble)',
+  gaming:    'Gaming',
+  food_drink: 'Food & Drink',
+  music:     'Music & Streaming',
+  fashion:   'Fashion & Kicks',
+  beauty:    'Beauty & Self-Care',
+  experience: 'Experience',
+};
+
+// Specific brands inside each category - used for admin fulfillment display
+// and for the redemption-time brand pick SMS
+export const REWARD_CATEGORY_OPTIONS: Record<string, string[]> = {
+  gaming:    ['Roblox', 'Steam', 'PSN', 'Xbox', 'Nintendo eShop'],
+  food_drink: ['Chick-fil-A', 'Chipotle', 'Starbucks', 'Dutch Bros'],
+  music:     ['Spotify', 'Apple Music', 'YouTube Premium'],
+  fashion:   ['Nike', 'Foot Locker', 'Amazon'],
+  beauty:    ['Sephora', 'Ulta', 'Target'],
+  experience: ['AMC/Fandango', "Dave & Buster's", 'Top Golf'],
+};
+
+// SMS-safe short labels for the onboarding category pick message
+export const REWARD_CATEGORY_SMS: Record<string, string> = {
+  gaming:     'Gaming (Roblox, Xbox, Nintendo)',
+  food_drink: 'Food & Drink (Chick-fil-A, Starbucks, Chipotle)',
+  music:      'Music (Spotify, Apple Music, YouTube)',
+  fashion:    'Fashion (Nike, Foot Locker, Amazon)',
+  beauty:     'Beauty (Sephora, Ulta, Target)',
+  experience: 'Experiences (Movies, Dave & Busters, Top Golf)',
+};
+
+// Map reply digit to category key
+export const REWARD_CATEGORY_BY_NUMBER: Record<string, string> = {
+  '1': 'gaming',
+  '2': 'food_drink',
+  '3': 'music',
+  '4': 'fashion',
+  '5': 'beauty',
+  '6': 'experience',
 };
 
 // ── Helpers ───────────────────────────────────────────────────────────────────

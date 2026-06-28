@@ -7,7 +7,7 @@
 import { requireUser } from '@/lib/auth';
 import { query } from '@/lib/db';
 import { Topbar } from '@/app/_components/Topbar';
-import { REWARD_TIERS, REWARD_CATEGORY_LABELS, getRewardTier } from '@/engine/boss-challenge';
+import { REWARD_TIERS, REWARD_CATEGORY_LABELS, REWARD_CATEGORY_OPTIONS, getRewardTier } from '@/engine/boss-challenge';
 import Link from 'next/link';
 import { fulfillRewardAction } from './actions';
 
@@ -39,7 +39,7 @@ export default async function RewardsPage() {
       `SELECT
          p.id, p.first_name, p.quest_xp, COALESCE(p.quest_monthly_xp, 0) as quest_monthly_xp,
          COALESCE(p.quest_level, 1) as quest_level,
-         COALESCE(p.quest_reward_category, 'gamer') as quest_reward_category,
+         COALESCE(p.quest_reward_category, 'gaming') as quest_reward_category,
          COALESCE(p.quest_streak, 0) as quest_streak,
          p.clinic_id, p.phone, p.enrolled_at::text,
          (SELECT qb.status FROM quest_boss_challenges qb
@@ -148,7 +148,12 @@ export default async function RewardsPage() {
                     </span>
                   </td>
                   <td className="small">
-                    {REWARD_CATEGORY_LABELS[r.quest_reward_category ?? 'gamer'] ?? r.quest_reward_category}
+                    {REWARD_CATEGORY_LABELS[r.quest_reward_category ?? 'gaming'] ?? r.quest_reward_category}
+                      {r.quest_reward_category && REWARD_CATEGORY_OPTIONS[r.quest_reward_category] && (
+                        <span style={{ fontSize: 11, color: '#888', display: 'block', marginTop: 2 }}>
+                          {REWARD_CATEGORY_OPTIONS[r.quest_reward_category].join(' / ')}
+                        </span>
+                      )}
                   </td>
                   <td className="small muted">
                     Lv {r.quest_level}
@@ -210,7 +215,7 @@ async function QuestSummaryTable({ clinicId }: { clinicId: string }) {
               COALESCE(quest_monthly_xp, 0) as quest_monthly_xp,
               COALESCE(quest_level, 1) as quest_level,
               COALESCE(quest_streak, 0) as quest_streak,
-              COALESCE(quest_reward_category, 'gamer') as quest_reward_category
+              COALESCE(quest_reward_category, 'gaming') as quest_reward_category
        FROM patients
        WHERE clinic_id = $1 AND modality = 'quest' AND status = 'active'
        ORDER BY quest_xp DESC`,
@@ -258,7 +263,7 @@ async function QuestSummaryTable({ clinicId }: { clinicId: string }) {
               <td className="small">Lv {p.quest_level}</td>
               <td className="small">{p.quest_streak}d</td>
               <td className="small muted">
-                {REWARD_CATEGORY_LABELS[p.quest_reward_category ?? 'gamer']}
+                {REWARD_CATEGORY_LABELS[p.quest_reward_category ?? 'gaming']}
               </td>
             </tr>
           );

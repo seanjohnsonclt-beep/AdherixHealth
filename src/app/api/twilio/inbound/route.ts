@@ -18,7 +18,7 @@ import { handleReplyGate } from '@/engine/replyGate';
 import { scanInbound, isEscalationKeyword } from '@/engine/keyword-scanner';
 import { parseWeightReply, hasPendingGaugeCheckin, handleWeightReply } from '@/engine/gauge';
 import { parseYesNo, parseQuestIntensity } from '@/engine/response-parser';
-import { handleBossReply } from '@/engine/boss-challenge';
+import { handleBossReply, REWARD_CATEGORY_BY_NUMBER, REWARD_CATEGORY_LABELS } from '@/engine/boss-challenge';
 
 function twiml(body = '') {
   return new NextResponse(`<Response>${body}</Response>`, {
@@ -302,6 +302,38 @@ export async function POST(req: NextRequest) {
         console.log(`[inbound] Quest intensity set to ${intensity} for patient ${patient.id}`);
       } catch (err) {
         console.warn('[inbound] Quest intensity update failed:', err);
+      }
+    }
+  }
+
+  // Quest: reward category selection (reply 1-6 to quest.p0.intensity_set)
+  // Check if the last outbound message was the category pick prompt.
+  if (patient.modality === 'quest') {
+    const digit = body.trim().split(/\s+/)[0];
+    const categoryKey = REWARD_CATEGORY_BY_NUMBER[digit];
+    if (categoryKey) {
+      try {
+        // Only apply if last outbound was the intensity_set reward pick prompt
+        const lastMsg = await queryOne<{ template_key: string }>(
+          `select template_key from messages
+           where patient_id = $1 and direction = 'outbound' and template_key is not null
+           order by sent_at desc nulls last, created_at desc limit 1`,
+          [patient.id]
+        );
+        if (lastMsg?.template_key === 'quest.p0.intensity_set') {
+          await query(
+            `update patients set quest_reward_category = $1 where id = $2`,
+            [categoryKey, patient.id]
+          );
+          await query(
+            `insert into events (patient_id, kind, payload)
+             values ($1, 'quest_reward_category_set', $2)`,
+            [patient.id, JSON.stringify({ category: categoryKey, label: REWARD_CATEGORY_LABELS[categoryKey] })]
+          );
+          console.log(`[inbound] Quest reward category set to ${categoryKey} for patient ${patient.id}`);
+        }
+      } catch (err) {
+        console.warn('[inbound] Quest reward category update failed:', err);
       }
     }
   }
