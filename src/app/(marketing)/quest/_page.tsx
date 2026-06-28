@@ -104,7 +104,7 @@ function QuestIPhone({
           {bubbles.slice(0, visCount).map((b, i) => (
             <motion.div key={i}
               className={`mkt-iphone__bubble mkt-iphone__bubble--${b.dir}`}
-              initial={animateFrom !== undefined && i >= animateFrom ? { opacity: 0, y: 6 } : false}
+              initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}>
               {b.text}
@@ -256,7 +256,7 @@ export function QuestPage() {
                 avatar="Q"
                 avatarBg="#1a4a46"
                 date="Monday 9:00 AM"
-                animateFrom={1}
+                animateDelay={0}
                 delivered={true}
                 bubbles={[
                   { dir: 'in', text: 'WEEK 5 BOSS: 5 consecutive check-ins. Alpha Squad needs every member in. Reply BOSS to accept. Worth 3x XP.' },
@@ -271,7 +271,7 @@ export function QuestPage() {
                 avatar="Q"
                 avatarBg="#1a4a46"
                 date="Today 4:01 PM"
-                animateFrom={0}
+                animateDelay={300}
                 bubbles={[
                   { dir: 'in', text: 'LEVEL UP. You just hit Beast Mode. XP total: 520. New challenges unlock this week. The squad noticed.' },
                 ]}
@@ -301,7 +301,7 @@ export function QuestPage() {
                 avatar="Q"
                 avatarBg="#1a4a46"
                 date="Today 4:00 PM"
-                animateFrom={1}
+                animateDelay={0}
                 delivered={true}
                 bubbles={[
                   { dir: 'in', text: 'Jordan - 12-day streak. Reply YES to log today and keep it going. Squad check is Sunday.' },
@@ -317,7 +317,7 @@ export function QuestPage() {
                 avatar="Q"
                 avatarBg="#3d2d6e"
                 date="Sunday 10:00 AM"
-                animateFrom={0}
+                animateDelay={300}
                 bubbles={[
                   { dir: 'in', text: 'Weekly update for Jordan: 5 of 5 check-ins. Streak: 12 days. Habit consistency is strong.' },
                   { dir: 'in', text: 'Tip: this is the window where habits become identity. Reinforce effort, not outcomes.' },
