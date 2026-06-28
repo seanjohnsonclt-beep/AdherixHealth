@@ -9059,3 +9059,45 @@ a.mkt-btn--primary:hover,
   .mkt-q-dual-phones__divider-line { width: 48px; height: 1px; }
   .mkt-q-dual-phones__divider-label { writing-mode: horizontal-tb; }
 }
+
+
+/* === Quest two-phone layout (game layer + dual channel) === */
+.mkt-q-two-phones {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+.mkt-q-two-phones__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+.mkt-q-two-phones__label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--quest-electric, #5CFFC8);
+  background: rgba(92,255,200,0.1);
+  border: 1px solid rgba(92,255,200,0.2);
+  padding: 4px 14px;
+  border-radius: 20px;
+}
+.mkt-q-two-phones__label--guardian {
+  color: var(--quest-violet, #A78BFA);
+  background: rgba(167,139,250,0.1);
+  border-color: rgba(167,139,250,0.2);
+}
+.mkt-q-two-phones__note {
+  font-size: 12px;
+  color: rgba(244,239,230,0.4);
+  text-align: center;
+  max-width: 220px;
+  margin: 0;
+  line-height: 1.5;
+}
+@media (max-width: 640px) {
+  .mkt-q-two-phones { flex-direction: column; align-items: center; gap: 32px; }
+}

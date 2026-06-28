@@ -44,18 +44,14 @@ function CheckMark({ color = '#5CFFC8' }: { color?: string }) {
 }
 
 /* ---- reusable iPhone mockup ---- */
-interface Bubble { dir: 'in' | 'out'; text: string; bold?: boolean; }
-interface IPhoneProps {
-  contact: string;
-  avatar: string;
-  avatarBg?: string;
-  date?: string;
-  bubbles: Bubble[];
-  delivered?: boolean;
-  animateFrom?: number;
-}
+interface Bubble { dir: 'in' | 'out'; text: string; }
 
-function QuestIPhone({ contact, avatar, avatarBg = '#2d5c58', date, bubbles, delivered, animateFrom }: IPhoneProps) {
+function QuestIPhone({
+  contact, avatar, avatarBg = '#1a4a46', date, bubbles, delivered, animateFrom,
+}: {
+  contact: string; avatar: string; avatarBg?: string;
+  date?: string; bubbles: Bubble[]; delivered?: boolean; animateFrom?: number;
+}) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: '-60px' });
   const [visCount, setVisCount] = useState(animateFrom !== undefined ? animateFrom : bubbles.length);
@@ -67,7 +63,7 @@ function QuestIPhone({ contact, avatar, avatarBg = '#2d5c58', date, bubbles, del
       i++;
       setVisCount(i);
       if (i >= bubbles.length) clearInterval(id);
-    }, 700);
+    }, 750);
     return () => clearInterval(id);
   }, [inView, animateFrom, bubbles.length]);
 
@@ -111,7 +107,7 @@ function QuestIPhone({ contact, avatar, avatarBg = '#2d5c58', date, bubbles, del
               initial={animateFrom !== undefined && i >= animateFrom ? { opacity: 0, y: 6 } : false}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}>
-              {b.bold ? <><strong>{b.text.split(':')[0]}:</strong>{b.text.slice(b.text.indexOf(':') + 1)}</> : b.text}
+              {b.text}
             </motion.div>
           ))}
           {delivered && visCount >= bubbles.length && (
@@ -127,7 +123,7 @@ function QuestIPhone({ contact, avatar, avatarBg = '#2d5c58', date, bubbles, del
   );
 }
 
-/* ---- SMS contrast visual ---- */
+/* ---- SMS contrast ---- */
 function SmsContrast() {
   return (
     <div className="mkt-q-contrast">
@@ -156,62 +152,6 @@ function SmsContrast() {
   );
 }
 
-/* ---- scenario data ---- */
-const scenarios = [
-  {
-    label: 'Daily check-in',
-    contact: 'Quest Health',
-    avatar: 'Q',
-    avatarBg: '#1a4a46',
-    date: 'Today 4:00 PM',
-    animateFrom: 1,
-    delivered: true,
-    bubbles: [
-      { dir: 'in' as const, text: 'Jordan - check-in time. Movement goal today? Reply YES or NO. You are on a 9-day streak.' },
-      { dir: 'out' as const, text: 'YES' },
-    ],
-  },
-  {
-    label: 'Boss challenge',
-    contact: 'Quest Health',
-    avatar: 'Q',
-    avatarBg: '#1a4a46',
-    date: 'Monday 9:00 AM',
-    animateFrom: 1,
-    delivered: true,
-    bubbles: [
-      { dir: 'in' as const, text: 'WEEK 5 BOSS: 5 consecutive check-ins. Alpha Squad needs every member. Reply BOSS to accept. Worth 3x XP.', bold: true },
-      { dir: 'out' as const, text: 'BOSS' },
-    ],
-  },
-  {
-    label: 'Level up',
-    contact: 'Quest Health',
-    avatar: 'Q',
-    avatarBg: '#1a4a46',
-    date: 'Today 4:01 PM',
-    animateFrom: 0,
-    delivered: false,
-    bubbles: [
-      { dir: 'in' as const, text: 'LEVEL UP: You just hit Beast Mode. XP total: 520. New challenges unlock this week. The squad noticed.', bold: true },
-    ],
-  },
-  {
-    label: 'Guardian weekly brief',
-    contact: 'Quest Health',
-    avatar: 'Q',
-    avatarBg: '#3d2d6e',
-    date: 'Sunday 10:00 AM',
-    animateFrom: 0,
-    delivered: false,
-    bubbles: [
-      { dir: 'in' as const, text: 'Weekly update for Jordan: 5 of 5 check-ins this week. Streak: 12 days. Habit consistency is strong.' },
-      { dir: 'in' as const, text: 'Tip: this is the window where habits become identity. Keep reinforcing effort over outcomes.' },
-    ],
-  },
-];
-
-/* ---- zero lift cards ---- */
 const lifts = [
   { label: 'No EHR changes', sub: 'Quest runs alongside your existing system. Nothing to integrate.' },
   { label: 'No portal for patients', sub: 'SMS only. Teens reply from their phone. No app, no login.' },
@@ -267,9 +207,7 @@ export function QuestPage() {
               <div className="mkt-q-stats-block">
                 {stats.map(s => (
                   <div key={s.label} className="mkt-q-stat-item">
-                    <div className="mkt-q-stat-item__n">
-                      <Counter to={s.n} suffix={s.suffix} />
-                    </div>
+                    <div className="mkt-q-stat-item__n"><Counter to={s.n} suffix={s.suffix} /></div>
                     <div className="mkt-q-stat-item__l">{s.label}</div>
                   </div>
                 ))}
@@ -292,45 +230,58 @@ export function QuestPage() {
               into a format adolescents actually respond to.
             </FadeRise>
           </div>
-          <FadeRise delay={0.1}>
-            <SmsContrast />
-          </FadeRise>
+          <FadeRise delay={0.1}><SmsContrast /></FadeRise>
         </div>
       </section>
 
-      {/* 4-phone scenario grid */}
-      <section className="mkt-v2-section mkt-v2-section--alt" id="quest-moments">
+      {/* Game layer - 2 phones */}
+      <section className="mkt-v2-section mkt-v2-section--alt" id="quest-game">
         <div className="mkt-container">
           <div className="mkt-v2-section__head">
-            <FadeRise as="span" className="mkt-eyebrow">What lands on their phone</FadeRise>
+            <FadeRise as="span" className="mkt-eyebrow">The game layer</FadeRise>
             <FadeRise as="h2" className="mkt-h2" delay={0.05}>
-              Four moments. All automated.
+              Clinical check-ins become missions. Progress becomes visible.
             </FadeRise>
-            <FadeRise as="p" delay={0.1} style={{ color: 'rgba(244,239,230,0.7)', maxWidth: 500, margin: '0 auto 48px', textAlign: 'center', fontSize: 16 }}>
-              Every message runs automatically based on where the patient is in their program.
-              No coordinator triggers these. No staff writes them.
+            <FadeRise as="p" delay={0.1} style={{ color: 'rgba(244,239,230,0.7)', maxWidth: 520, margin: '0 auto 48px', textAlign: 'center', fontSize: 16 }}>
+              XP, streaks, squad accountability, and boss challenges run
+              automatically on top of your existing behavioral protocol.
+              Teens engage because it feels worth showing up for.
             </FadeRise>
           </div>
-          <StaggerGroup className="mkt-q-phone-grid" stagger={0.1} amount={0.2}>
-            {scenarios.map((s) => (
-              <div key={s.label} className="mkt-q-phone-grid__item">
-                <div className="mkt-q-phone-grid__label">{s.label}</div>
-                <QuestIPhone
-                  contact={s.contact}
-                  avatar={s.avatar}
-                  avatarBg={s.avatarBg}
-                  date={s.date}
-                  bubbles={s.bubbles}
-                  delivered={s.delivered}
-                  animateFrom={s.animateFrom}
-                />
-              </div>
-            ))}
-          </StaggerGroup>
+          <div className="mkt-q-two-phones">
+            <FadeRise delay={0.05} className="mkt-q-two-phones__item">
+              <div className="mkt-q-two-phones__label">Boss challenge</div>
+              <QuestIPhone
+                contact="Quest Health"
+                avatar="Q"
+                avatarBg="#1a4a46"
+                date="Monday 9:00 AM"
+                animateFrom={1}
+                delivered={true}
+                bubbles={[
+                  { dir: 'in', text: 'WEEK 5 BOSS: 5 consecutive check-ins. Alpha Squad needs every member in. Reply BOSS to accept. Worth 3x XP.' },
+                  { dir: 'out', text: 'BOSS' },
+                ]}
+              />
+            </FadeRise>
+            <FadeRise delay={0.15} className="mkt-q-two-phones__item">
+              <div className="mkt-q-two-phones__label">Level up</div>
+              <QuestIPhone
+                contact="Quest Health"
+                avatar="Q"
+                avatarBg="#1a4a46"
+                date="Today 4:01 PM"
+                animateFrom={0}
+                bubbles={[
+                  { dir: 'in', text: 'LEVEL UP. You just hit Beast Mode. XP total: 520. New challenges unlock this week. The squad noticed.' },
+                ]}
+              />
+            </FadeRise>
+          </div>
         </div>
       </section>
 
-      {/* Dual track */}
+      {/* Dual channel - 2 phones */}
       <section className="mkt-v2-section" id="quest-dual">
         <div className="mkt-container">
           <div className="mkt-v2-section__head">
@@ -339,50 +290,40 @@ export function QuestPage() {
               The patient gets engaged. The parent stays informed.
             </FadeRise>
             <FadeRise as="p" delay={0.1} style={{ color: 'rgba(244,239,230,0.7)', maxWidth: 520, margin: '0 auto 48px', textAlign: 'center', fontSize: 16 }}>
-              Two parallel SMS streams. Behavioral engagement for the teen.
-              A weekly clinical summary for the guardian. No PHI on either channel.
+              Two parallel SMS streams run automatically. No PHI on either channel.
             </FadeRise>
           </div>
-          <div className="mkt-q-dual-phones">
-            <FadeRise delay={0.05}>
-              <div className="mkt-q-dual-phones__col">
-                <div className="mkt-q-dual-phones__badge">Patient</div>
-                <QuestIPhone
-                  contact="Quest Health"
-                  avatar="Q"
-                  avatarBg="#1a4a46"
-                  date="Today 4:00 PM"
-                  animateFrom={1}
-                  delivered={true}
-                  bubbles={[
-                    { dir: 'in', text: 'Jordan - Week 5. You have been showing up. Reply YES to log today and keep your streak going.' },
-                    { dir: 'out', text: 'YES' },
-                    { dir: 'in', text: 'Logged. 12-day streak. Squad check is Sunday.' },
-                  ]}
-                />
-              </div>
+          <div className="mkt-q-two-phones">
+            <FadeRise delay={0.05} className="mkt-q-two-phones__item">
+              <div className="mkt-q-two-phones__label">Patient</div>
+              <QuestIPhone
+                contact="Quest Health"
+                avatar="Q"
+                avatarBg="#1a4a46"
+                date="Today 4:00 PM"
+                animateFrom={1}
+                delivered={true}
+                bubbles={[
+                  { dir: 'in', text: 'Jordan - 12-day streak. Reply YES to log today and keep it going. Squad check is Sunday.' },
+                  { dir: 'out', text: 'YES' },
+                  { dir: 'in', text: 'Logged. Keep going.' },
+                ]}
+              />
             </FadeRise>
-            <div className="mkt-q-dual-phones__divider" aria-hidden="true">
-              <div className="mkt-q-dual-phones__divider-line" />
-              <span className="mkt-q-dual-phones__divider-label">parallel track</span>
-              <div className="mkt-q-dual-phones__divider-line" />
-            </div>
-            <FadeRise delay={0.12}>
-              <div className="mkt-q-dual-phones__col">
-                <div className="mkt-q-dual-phones__badge mkt-q-dual-phones__badge--guardian">Guardian</div>
-                <QuestIPhone
-                  contact="Quest Health"
-                  avatar="Q"
-                  avatarBg="#3d2d6e"
-                  date="Sunday 10:00 AM"
-                  animateFrom={0}
-                  bubbles={[
-                    { dir: 'in', text: 'Weekly update for Jordan: 5 of 5 check-ins. Streak: 12 days. Engagement is strong.' },
-                    { dir: 'in', text: 'Tip: this is the window where habits become identity. Reinforce effort over outcomes.' },
-                  ]}
-                />
-                <div className="mkt-q-dual-phones__note">No clinical data shared. No action required.</div>
-              </div>
+            <FadeRise delay={0.15} className="mkt-q-two-phones__item">
+              <div className="mkt-q-two-phones__label mkt-q-two-phones__label--guardian">Guardian</div>
+              <QuestIPhone
+                contact="Quest Health"
+                avatar="Q"
+                avatarBg="#3d2d6e"
+                date="Sunday 10:00 AM"
+                animateFrom={0}
+                bubbles={[
+                  { dir: 'in', text: 'Weekly update for Jordan: 5 of 5 check-ins. Streak: 12 days. Habit consistency is strong.' },
+                  { dir: 'in', text: 'Tip: this is the window where habits become identity. Reinforce effort, not outcomes.' },
+                ]}
+              />
+              <p className="mkt-q-two-phones__note">No clinical data shared. No action required.</p>
             </FadeRise>
           </div>
         </div>
@@ -414,9 +355,7 @@ export function QuestPage() {
         <div className="mkt-container">
           <div className="mkt-v2-section__head">
             <FadeRise as="span" className="mkt-eyebrow">Built for</FadeRise>
-            <FadeRise as="h2" className="mkt-h2" delay={0.05}>
-              Who Quest is designed for.
-            </FadeRise>
+            <FadeRise as="h2" className="mkt-h2" delay={0.05}>Who Quest is designed for.</FadeRise>
           </div>
           <StaggerGroup className="mkt-q-audience-grid" stagger={0.08} amount={0.2}>
             {audience.map(a => (
@@ -434,10 +373,8 @@ export function QuestPage() {
       <section className="mkt-v2-section mkt-v2-section--ink">
         <div className="mkt-container mkt-v2-trust">
           <FadeRise as="h2" className="mkt-v2-trust__title" style={{
-            fontFamily: 'Fraunces, Georgia, serif',
-            fontSize: 'clamp(28px, 4vw, 44px)',
-            fontWeight: 400, color: 'var(--mkt-paper)',
-            lineHeight: 1.1, marginBottom: 20,
+            fontFamily: 'Fraunces, Georgia, serif', fontSize: 'clamp(28px, 4vw, 44px)',
+            fontWeight: 400, color: 'var(--mkt-paper)', lineHeight: 1.1, marginBottom: 20,
           }}>
             Your patients stay in program. Your team gets alerted when they don't.
           </FadeRise>
