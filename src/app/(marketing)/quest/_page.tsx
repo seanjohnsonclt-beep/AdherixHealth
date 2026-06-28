@@ -6,7 +6,6 @@ import { motion, useInView } from 'framer-motion';
 import { QuestHero } from '../_components/sections/QuestHero';
 import { FadeRise, StaggerGroup } from '../_components/animation/MotionPrimitives';
 
-/* ---- animated counter ---- */
 function Counter({ to, suffix = '' }: { to: number; suffix?: string }) {
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, margin: '-60px' });
@@ -25,7 +24,6 @@ function Counter({ to, suffix = '' }: { to: number; suffix?: string }) {
   return <span ref={ref}>{inView ? val : 0}{suffix}</span>;
 }
 
-/* ---- animated check icon ---- */
 function CheckMark({ color = '#5CFFC8' }: { color?: string }) {
   return (
     <motion.svg width="20" height="20" viewBox="0 0 20 20" fill="none"
@@ -43,29 +41,34 @@ function CheckMark({ color = '#5CFFC8' }: { color?: string }) {
   );
 }
 
-/* ---- reusable iPhone mockup ---- */
 interface Bubble { dir: 'in' | 'out'; text: string; }
 
 function QuestIPhone({
-  contact, avatar, avatarBg = '#1a4a46', date, bubbles, delivered, animateFrom,
+  contact, avatar, avatarBg = '#1a4a46', date, bubbles, delivered, animateDelay = 0,
 }: {
   contact: string; avatar: string; avatarBg?: string;
-  date?: string; bubbles: Bubble[]; delivered?: boolean; animateFrom?: number;
+  date?: string; bubbles: Bubble[]; delivered?: boolean; animateDelay?: number;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: '-60px' });
-  const [visCount, setVisCount] = useState(animateFrom !== undefined ? animateFrom : bubbles.length);
+  const inView = useInView(ref, { once: true, margin: '-80px' });
+  const [visCount, setVisCount] = useState(0);
 
   useEffect(() => {
-    if (!inView || animateFrom === undefined) return;
-    let i = animateFrom;
-    const id = setInterval(() => {
-      i++;
-      setVisCount(i);
-      if (i >= bubbles.length) clearInterval(id);
-    }, 750);
-    return () => clearInterval(id);
-  }, [inView, animateFrom, bubbles.length]);
+    if (!inView) return;
+    let i = 0;
+    const start = setTimeout(() => {
+      // show first bubble immediately
+      setVisCount(1);
+      i = 1;
+      const id = setInterval(() => {
+        i++;
+        setVisCount(i);
+        if (i >= bubbles.length) clearInterval(id);
+      }, 900);
+      return () => clearInterval(id);
+    }, animateDelay);
+    return () => clearTimeout(start);
+  }, [inView, animateDelay, bubbles.length]);
 
   return (
     <div ref={ref} className="mkt-iphone">
@@ -123,7 +126,6 @@ function QuestIPhone({
   );
 }
 
-/* ---- SMS contrast ---- */
 function SmsContrast() {
   return (
     <div className="mkt-q-contrast">
@@ -234,54 +236,42 @@ export function QuestPage() {
         </div>
       </section>
 
-      {/* Game layer - 2 phones */}
+      {/* Game layer - copy left, phone right (PatientSmsView pattern) */}
       <section className="mkt-v2-section mkt-v2-section--alt" id="quest-game">
-        <div className="mkt-container">
-          <div className="mkt-v2-section__head">
-            <FadeRise as="span" className="mkt-eyebrow">The game layer</FadeRise>
-            <FadeRise as="h2" className="mkt-h2" delay={0.05}>
-              Clinical check-ins become missions. Progress becomes visible.
-            </FadeRise>
-            <FadeRise as="p" delay={0.1} style={{ color: 'rgba(244,239,230,0.7)', maxWidth: 520, margin: '0 auto 48px', textAlign: 'center', fontSize: 16 }}>
-              XP, streaks, squad accountability, and boss challenges run
+        <div className="mkt-container mkt-v2-sms-view">
+          <FadeRise className="mkt-v2-sms-view__copy">
+            <span className="mkt-eyebrow">The game layer</span>
+            <h2 className="mkt-h2">Clinical check-ins become missions. Progress becomes visible.</h2>
+            <p className="mkt-subhead" style={{ marginBottom: 28 }}>
+              XP, streaks, squad accountability, and weekly boss challenges run
               automatically on top of your existing behavioral protocol.
               Teens engage because it feels worth showing up for.
-            </FadeRise>
-          </div>
-          <div className="mkt-q-two-phones">
-            <FadeRise delay={0.05} className="mkt-q-two-phones__item">
-              <div className="mkt-q-two-phones__label">Boss challenge</div>
-              <QuestIPhone
-                contact="Quest Health"
-                avatar="Q"
-                avatarBg="#1a4a46"
-                date="Monday 9:00 AM"
-                animateDelay={0}
-                delivered={true}
-                bubbles={[
-                  { dir: 'in', text: 'WEEK 5 BOSS: 5 consecutive check-ins. Alpha Squad needs every member in. Reply BOSS to accept. Worth 3x XP.' },
-                  { dir: 'out', text: 'BOSS' },
-                ]}
-              />
-            </FadeRise>
-            <FadeRise delay={0.15} className="mkt-q-two-phones__item">
-              <div className="mkt-q-two-phones__label">Level up</div>
-              <QuestIPhone
-                contact="Quest Health"
-                avatar="Q"
-                avatarBg="#1a4a46"
-                date="Today 4:01 PM"
-                animateDelay={300}
-                bubbles={[
-                  { dir: 'in', text: 'LEVEL UP. You just hit Beast Mode. XP total: 520. New challenges unlock this week. The squad noticed.' },
-                ]}
-              />
-            </FadeRise>
-          </div>
+            </p>
+            <ul className="mkt-v2-sms-view__points">
+              <li>Boss challenges: 3x XP stakes, squad visibility, Monday launch</li>
+              <li>Streaks and level-ups fire automatically - no staff trigger</li>
+              <li>Intensity levels (Chill / Standard / Beast) set by the teen on day one</li>
+            </ul>
+          </FadeRise>
+          <FadeRise className="mkt-v2-sms-view__phone" delay={0.12}>
+            <QuestIPhone
+              contact="Quest Health"
+              avatar="Q"
+              avatarBg="#1a4a46"
+              date="Monday 9:00 AM"
+              animateDelay={400}
+              delivered={true}
+              bubbles={[
+                { dir: 'in', text: 'WEEK 5 BOSS: 5 consecutive check-ins. Alpha Squad needs every member in. Reply BOSS to accept. Worth 3x XP.' },
+                { dir: 'out', text: 'BOSS' },
+                { dir: 'in', text: "Challenge accepted. Check-in streak starts today. Squad can see you're in." },
+              ]}
+            />
+          </FadeRise>
         </div>
       </section>
 
-      {/* Dual channel - 2 phones */}
+      {/* Dual channel - two phones side by side */}
       <section className="mkt-v2-section" id="quest-dual">
         <div className="mkt-container">
           <div className="mkt-v2-section__head">
@@ -293,15 +283,15 @@ export function QuestPage() {
               Two parallel SMS streams run automatically. No PHI on either channel.
             </FadeRise>
           </div>
-          <div className="mkt-q-two-phones">
-            <FadeRise delay={0.05} className="mkt-q-two-phones__item">
-              <div className="mkt-q-two-phones__label">Patient</div>
+          <div className="mkt-q-dual-row">
+            <FadeRise className="mkt-q-dual-col" delay={0.05}>
+              <div className="mkt-q-dual-badge mkt-q-dual-badge--patient">Patient</div>
               <QuestIPhone
                 contact="Quest Health"
                 avatar="Q"
                 avatarBg="#1a4a46"
                 date="Today 4:00 PM"
-                animateDelay={0}
+                animateDelay={200}
                 delivered={true}
                 bubbles={[
                   { dir: 'in', text: 'Jordan - 12-day streak. Reply YES to log today and keep it going. Squad check is Sunday.' },
@@ -310,20 +300,20 @@ export function QuestPage() {
                 ]}
               />
             </FadeRise>
-            <FadeRise delay={0.15} className="mkt-q-two-phones__item">
-              <div className="mkt-q-two-phones__label mkt-q-two-phones__label--guardian">Guardian</div>
+            <FadeRise className="mkt-q-dual-col" delay={0.18}>
+              <div className="mkt-q-dual-badge mkt-q-dual-badge--guardian">Guardian</div>
               <QuestIPhone
                 contact="Quest Health"
                 avatar="Q"
                 avatarBg="#3d2d6e"
                 date="Sunday 10:00 AM"
-                animateDelay={300}
+                animateDelay={500}
                 bubbles={[
                   { dir: 'in', text: 'Weekly update for Jordan: 5 of 5 check-ins. Streak: 12 days. Habit consistency is strong.' },
-                  { dir: 'in', text: 'Tip: this is the window where habits become identity. Reinforce effort, not outcomes.' },
+                  { dir: 'in', text: 'Tip: reinforce effort, not outcomes. This window is where habits become identity.' },
                 ]}
               />
-              <p className="mkt-q-two-phones__note">No clinical data shared. No action required.</p>
+              <p className="mkt-q-dual-note">No clinical data shared. No action required.</p>
             </FadeRise>
           </div>
         </div>
