@@ -8289,13 +8289,13 @@ a.mkt-btn--primary:hover,
   font-size: clamp(32px, 4.5vw, 56px);
   font-weight: 400;
   line-height: 1.1;
-  color: #ffffff;
-  text-shadow: 0 1px 24px rgba(0,0,0,0.3);
+  color: #ffffff !important;
+  text-shadow: 0 2px 32px rgba(0,0,0,0.4);
   margin: 0 0 24px;
 }
 
 .mkt-q-title em {
-  color: var(--quest-electric);
+  color: var(--quest-electric) !important;
   font-style: italic;
 }
 

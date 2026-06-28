@@ -171,7 +171,7 @@ export function QuestHero() {
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.5, ease }}
                 >
-                  <span className="mkt-q-toast__icon" aria-hidden="true">&#x26A1;</span>
+
                   <div>
                     <p className="mkt-q-toast__label">+30 XP - Boss Challenge: CONQUERED</p>
                     <p className="mkt-q-toast__sub">
