@@ -17,7 +17,7 @@ import { query, queryOne } from '@/lib/db';
 import { handleReplyGate } from '@/engine/replyGate';
 import { scanInbound, isEscalationKeyword } from '@/engine/keyword-scanner';
 import { parseWeightReply, hasPendingGaugeCheckin, handleWeightReply } from '@/engine/gauge';
-import { parseYesNo, parseQuestIntensity } from '@/engine/response-parser';
+import { parseYesNo } from '@/engine/response-parser';
 import { handleBossReply, REWARD_CATEGORY_BY_NUMBER, REWARD_CATEGORY_LABELS } from '@/engine/boss-challenge';
 
 function twiml(body = '') {
@@ -284,30 +284,10 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  // Quest: intensity selection (CHILL/STANDARD/BEAST or 1/2/3)
-  // Only runs for Quest patients during onboarding phase (phase 1).
-  if (patient.modality === 'quest') {
-    const intensity = parseQuestIntensity(body);
-    if (intensity) {
-      try {
-        await query(
-          `update patients set quest_intensity = $1 where id = $2`,
-          [intensity, patient.id]
-         );
-        await query(
-          `insert into events (patient_id, kind, payload)
-           values ($1, 'quest_intensity_set', $2)`,
-          [patient.id, JSON.stringify({ intensity })]
-        );
-        console.log(`[inbound] Quest intensity set to ${intensity} for patient ${patient.id}`);
-      } catch (err) {
-        console.warn('[inbound] Quest intensity update failed:', err);
-      }
-    }
-  }
-
-  // Quest: reward category selection (reply 1-6 to quest.p0.intensity_set)
-  // Check if the last outbound message was the category pick prompt.
+  // Quest: reward category selection (reply 1-6 to redemption prompt)
+  // Wired at redemption time - when patient hits XP milestone and is asked to pick category.
+  // Template key check will be 'quest.reward.category_prompt' once redemption flow is built.
+  // Placeholder: check left intentionally inert until redemption SMS template exists.
   if (patient.modality === 'quest') {
     const digit = body.trim().split(/\s+/)[0];
     const categoryKey = REWARD_CATEGORY_BY_NUMBER[digit];
@@ -320,7 +300,7 @@ export async function POST(req: NextRequest) {
            order by sent_at desc nulls last, created_at desc limit 1`,
           [patient.id]
         );
-        if (lastMsg?.template_key === 'quest.p0.intensity_set') {
+        if (lastMsg?.template_key === 'quest.reward.category_prompt') {
           await query(
             `update patients set quest_reward_category = $1 where id = $2`,
             [categoryKey, patient.id]

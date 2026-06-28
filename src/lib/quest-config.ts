@@ -67,15 +67,11 @@ export const QUEST_TEMPLATES: QuestTemplate[] = [
 
   { key: 'quest.p0.teen_handle', phase: 0, track: 'teen', sensitivity: 'low',
     requires_reply_to: 'quest.p0.teen_welcome',
-    body: 'Your anonymous handle is {quest_handle}. Nobody knows who is behind it. This is how you show up on the leaderboard. Pick your intensity - reply CHILL, STANDARD, or BEAST.' },
+    body: 'Your anonymous handle is {quest_handle}. Nobody knows who is behind it. This is how you show up on the leaderboard. Reply YES to lock it in.' },
 
-  { key: 'quest.p0.intensity_set', phase: 0, track: 'teen', sensitivity: 'low',
+  { key: 'quest.p0.handle_confirmed', phase: 0, track: 'teen', sensitivity: 'low',
     requires_reply_to: 'quest.p0.teen_handle',
-    body: 'Locked in. Last thing - what do you want to earn? Reply a number: 1-Gaming 2-Food & Drink 3-Music 4-Fashion 5-Beauty 6-Experiences' },
-
-  { key: 'quest.p0.reward_confirm', phase: 0, track: 'teen', sensitivity: 'low',
-    requires_reply_to: 'quest.p0.intensity_set',
-    body: 'Set. 500 XP = $5. 1000 XP = $10. 2500 XP = $25. First check-in tomorrow at 4pm. That is when your streak starts.' },
+    body: 'Locked in. First check-in tomorrow at 4pm. That is when your streak starts.' },
 
   // ── Phase 1: Onboarding ────────────────────────────────────────────────────
 
