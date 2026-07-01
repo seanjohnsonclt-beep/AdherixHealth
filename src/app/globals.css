@@ -9153,3 +9153,64 @@ a.mkt-btn--primary:hover,
 @media (max-width: 640px) {
   .mkt-q-dual-row { flex-direction: column; align-items: center; gap: 40px; }
 }
+
+/* Medicare accordion (What providers need to know) */
+.med-accordion {
+  border: 1px solid var(--mkt-sage-mist);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.med-accordion__item {
+  border-bottom: 1px solid var(--mkt-sage-mist);
+}
+.med-accordion__item:last-child {
+  border-bottom: none;
+}
+.med-accordion__trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 20px 24px;
+  background: #fff;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s;
+}
+.med-accordion__trigger:hover {
+  background: var(--mkt-paper-soft);
+}
+.med-accordion__item--open .med-accordion__trigger {
+  background: var(--mkt-paper-soft);
+}
+.med-accordion__icon {
+  color: var(--mkt-sage-deep);
+  flex-shrink: 0;
+}
+.med-accordion__title {
+  flex: 1;
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--mkt-ink);
+}
+.med-accordion__chevron {
+  color: var(--mkt-sage);
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+.med-accordion__item--open .med-accordion__chevron {
+  transform: rotate(180deg);
+}
+.med-accordion__body {
+  padding: 0 24px 22px 58px;
+  background: var(--mkt-paper-soft);
+}
+.med-accordion__body p {
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--mkt-ink-2);
+  margin: 0;
+}
